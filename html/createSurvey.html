@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../utils/templateJS.js"></script>
+    <link rel="stylesheet" href="../css/createSurvey.css">
+</head>
+<body>
+<div id="app" v-cloak>
+    <el-container>
+        <!--侧边栏，添加基础题型及常用题目-->
+        <el-aside width="25vw">
+            <!--基础题型-->
+            <el-button type="primary" @click="addBasicQuestion('my-single')">单选</el-button>
+            <el-button type="primary" @click="addBasicQuestion('my-multiple')">多选</el-button>
+            <el-button type="primary" @click="addBasicQuestion('my-fill-blank')">填空</el-button>
+            <el-button type="primary" @click="addBasicQuestion('my-order')">排序</el-button>
+            <el-button type="primary" @click="addBasicQuestion('my-select')" disabled>下拉框</el-button>
+            <el-divider></el-divider>
+            <!--常用题目-->
+            <el-button type="success" @click="addDefaultQuestion('my-fill-blank','phone')">手机号</el-button>
+        </el-aside>
+
+        <!--主界面，预览问卷及具体设置-->
+        <el-main>
+            <el-button type="primary" @click="submitSurvey">提交</el-button><!--todo 建议放在右上角-->
+            <el-input v-model="survey.surveyTitle" placeholder="请填写问卷标题"></el-input>
+            <el-input v-model="survey.description" placeholder="请填写问卷说明" type="textarea"></el-input>
+            <component :is="item.type" v-for="item in survey.questions" :question="item"
+                       :list="survey.questions" v-bind:key="item.id"
+                       v-on:delete-question-by-index="deleteQuestionByIndex"
+                       v-on:submit-this-question="submitQuestionByIndex"
+                       v-on:revert-this-question="revertQuestionByIndex">
+            </component>
+        </el-main>
+    </el-container>
+</div>
+<script src="../js/createSurvey.js"></script>
+</body>
+</html>
