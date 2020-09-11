@@ -12,6 +12,9 @@ let mySingleQuestion = Vue.extend({
             //模块内属性
             disableEdit: false,
             enableFrontOptions: false,
+            multipleFrontOptions: false,
+            furtherOption: {},
+            disableChangeStatus: false,
             selectedQuestionId: '',
             selectedOption: '',
             //题目属性
@@ -68,7 +71,7 @@ let mySingleQuestion = Vue.extend({
                     选中时，显示此题目
                 </div>
                 <!--提交/编辑本题-->
-                <el-button :type="buttonType" @click="changeStatus">{{buttonText}}</el-button>
+                <el-button :type="buttonType" @click="changeStatus"  :disabled="disableChangeStatus">{{buttonText}}</el-button>
             </div>
         </el-card>
     `,
@@ -92,9 +95,11 @@ let mySingleQuestion = Vue.extend({
                     this.question.frontOptions = []
                 } else {
                     this.question.frontOptions = [{
-                        question_id: this.selectedQuestion.index - 1,
+                        question_id: this.selectedQuestionId,
                         question_answer: this.selectedOption
                     }];
+                    if (this.multipleFrontOptions)
+                        this.question.frontOptions.push(this.furtherOption)
                 }
 
                 this.$emit('submit-this-question', this.question);
@@ -119,9 +124,31 @@ let mySingleQuestion = Vue.extend({
             return this.disableEdit ? 'warning' : 'primary'
         },
         selectedQuestion: function () {
-            for (let i = 0; i < this.list.length; i++)
-                if (this.list[i].id === this.selectedQuestionId)
+            for (let i = 0; i < this.list.length; i++) {
+                if (this.selectedQuestionId === this.list[i].id)
                     return this.list[i]
+            }
+        }
+    },
+    created: function () {
+        if (this.question.submitted) {
+            this.disableEdit = false;
+            this.enableFrontOptions = !!this.question.frontOptions.length;
+            this.multipleFrontOptions = this.question.frontOptions.length > 1;
+            if (this.enableFrontOptions) {
+                this.selectedQuestionId = this.question.frontOptions[0].question_id;
+                this.selectedOption = this.question.frontOptions[0].question_answer;
+            }
+            if (this.multipleFrontOptions) {
+                this.furtherOption = this.question.frontOptions[1];
+                this.disableChangeStatus = true;
+            }
+            this.title = this.question.title;
+            this.isRequired = this.question.isRequired;
+            this.answerList = this.question.answerList;
+            this.frontOptions = this.question.frontOptions;
+            this.isPrivate = this.question.isPrivate;
+            this.changeStatus();
         }
     }
 })
@@ -220,7 +247,7 @@ let myMultipleQuestion = Vue.extend({
                     this.question.frontOptions = []
                 } else {
                     this.question.frontOptions = [{
-                        question_id: this.selectedQuestion.index - 1,
+                        question_id: this.selectedQuestionId,
                         question_answer: this.selectedOption
                     }];
                 }
@@ -247,9 +274,26 @@ let myMultipleQuestion = Vue.extend({
             return this.disableEdit ? 'warning' : 'primary'
         },
         selectedQuestion: function () {
-            for (let i = 0; i < this.list.length; i++)
-                if (this.list[i].id === this.selectedQuestionId)
+            for (let i = 0; i < this.list.length; i++) {
+                if (this.selectedQuestionId === this.list[i].id)
                     return this.list[i]
+            }
+        }
+    },
+    created: function () {
+        if (this.question.submitted) {
+            this.disableEdit = false;
+            this.enableFrontOptions = !!this.question.frontOptions.length;
+            if (this.enableFrontOptions) {
+                this.selectedQuestionId = this.question.frontOptions[0].question_id;
+                this.selectedOption = this.question.frontOptions[0].question_answer;
+            }
+            this.title = this.question.title;
+            this.isRequired = this.question.isRequired;
+            this.answerList = this.question.answerList;
+            this.frontOptions = this.question.frontOptions;
+            this.isPrivate = this.question.isPrivate;
+            this.changeStatus();
         }
     }
 })
@@ -268,11 +312,15 @@ let myBlankQuestion = Vue.extend({
             //模块内属性
             disableEdit: false,
             enableFrontOptions: false,
+            multipleFrontOptions: false,
+            furtherOption: {},
+            disableChangeStatus: false,
             selectedQuestionId: '',
             selectedOption: '',
             enableValidation: false,
             validationType: [
                 {type: 'phone', text: '手机号'},
+                {type: 'integer', text: '整数'},
                 {type: 'rank', text: '分数段（管理员预置）'},
                 {type: 'grade', text: '成绩（管理员预置）'}],
             //题目属性
@@ -293,6 +341,9 @@ let myBlankQuestion = Vue.extend({
             </div>
             <div>
                 <!--todo 调整格式-->
+                <!--禁用编辑按钮时的提示-->
+                <el-alert title="本题目为系统预置，含有复杂逻辑，不支持编辑" type="warning" 
+                        show-icon :closable="false" v-if="disableChangeStatus"></el-alert>
                 <!--题目-->
                 <el-input v-model="title" :disabled="disableEdit" placeholder="请输入题目描述"></el-input>
                 <!--是否为隐私项-->
@@ -330,7 +381,7 @@ let myBlankQuestion = Vue.extend({
                     选中时，显示此题目
                 </div>
                 <!--提交/编辑本题-->
-                <el-button :type="buttonType" @click="changeStatus">{{buttonText}}</el-button>
+                <el-button :type="buttonType" @click="changeStatus" :disabled="disableChangeStatus">{{buttonText}}</el-button>
             </div>
         </el-card>
     `,
@@ -355,9 +406,11 @@ let myBlankQuestion = Vue.extend({
                     this.question.frontOptions = []
                 } else {
                     this.question.frontOptions = [{
-                        question_id: this.selectedQuestion.index - 1,
+                        question_id: this.selectedQuestionId,
                         question_answer: this.selectedOption
                     }];
+                    if (this.multipleFrontOptions)
+                        this.question.frontOptions.push(this.furtherOption)
                 }
 
                 if (!this.enableValidation)
@@ -378,14 +431,29 @@ let myBlankQuestion = Vue.extend({
             return this.disableEdit ? 'warning' : 'primary'
         },
         selectedQuestion: function () {
-            for (let i = 0; i < this.list.length; i++)
-                if (this.list[i].id === this.selectedQuestionId)
+            for (let i = 0; i < this.list.length; i++) {
+                if (this.selectedQuestionId === this.list[i].id)
                     return this.list[i]
+            }
         }
     },
     created: function () {
-        if (this.question.validation !== '') {
-            this.enableValidation = true;
+        if (this.question.submitted) {
+            this.disableEdit = false;
+            this.enableFrontOptions = !!this.question.frontOptions.length;
+            this.multipleFrontOptions = this.question.frontOptions.length > 1;
+            if (this.enableFrontOptions) {
+                this.selectedQuestionId = this.question.frontOptions[0].question_id;
+                this.selectedOption = this.question.frontOptions[0].question_answer;
+            }
+            if (this.multipleFrontOptions) {
+                this.furtherOption = this.question.frontOptions[1];
+                this.disableChangeStatus = true;
+            }
+            this.enableValidation = this.question.validation !== '';
+            this.title = this.question.title;
+            this.isRequired = this.question.isRequired;
+            this.frontOptions = this.question.frontOptions;
             this.validation = this.question.validation;
             this.isPrivate = this.question.isPrivate;
             this.changeStatus();
@@ -488,7 +556,7 @@ let myOrderQuestion = Vue.extend({
                     this.question.frontOptions = []
                 } else {
                     this.question.frontOptions = [{
-                        question_id: this.selectedQuestion.index - 1,
+                        question_id: this.selectedQuestionId,
                         question_answer: this.selectedOption
                     }];
                 }
@@ -516,9 +584,10 @@ let myOrderQuestion = Vue.extend({
             return this.disableEdit ? 'warning' : 'primary'
         },
         selectedQuestion: function () {
-            for (let i = 0; i < this.list.length; i++)
-                if (this.list[i].id === this.selectedQuestionId)
+            for (let i = 0; i < this.list.length; i++) {
+                if (this.selectedQuestionId === this.list[i].id)
                     return this.list[i]
+            }
         }
     }
 })
@@ -561,24 +630,154 @@ let app = new Vue({
             this.survey.questions.push(newQuestion)
             this.questionCount++
         },
-        addDefaultQuestion: function (questionType, arg) {
+        addMobilePhone: function () {
             let newQuestion = {
                 //前端使用
                 id: '#' + this.questionCount,
-                submitted: false,
+                submitted: true,
                 //传至后端
                 title: '手机号',
                 index: this.survey.questions.length + 1,
-                type: questionType,
+                type: 'my-fill-blank',
                 isRequired: true,
                 defaultAns: '',
                 answerList: [],
                 frontOptions: [],
                 skipLogices: [],
-                validation: arg,
+                validation: 'phone',
                 isPrivate: true
             }
             this.survey.questions.push(newQuestion)
+            this.questionCount++
+        },
+        addApplication: function () {
+            let question1 = {
+                //前端使用
+                id: '#' + this.questionCount,
+                submitted: true,
+                //传至后端
+                title: '平行志愿报考北京理工大学顺序',
+                index: this.survey.questions.length + 1,
+                type: 'my-single',
+                isRequired: true,
+                defaultAns: '',
+                answerList: [{index: '选项A', content: 'A志愿'},
+                    {index: '选项B', content: 'B志愿'},
+                    {index: '选项C', content: 'C志愿'},
+                    {index: '选项D', content: '其他'},],
+                frontOptions: [],
+                skipLogices: [],
+                validation: '',
+                isPrivate: false
+            };
+            this.survey.questions.push(question1)
+            this.questionCount++
+
+            let question2 = {
+                //前端使用
+                id: '#' + this.questionCount,
+                submitted: true,
+                //传至后端
+                title: '请填写A志愿学校名称',
+                index: this.survey.questions.length + 1,
+                type: 'my-fill-blank',
+                isRequired: true,
+                defaultAns: '',
+                answerList: [],
+                frontOptions: [{question_id: '#' + (this.questionCount - 1), question_answer: 'B志愿'},
+                    {question_id: '#' + (this.questionCount - 1), question_answer: 'C志愿'}],
+                skipLogices: [],
+                validation: '',
+                isPrivate: false
+            }
+            this.survey.questions.push(question2)
+            this.questionCount++
+
+            let question3 = {
+                //前端使用
+                id: '#' + this.questionCount,
+                submitted: true,
+                //传至后端
+                title: '请填写B志愿学校名称',
+                index: this.survey.questions.length + 1,
+                type: 'my-fill-blank',
+                isRequired: true,
+                defaultAns: '',
+                answerList: [],
+                frontOptions: [{
+                    question_id: '#' + (this.questionCount - 2),
+                    question_answer: 'C志愿'
+                }],
+                skipLogices: [],
+                validation: '',
+                isPrivate: false
+            }
+            this.survey.questions.push(question3)
+            this.questionCount++
+
+            let question4 = {
+                //前端使用
+                id: '#' + this.questionCount,
+                submitted: true,
+                //传至后端
+                title: '请填写报考北京理工大学的院校顺序',
+                index: this.survey.questions.length + 1,
+                type: 'my-single',
+                isRequired: true,
+                defaultAns: '',
+                answerList: [{index: '选项A', content: 'D志愿'},
+                    {index: '选项B', content: 'E志愿'},
+                    {index: '选项C', content: 'F志愿'}],
+                frontOptions: [{
+                    question_id: '#' + (this.questionCount - 3),
+                    question_answer: '其他'
+                }],
+                skipLogices: [],
+                validation: '',
+                isPrivate: false
+            };
+            this.survey.questions.push(question4)
+            this.questionCount++
+        },
+        addSpecialPlan: function () {
+            let single = {
+                //前端使用
+                id: '#' + this.questionCount,
+                submitted: true,
+                //传至后端
+                title: '是否报考其他学校的强基计划或国家专项',
+                index: this.survey.questions.length + 1,
+                type: 'my-single',
+                isRequired: true,
+                defaultAns: '',
+                answerList: [{index: '选项A', content: '是'}, {index: '选项B', content: '否'}],
+                frontOptions: [],
+                skipLogices: [],
+                validation: '',
+                isPrivate: false
+            };
+            this.survey.questions.push(single)
+            this.questionCount++
+            let fillBlank = {
+                //前端使用
+                id: '#' + this.questionCount,
+                submitted: true,
+                //传至后端
+                title: '报考强基计划或国家专项学校名称',
+                index: this.survey.questions.length + 1,
+                type: 'my-fill-blank',
+                isRequired: true,
+                defaultAns: '',
+                answerList: [],
+                frontOptions: [{
+                    question_id: '#' + (this.questionCount - 1),
+                    question_answer: '是'
+                }],
+                skipLogices: [],
+                validation: '',
+                isPrivate: false
+            };
+            this.survey.questions.push(fillBlank)
             this.questionCount++
         },
         deleteQuestionByIndex: function (index) {
