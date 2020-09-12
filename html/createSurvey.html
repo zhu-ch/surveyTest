@@ -10,31 +10,49 @@
 <div id="app" v-cloak>
     <el-container>
         <!--侧边栏，添加基础题型及常用题目-->
-        <el-aside width="25vw">
+        <el-aside style="width: 200px;background-color: unset">
             <!--基础题型-->
-            <el-button type="primary" @click="addBasicQuestion('my-single')">单选</el-button>
-            <el-button type="primary" @click="addBasicQuestion('my-multiple')">多选</el-button>
-            <el-button type="primary" @click="addBasicQuestion('my-fill-blank')">填空</el-button>
-            <el-button type="primary" @click="addBasicQuestion('my-order')">排序</el-button>
+            <div style="width:90px;margin-top:7px;margin-left:10px;float: left;"><el-button style="width: 83px"type="primary"plain  @click="addBasicQuestion('my-single')">单选</el-button></div>
+            <div style="width:90px;margin-top:7px;margin-right:10px;float: right;"><el-button style="width: 83px"type="primary"plain  @click="addBasicQuestion('my-multiple')">多选</el-button></div>
+            <div style="width:90px;margin-top:10px;margin-left:10px;float: left;"><el-button style="width: 83px"type="primary"plain  @click="addBasicQuestion('my-fill-blank')">填空</el-button></div>
+            <div style="width:90px;margin-top:10px;margin-right:10px;float: right;"><el-button style="width: 83px"type="primary"plain  @click="addBasicQuestion('my-order')">排序</el-button></div>
+
+
+
+            <div style="height: 100px;width: 200px;"></div><!--施工用分割符-->
             <el-divider></el-divider>
             <!--常用题目-->
-            <el-button type="success" @click="addMobilePhone()">手机号</el-button>
-            <el-button type="success" @click="addApplication()">志愿情况</el-button>
-            <el-button type="success" @click="addSpecialPlan()">专项计划情况</el-button>
-
+            <div style="width:100px;margin-top:20px;margin-left:17px;"><el-button style="width: 150px"type="success"plain @click="addMobilePhone()">手机号</el-button></div>
+            <div style="width:100px;margin-top:20px;margin-left:17px;"><el-button style="width: 150px"type="success"plain @click="addApplication()">志愿情况</el-button></div>
+            <div style="width:100px;margin-top:20px;margin-left:17px;"><el-button style="width: 150px"type="success"plain @click="addSpecialPlan()">专项计划情况</el-button></div>
         </el-aside>
 
         <!--主界面，预览问卷及具体设置-->
-        <el-main>
-            <el-button type="primary" @click="submitSurvey">提交</el-button><!--todo 建议放在右上角-->
-            <el-input v-model="survey.surveyTitle" placeholder="请填写问卷标题"></el-input>
-            <el-input v-model="survey.description" placeholder="请填写问卷说明" type="textarea"></el-input>
-            <component :is="item.type" v-for="item in survey.questions" :question="item"
-                       :list="survey.questions" v-bind:key="item.id"
-                       v-on:delete-question-by-index="deleteQuestionByIndex"
-                       v-on:submit-this-question="submitQuestionByIndex"
-                       v-on:revert-this-question="revertQuestionByIndex">
-            </component>
+        <el-main style="background-color: whitesmoke;padding: 0">
+            <div style="margin: 4px 0;"></div>
+            <!--使用row-col将提交按钮置右-->
+            <div style="width:910px;margin-left: 62px;">
+
+                <div style="float: right"><el-button style="width: 150px"type="primary"@click="submitSurvey">提交</el-button></div><!--todo 建议放在右上角-->
+            </div>
+            <div style="background-color: white;margin-left: 62px;margin-right: 15px;margin-top:50px;height:100%;overflow:scroll;width: 910px;">
+                <div style="height: 10px;width: 910px;"></div><!--人工增设一块，为了增加上边界距离-->
+                <div style="margin-left: 15px;margin-right: 15px;height: auto">
+                    <div style="width: 700px">
+                        <el-input v-model="survey.surveyTitle" placeholder="请填写问卷标题"></el-input>
+                    </div>
+                    <div style="margin-top: 10px;margin-bottom: 10px">
+                        <el-input v-model="survey.description" placeholder="请填写问卷说明" type="textarea"></el-input>
+                    </div>
+
+                    <component :is="item.type" v-for="item in survey.questions" :question="item"
+                               :list="survey.questions" v-bind:key="item.id"
+                               v-on:delete-question-by-index="deleteQuestionByIndex"
+                               v-on:submit-this-question="submitQuestionByIndex"
+                               v-on:revert-this-question="revertQuestionByIndex">
+                    </component>
+                </div>
+            </div>
         </el-main>
     </el-container>
 </div>

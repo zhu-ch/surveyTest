@@ -35,28 +35,37 @@ let mySingleQuestion = Vue.extend({
             </div>
             <div>
                 <!--todo 调整格式-->
-                <!--题目-->
-                <el-input v-model="title" :disabled="disableEdit" placeholder="请输入题目描述"></el-input>
-                <!--是否为隐私项-->
-                <el-switch v-model="isPrivate" :disabled="disableEdit" 
-                            active-color="#13ce66" inactive-color="#ff4949"></el-switch>
-                <!--是否必填-->
-                <el-switch v-model="isRequired" :disabled="disableEdit" 
-                            active-color="#13ce66" inactive-color="#ff4949"></el-switch>
-                <!--各选项内容-->
-                <el-input v-for="item in answerList" v-model="item.content"
-                            :placeholder="item.index" :disabled="disableEdit"></el-input>
-                <!--添加选项-->
-                <el-button type="primary" icon="el-icon-plus" circle @click="addContent"
-                            :disabled="disableEdit"></el-button>
-                <!--移除最后一个选项-->
-                <el-button type="danger" icon="el-icon-minus" circle @click="deleteContent"
-                            :disabled="disableEdit || answerList.length<=2"></el-button>
-                <!--是否启用跳题逻辑-->
-                <el-switch v-model="enableFrontOptions" :disabled="disableEdit" 
-                            active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+                <div style="margin-bottom: 10px">
+                    <!--题目-->
+                    <el-input v-model="title" :disabled="disableEdit" placeholder="请输入题目描述"></el-input>
+                </div>
+                <div style="margin-bottom: 10px">
+                    <!--各选项内容-->
+                    <el-input v-for="item in answerList" v-model="item.content"
+                                :placeholder="item.index" :disabled="disableEdit"></el-input>
+                </div>
+                <div style="height:50px;width: 100%;margin-bottom: 10px;">
+                    <!--添加选项-->
+                    <el-button type="primary" icon="el-icon-plus" circle @click="addContent"
+                                :disabled="disableEdit"></el-button>
+                    <!--移除最后一个选项-->
+                    <el-button type="danger" icon="el-icon-minus" circle @click="deleteContent"
+                                :disabled="disableEdit || answerList.length<=2"></el-button>
+                    <!--是否为隐私项-->
+                    <el-switch v-model="isPrivate" :disabled="disableEdit" 
+                                active-text="隐私项" inactive-text="非隐私项"style="margin-left:20px;margin-right: 10px"
+                                active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+                    <!--是否必填-->
+                    <el-switch v-model="isRequired" :disabled="disableEdit" 
+                                active-text="必填项" inactive-text="非必填项" style="margin-left:20px;margin-right: 10px"
+                                active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+                    <!--是否启用跳题逻辑-->
+                    <el-switch v-model="enableFrontOptions" :disabled="disableEdit" 
+                    style="margin-left:20px;margin-right: 10px" active-text="启用跳题逻辑" inactive-text="关闭跳题逻辑"
+                                active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+                </div>
                 <!--跳题逻辑设置-->
-                <div v-if="enableFrontOptions">
+                <div v-if="enableFrontOptions" style="width:100%;margin-bottom: 15px;">
                     当<strong>题目</strong>
                     <el-select v-model="selectedQuestionId" :disabled="disableEdit">
                         <el-option v-for="item in list" :key="item.id" :label="item.title" :value="item.id"
@@ -70,8 +79,10 @@ let mySingleQuestion = Vue.extend({
                     </el-select>
                     选中时，显示此题目
                 </div>
-                <!--提交/编辑本题-->
-                <el-button :type="buttonType" @click="changeStatus"  :disabled="disableChangeStatus">{{buttonText}}</el-button>
+                <div style=";margin-top: 15px">
+                    <!--提交/编辑本题-->
+                    <el-button style="width: 100%":type="buttonType" @click="changeStatus"  :disabled="disableChangeStatus">{{buttonText}}</el-button>
+                </div>
             </div>
         </el-card>
     `,
@@ -153,7 +164,8 @@ let mySingleQuestion = Vue.extend({
     }
 })
 
-let myMultipleQuestion = Vue.extend({
+let myMultipleQuestion;
+myMultipleQuestion = Vue.extend({
     props: {
         'question': {
             type: Object
@@ -187,28 +199,37 @@ let myMultipleQuestion = Vue.extend({
             </div>
             <div>
                 <!--todo 调整格式-->
-                <!--题目-->
-                <el-input v-model="title" :disabled="disableEdit" placeholder="请输入题目描述"></el-input>
-                <!--是否为隐私项-->
-                <el-switch v-model="isPrivate" :disabled="disableEdit" 
-                            active-color="#13ce66" inactive-color="#ff4949"></el-switch>
-                <!--是否必填-->
-                <el-switch v-model="isRequired" :disabled="disableEdit" 
-                            active-color="#13ce66" inactive-color="#ff4949"></el-switch>
-                <!--各选项内容-->
-                <el-input v-for="item in answerList" v-model="item.content"
-                            :placeholder="item.index" :disabled="disableEdit"></el-input>
-                <!--添加选项-->
-                <el-button type="primary" icon="el-icon-plus" circle @click="addContent"
-                            :disabled="disableEdit"></el-button>
-                <!--移除最后一个选项-->
-                <el-button type="danger" icon="el-icon-minus" circle @click="deleteContent"
-                            :disabled="disableEdit || answerList.length<=2"></el-button>
-                <!--是否启用跳题逻辑-->
-                <el-switch v-model="enableFrontOptions" :disabled="disableEdit" 
-                            active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+                <div style="margin-bottom: 10px">
+                    <!--题目-->
+                    <el-input v-model="title" :disabled="disableEdit" placeholder="请输入题目描述"></el-input>
+                </div>
+                <div style="margin-bottom: 10px">
+                    <!--各选项内容-->
+                    <el-input v-for="item in answerList" v-model="item.content"
+                                :placeholder="item.index" :disabled="disableEdit"></el-input>
+                </div>
+                <div style="height:50px;width: 100%;margin-bottom: 10px;">
+                    <!--添加选项-->
+                    <el-button type="primary" icon="el-icon-plus" circle @click="addContent"
+                                :disabled="disableEdit"></el-button>
+                    <!--移除最后一个选项-->
+                    <el-button type="danger" icon="el-icon-minus" circle @click="deleteContent"
+                                :disabled="disableEdit || answerList.length<=2"></el-button>
+                    <!--是否为隐私项-->
+                    <el-switch v-model="isPrivate" :disabled="disableEdit" 
+                                active-text="隐私项" inactive-text="非隐私项"style="margin-left:20px;margin-right: 10px"
+                                active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+                    <!--是否必填-->
+                    <el-switch v-model="isRequired" :disabled="disableEdit" 
+                                active-text="必填项" inactive-text="非必填项" style="margin-left:20px;margin-right: 10px"
+                                active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+                    <!--是否启用跳题逻辑-->
+                    <el-switch v-model="enableFrontOptions" :disabled="disableEdit" 
+                                style="margin-left:20px;margin-right: 10px" active-text="启用跳题逻辑" inactive-text="关闭跳题逻辑"
+                                active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+                </div>
                 <!--跳题逻辑设置-->
-                <div v-if="enableFrontOptions">
+                <div v-if="enableFrontOptions" style="width:100%;margin-bottom: 15px;">
                     当<strong>题目</strong>
                     <el-select v-model="selectedQuestionId" :disabled="disableEdit">
                         <el-option v-for="item in list" :key="item.id" :label="item.title" :value="item.id"
@@ -223,7 +244,9 @@ let myMultipleQuestion = Vue.extend({
                     选中时，显示此题目
                 </div>
                 <!--提交/编辑本题-->
-                <el-button :type="buttonType" @click="changeStatus">{{buttonText}}</el-button>
+                <div style=";margin-top: 15px">
+                    <el-button style="width: 100%":type="buttonType" @click="changeStatus">{{buttonText}}</el-button>
+                </div>
             </div>
         </el-card>
     `,
@@ -296,7 +319,7 @@ let myMultipleQuestion = Vue.extend({
             this.changeStatus();
         }
     }
-})
+});
 
 let myBlankQuestion = Vue.extend({
     props: {
@@ -345,28 +368,36 @@ let myBlankQuestion = Vue.extend({
                 <el-alert title="本题目为系统预置，含有复杂逻辑，不支持编辑" type="warning" 
                         show-icon :closable="false" v-if="disableChangeStatus"></el-alert>
                 <!--题目-->
-                <el-input v-model="title" :disabled="disableEdit" placeholder="请输入题目描述"></el-input>
-                <!--是否为隐私项-->
-                <el-switch v-model="isPrivate" :disabled="disableEdit" 
-                            active-color="#13ce66" inactive-color="#ff4949"></el-switch>
-                <!--是否必填-->
-                <el-switch v-model="isRequired" :disabled="disableEdit" 
-                            active-color="#13ce66" inactive-color="#ff4949"></el-switch>
-                <!--是否启用跳题逻辑-->
-                <el-switch v-model="enableFrontOptions" :disabled="disableEdit" 
-                            active-color="#13ce66" inactive-color="#ff4949"></el-switch>
-                <!--是否启用数据验证-->
-                <el-switch v-model="enableValidation" :disabled="disableEdit" 
-                            active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+                <div style="margin-bottom: 10px">
+                    <el-input v-model="title" :disabled="disableEdit" placeholder="请输入题目描述"></el-input>
+                </div>
+                <div style="margin-bottom: 10px;height:35px;width:100%;">
+                    <!--是否为隐私项-->
+                    <el-switch v-model="isPrivate" :disabled="disableEdit" 
+                                active-text="隐私项" inactive-text="非隐私项"style="margin-left:0px;margin-right: 8px"
+                                active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+                    <!--是否必填-->
+                    <el-switch v-model="isRequired" :disabled="disableEdit" 
+                                active-text="必填项" inactive-text="非必填项" style="margin-left:0px;margin-right: 8px"
+                                active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+                    <!--是否启用数据验证-->
+                    <el-switch v-model="enableValidation" :disabled="disableEdit" 
+                                style="margin-left:0px;margin-right: 8px" active-text="启用数据验证" inactive-text="关闭数据验证"
+                                active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+                    <!--是否启用跳题逻辑-->
+                    <el-switch v-model="enableFrontOptions" :disabled="disableEdit" 
+                                style="margin-left:0px;margin-right: 8px" active-text="启用跳题逻辑" inactive-text="关闭跳题逻辑"
+                                active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+                </div>
                 <!--数据验证选项-->
-                <div v-if="enableValidation">
+                <div v-if="enableValidation"style="width:490px;margin-bottom: 15px;">
                     数据验证选项
                     <el-select v-model="validation" :disabled="disableEdit">
                         <el-option v-for="item in validationType" :key="item.type" :label="item.text" :value="item.type"></el-option>
                     </el-select>
                 </div>
                 <!--跳题逻辑设置-->
-                <div v-if="enableFrontOptions">
+                <div v-if="enableFrontOptions"style="width:100%;margin-bottom: 15px;">
                     当<strong>题目</strong>
                     <el-select v-model="selectedQuestionId" :disabled="disableEdit">
                         <el-option v-for="item in list" :key="item.id" :label="item.title" :value="item.id"
@@ -380,8 +411,11 @@ let myBlankQuestion = Vue.extend({
                     </el-select>
                     选中时，显示此题目
                 </div>
-                <!--提交/编辑本题-->
-                <el-button :type="buttonType" @click="changeStatus" :disabled="disableChangeStatus">{{buttonText}}</el-button>
+                
+                <div style=";margin-top:10px">
+                    <!--提交/编辑本题-->
+                    <el-button style="width: 100%":type="buttonType" @click="changeStatus" :disabled="disableChangeStatus">{{buttonText}}</el-button>
+                </div>
             </div>
         </el-card>
     `,
@@ -496,27 +530,36 @@ let myOrderQuestion = Vue.extend({
             <div>
                 <!--todo 调整格式-->
                 <!--题目-->
-                <el-input v-model="title" :disabled="disableEdit" placeholder="请输入题目描述"></el-input>
-                <!--是否为隐私项-->
-                <el-switch v-model="isPrivate" :disabled="disableEdit" 
-                            active-color="#13ce66" inactive-color="#ff4949"></el-switch>
-                <!--是否必填-->
-                <el-switch v-model="isRequired" :disabled="disableEdit" 
-                            active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+                <div style="margin-bottom: 10px">
+                    <el-input v-model="title" :disabled="disableEdit" placeholder="请输入题目描述"></el-input>
+                </div>
                  <!--各选项内容-->
-                <el-input v-for="item in answerList" v-model="item.content"
-                            :placeholder="item.index" :disabled="disableEdit"></el-input>
-                <!--添加选项-->
-                <el-button type="primary" icon="el-icon-plus" circle @click="addContent"
-                            :disabled="disableEdit"></el-button>
-                <!--移除最后一个选项-->
-                <el-button type="danger" icon="el-icon-minus" circle @click="deleteContent"
-                            :disabled="disableEdit || answerList.length<=2"></el-button>
-                <!--是否启用跳题逻辑-->
-                <el-switch v-model="enableFrontOptions" :disabled="disableEdit" 
-                            active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+                <div style="margin-bottom: 10px">
+                    <el-input v-for="item in answerList" v-model="item.content"
+                                :placeholder="item.index" :disabled="disableEdit"></el-input>
+                </div>
+                <div style="height:50px;width: 100%;margin-bottom: 10px;">
+                    <!--添加选项-->
+                    <el-button type="primary" icon="el-icon-plus" circle @click="addContent"
+                                :disabled="disableEdit"></el-button>
+                    <!--移除最后一个选项-->
+                    <el-button type="danger" icon="el-icon-minus" circle @click="deleteContent"
+                                :disabled="disableEdit || answerList.length<=2"></el-button>
+                    <!--是否为隐私项-->
+                    <el-switch v-model="isPrivate" :disabled="disableEdit" 
+                                active-text="隐私项" inactive-text="非隐私项"style="margin-left:20px;margin-right: 10px"
+                                active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+                    <!--是否必填-->
+                    <el-switch v-model="isRequired" :disabled="disableEdit" 
+                                active-text="必填项" inactive-text="非必填项" style="margin-left:20px;margin-right: 10px"
+                                active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+                    <!--是否启用跳题逻辑-->
+                    <el-switch v-model="enableFrontOptions" :disabled="disableEdit" 
+                                style="margin-left:20px;margin-right: 10px" active-text="启用跳题逻辑" inactive-text="关闭跳题逻辑"
+                                active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+                </div>
                 <!--跳题逻辑设置-->
-                <div v-if="enableFrontOptions">
+                <div v-if="enableFrontOptions" style="width:100%;margin-top: 15px;">
                     当<strong>题目</strong>
                     <el-select v-model="selectedQuestionId" :disabled="disableEdit">
                         <el-option v-for="item in list" :key="item.id" :label="item.title" :value="item.id"
@@ -530,8 +573,10 @@ let myOrderQuestion = Vue.extend({
                     </el-select>
                     选中时，显示此题目
                 </div>
-                <!--提交/编辑本题-->
-                <el-button :type="buttonType" @click="changeStatus">{{buttonText}}</el-button>
+                <div style=";margin-top: 15px">
+                    <!--提交/编辑本题-->
+                    <el-button style="width: 100%":type="buttonType" @click="changeStatus">{{buttonText}}</el-button>
+                </div>
             </div>
         </el-card>
     `,

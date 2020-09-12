@@ -7,47 +7,57 @@
     <link rel="stylesheet" href="../utils/templateCSS.css">
     <link rel="stylesheet" href="../css/welcome.css">
 </head>
+<style>
+#div_back_image  {
+    width:90%;
+    height:550px;
+    margin: 0 auto;
+    background-image: url("../images/back_image.jpg") ;
+    background-size: cover;
+}
+</style>
 <body>
-<div id="app" v-cloak>
-    <el-tabs v-model="activeName"
-             @tab-click="handleTabClick"
-             v-loading="fullScreenLoading">
-        <el-tab-pane label="登录" name="login">
-            <el-form>
-                <el-form-item label="用户名" label-width="120px">
-                    <el-input v-model="ruleForm.userName" placeholder="请输入用户名或准考证号"></el-input>
-                </el-form-item>
-                <el-form-item label="密码" label-width="120px">
-                    <el-input v-model="ruleForm.password" show-password></el-input>
-                </el-form-item>
-            </el-form>
-            <div class="button">
-                <el-button type="primary" @click="login">登录</el-button>
-            </div>
-        </el-tab-pane>
+<div id="app" v-cloak style="width:100%;height:100%;background-color: whitesmoke">
+    <div id='div_back_image'>
+            <el-tabs style="float:right"
+                     v-model="activeName"
+                     @tab-click="handleTabClick"
+                     v-loading="fullScreenLoading">
+                <el-tab-pane label="登录" name="login">
+                    <el-form>
+                        <el-form-item label="用户名" label-width="120px">
+                            <el-input v-model="ruleForm.userName" placeholder="请输入用户名或准考证号"></el-input>
+                        </el-form-item>
+                        <el-form-item label="密码" label-width="120px">
+                            <el-input v-model="ruleForm.password" show-password></el-input>
+                        </el-form-item>
+                    </el-form>
+                    <div class="button">
+                        <el-button type="primary" @click="login">登录</el-button>
+                    </div>
+                </el-tab-pane>
 
-        <el-tab-pane label="注册" name="register">
-            <el-form :rules="rules" :model="ruleForm" ref="ruleForm">
-                <el-form-item label="准考证号" label-width="120px" prop="userName">
-                    <el-input v-model="ruleForm.userName"></el-input>
-                </el-form-item>
-                <el-form-item label="电子邮箱" label-width="120px" prop="email">
-                    <el-input v-model="ruleForm.email"></el-input>
-                </el-form-item>
-                <el-form-item label="密码" label-width="120px" prop="password">
-                    <el-input v-model="ruleForm.password" show-password></el-input>
-                </el-form-item>
-                <el-form-item label="确认密码" label-width="120px" prop="confirmPassword">
-                    <el-input v-model="ruleForm.confirmPassword" show-password></el-input>
-                </el-form-item>
-                <el-form-item class="button">
-                    <el-button type="success" @click="register">注册</el-button>
-                </el-form-item>
-            </el-form>
-        </el-tab-pane>
-    </el-tabs>
-
-
+                <el-tab-pane label="注册" name="register">
+                    <el-form :rules="rules" :model="ruleForm" ref="ruleForm">
+                        <el-form-item label="准考证号" label-width="120px" prop="userName">
+                            <el-input v-model="ruleForm.userName"></el-input>
+                        </el-form-item>
+                        <el-form-item label="电子邮箱" label-width="120px" prop="email">
+                            <el-input v-model="ruleForm.email"></el-input>
+                        </el-form-item>
+                        <el-form-item label="密码" label-width="120px" prop="password">
+                            <el-input v-model="ruleForm.password" show-password></el-input>
+                        </el-form-item>
+                        <el-form-item label="确认密码" label-width="120px" prop="confirmPassword">
+                            <el-input v-model="ruleForm.confirmPassword" show-password></el-input>
+                        </el-form-item>
+                        <el-form-item class="button">
+                            <el-button type="success" @click="register">注册</el-button>
+                        </el-form-item>
+                    </el-form>
+                </el-tab-pane>
+            </el-tabs>
+    </div>
 </div>
 </body>
 <script src="../js/welcome.js"></script>
