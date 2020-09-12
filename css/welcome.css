@@ -1,0 +1,26 @@
+html{
+    background-color: #333333;
+}
+.el-tabs{
+    background-color: #FFFFFF;
+    height: auto;
+    width: 30%;
+    border-radius: 10px;
+    position: absolute;
+    left: 35%;
+    top: 20%;
+    padding: 20px 20px 20px 20px;
+}
+.el-tabs__item{
+    width: 15vw;
+    text-align:center;
+}
+.el-input{
+    margin-left: 10%;
+    width: 80%;
+}
+.button{
+    margin-top: 2em;
+    display: flex;
+    justify-content: center;
+}
