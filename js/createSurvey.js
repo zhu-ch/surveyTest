@@ -641,6 +641,7 @@ let app = new Vue({
     el: '#app',
     data: {
         questionCount: 0,
+        groupCount: 0,
         survey: {
             surveyTitle: '',
             description: '',
@@ -659,6 +660,7 @@ let app = new Vue({
             let newQuestion = {
                 //前端使用
                 id: '#' + this.questionCount,
+                groupId: '',
                 submitted: false,
                 //传至后端
                 title: '',
@@ -679,6 +681,7 @@ let app = new Vue({
             let newQuestion = {
                 //前端使用
                 id: '#' + this.questionCount,
+                groupId: '',
                 submitted: true,
                 //传至后端
                 title: '手机号',
@@ -699,6 +702,7 @@ let app = new Vue({
             let question1 = {
                 //前端使用
                 id: '#' + this.questionCount,
+                groupId: '$' + this.groupCount,
                 submitted: true,
                 //传至后端
                 title: '平行志愿报考北京理工大学顺序',
@@ -721,6 +725,7 @@ let app = new Vue({
             let question2 = {
                 //前端使用
                 id: '#' + this.questionCount,
+                groupId: '$' + this.groupCount,
                 submitted: true,
                 //传至后端
                 title: '请填写A志愿学校名称',
@@ -741,6 +746,7 @@ let app = new Vue({
             let question3 = {
                 //前端使用
                 id: '#' + this.questionCount,
+                groupId: '$' + this.groupCount,
                 submitted: true,
                 //传至后端
                 title: '请填写B志愿学校名称',
@@ -763,6 +769,7 @@ let app = new Vue({
             let question4 = {
                 //前端使用
                 id: '#' + this.questionCount,
+                groupId: '$' + this.groupCount,
                 submitted: true,
                 //传至后端
                 title: '请填写报考北京理工大学的院校顺序',
@@ -783,11 +790,13 @@ let app = new Vue({
             };
             this.survey.questions.push(question4)
             this.questionCount++
+            this.groupCount++
         },
         addSpecialPlan: function () {
             let single = {
                 //前端使用
                 id: '#' + this.questionCount,
+                groupId: '$' + this.groupCount,
                 submitted: true,
                 //传至后端
                 title: '是否报考其他学校的强基计划或国家专项',
@@ -806,6 +815,7 @@ let app = new Vue({
             let fillBlank = {
                 //前端使用
                 id: '#' + this.questionCount,
+                groupId: '$' + this.groupCount,
                 submitted: true,
                 //传至后端
                 title: '报考强基计划或国家专项学校名称',
@@ -824,23 +834,40 @@ let app = new Vue({
             };
             this.survey.questions.push(fillBlank)
             this.questionCount++
+            this.groupCount++
         },
         deleteQuestionByIndex: function (index) {
-            console.log(index - 1);
+            console.log('index', index - 1);
             this.$confirm('确认移除此题目', '警告', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
                 //根据index移除题目
+                let flag = this.survey.questions[index - 1].groupId
+                console.log('flag', flag)
                 this.survey.questions.splice(index - 1, 1);
+
+                //移除整套问题
+                if (flag !== '') {
+                    let toRemove = []
+                    let newList = []
+                    for (let i = 0; i < this.survey.questions.length; i++) {
+                        if (this.survey.questions[i].groupId === flag)
+                            toRemove.push(i)
+                    }
+                    console.log(toRemove)
+                    for (let i = 0; i < this.survey.questions.length; i++) {
+                        if (toRemove.indexOf(i) === -1)
+                            newList.push(this.survey.questions[i])
+                    }
+                    this.survey.questions = newList
+                }
 
                 //对剩下的题目重新标号
                 for (let i = 0; i < this.survey.questions.length; i++) {
                     this.survey.questions[i].index = i + 1;
                 }
-
-                console.log(this.survey.questions)
             });
         },
         revertQuestionByIndex: function (question) {

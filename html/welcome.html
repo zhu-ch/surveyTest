@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <title>welcome</title>
@@ -8,20 +8,20 @@
     <link rel="stylesheet" href="../css/welcome.css">
 </head>
 <style>
-.div_back_image  {
-    width:90%;
-    height:550px;
-    margin: 0 auto;
-    background-image: url("../images/back_image.jpg") ;
-    background-size: cover;
-}
+    .div_back_image {
+        width: 90%;
+        height: 550px;
+        margin: 0 auto;
+        background-image: url("../images/back_image.jpg");
+        background-size: cover;
+    }
 </style>
 <body>
-<div id="app" class='div_back_image'v-cloak style="width:100%;height:100%;background-color: whitesmoke">
-     <el-tabs style="float:right"
+<div id="app" style="width:100%;height:100%;background-color: whitesmoke"
+     v-loading="fullScreenLoading" v-cloak class='div_back_image'>
+    <el-tabs style="float:right"
              v-model="activeName"
-             @tab-click="handleTabClick"
-             v-loading="fullScreenLoading">
+             @tab-click="handleTabClick">
         <el-tab-pane label="登录" name="login">
             <el-form>
                 <el-form-item label="用户名" label-width="120px">
