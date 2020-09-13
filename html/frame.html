@@ -3,8 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <title>考生意向志愿采集平台</title>
+    <script src="../plugins/vue/vue.js"></script>
+    <script src="../plugins/jquery/jquery-3.3.1.min.js"></script>
+    <script src="../plugins/elementui/index.js"></script>
+    <link rel="stylesheet" href="../css/frame.css">
+    <link rel="stylesheet" href="../css/template.css">
+
 </head>
 <body>
+<div id="app" v-cloak>
+    <el-container style="height: 100vh" v-loading="fullScreenLoading"  direction="vertical" v-if="showWindow">
+        <el-header height="48px"
+                   style="background: #007cc4;padding-right: 60px;box-shadow: 0 2px 10px 0 rgba(0,0,0,.15);">
+            <span class="title">意向考生大数据分析平台</span>
+            <div style="display: block;">
+                <el-button type="danger" size="small" @click="logout">退出</el-button>
+            </div>
+        </el-header>
+        <el-container style="height: 100%">
+            <el-aside width="230px">
+                <el-menu text-color="#ccc" :default-openeds="default_openeds_array" @select="onSelect">
+                    <el-submenu index="userManagement">
+                        <template slot="title"><i class="el-icon-s-tools"></i>用户管理</template>
+                        <el-menu-item index="1">用户管理1</el-menu-item>
+                        <el-menu-item index="2">用户管理2</el-menu-item>
+                    </el-submenu>
+                    <el-submenu index="surveyManagement">
+                        <template slot="title"><i class="el-icon-s-tools"></i>问卷管理</template>
+                        <el-menu-item index="3">问卷管理2</el-menu-item>
+                        <el-menu-item index="4">问卷管理3</el-menu-item>
+                        <el-menu-item index="5">问卷管理4</el-menu-item>
+                    </el-submenu>
+                    <el-submenu index="infoDevice">
+                        <template slot="title"><i class="el-icon-s-tools"></i>配置管理</template>
+                        <el-menu-item index="6">配置管理1</el-menu-item>
+                        <el-menu-item index="7">配置管理2</el-menu-item>
+                        <el-menu-item index="8">配置管理3</el-menu-item>
+                    </el-submenu>
+                    <el-submenu index="storage">
+                        <template slot="title"><i class="el-icon-s-tools"></i>字典管理</template>
+                        <el-menu-item index="9">字典管理1</el-menu-item>
+                        <el-menu-item index="10">字典管理2</el-menu-item>
+                        <el-menu-item index="11">字典管理3</el-menu-item>
+                    </el-submenu>
+                </el-menu>
+            </el-aside>
 
+            <el-main style="padding: 0px;height: 100%;overflow-y: hidden">
+                <el-tabs v-model="activeTabName" type="card" closable @tab-remove="removeTab"
+                         style="height: 100%">
+                    <el-tab-pane :key="tab.name" v-for="(tab, index) in tabList" :label="tab.title" :name="tab.name"
+                                 style="height: 100%" v-loading="tab.loading">
+                        <iframe style="border: 0px;height: calc(100% - 40px);width: 100%;"
+                                :src="tab.url" :id="tab.name" @load="tab.loading=false"></iframe>
+                    </el-tab-pane>
+                </el-tabs>
+            </el-main>
+        </el-container>
+    </el-container>
+</div>
 </body>
+<script src="../utils/utilJS.js"></script>
+<script src="../js/frame.js"></script>
 </html>

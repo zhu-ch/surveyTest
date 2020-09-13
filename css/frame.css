@@ -1,0 +1,112 @@
+.icon {
+    font-size: 14px;
+    width: 15px;
+}
+
+.title {
+    color: white;
+    font-size: 17px;
+    margin-left: 50px;
+    letter-spacing: 4px;
+    line-height: 48px;
+}
+
+
+/*菜单栏*/
+/* 菜单文字不可被选中 */
+.el-submenu__title, .el-menu-item {
+    -moz-user-select: none; /*火狐*/
+    -webkit-user-select: none; /*webkit浏览器*/
+    -ms-user-select: none; /*IE10*/
+    -khtml-user-select: none; /*早期浏览器*/
+    user-select: none;
+}
+
+/*隐藏滚动条，仅webkit*/
+.el-aside::-webkit-scrollbar {
+    display: none;
+}
+
+.el-aside {
+    height: 100%;
+    background: #272B2E;
+}
+
+.el-submenu {
+    background: #272B2E;
+}
+
+.el-submenu__title:hover > i {
+    color: #FFFFFF !important;
+}
+
+.el-menu-item {
+    background-color: #000000 !important;
+}
+
+.el-menu-item:hover {
+    color: #FFFFFF !important;
+    background: rgb(54, 62, 79) !important;
+}
+
+.el-menu-item.is-active {
+    color: #fff !important;
+    background: rgb(54, 62, 79) !important;
+}
+
+.el-submenu__title:focus, .el-submenu__title:hover {
+    outline: 0 !important;
+    color: #FFFFFF !important;
+    background: none !important;
+}
+
+/*标签栏*/
+.el-tabs__header {
+    margin: 0px;
+}
+
+.el-tabs__content {
+    height: 100%;
+}
+
+/* tab的下横线 */
+.el-tabs--card > .el-tabs__header {
+    background: #DEE1E6;
+}
+
+.el-tabs--card > .el-tabs__header .el-tabs__item {
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+}
+
+.el-tabs__item, .el-tabs--card > .el-tabs__header .el-tabs__item:hover {
+    /*color: gray;*/
+    padding: 0 17px 0 20px !important;
+}
+
+.el-tabs--card > .el-tabs__header .el-tabs__item.is-active {
+    border-bottom: 3px solid #70b6ff;
+}
+
+.el-tabs--card > .el-tabs__header .el-tabs__item:first-child .el-icon-close {
+    display: none;
+}
+
+.el-tabs--card > .el-tabs__header .el-tabs__item:hover {
+    border-bottom: 3px solid #70b6ff;
+}
+
+.el-tabs--card > .el-tabs__header .el-tabs__nav {
+    border: 0px;
+}
+
+/* 顶栏左右分列 */
+.el-header{
+    display: flex;
+    justify-content: space-between;
+}
+
+.el-button--small, .el-button--small.is-round{
+    margin-top: 8px;
+    margin-right: 30px;
+}
