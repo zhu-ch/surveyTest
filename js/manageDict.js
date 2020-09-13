@@ -68,6 +68,12 @@ let app = new Vue({
                 app.table.entity.loading = false;
                 app.table.entity.data = d.data.resultList;
                 app.table.entity.params.total = d.data.total;
+            },function () {
+                app.table.entity.loading = false;
+                app.$message({
+                    message: '未知错误',
+                    type: 'error'
+                });
             });
         },
         insertEntity: function () {
@@ -231,9 +237,10 @@ let app = new Vue({
         let app = this;
         app.user = getSessionStorage('user')
         //todo 权限验证
-        ajaxGet(this.urls.selectDictTypeAllList, null, function (d) {
-            app.options.dictType = d.data;
-            app.refreshTableEntity();
-        })
+        app.selectEntityListByPage()
+        // ajaxGet(this.urls.selectDictTypeAllList, null, function (d) {
+        //     app.options.dictType = d.data;
+        //     app.refreshTableEntity();
+        // })
     }
 })
