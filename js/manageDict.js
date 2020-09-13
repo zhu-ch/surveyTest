@@ -237,10 +237,10 @@ let app = new Vue({
         let app = this;
         app.user = getSessionStorage('user')
         //todo 权限验证
-        app.selectEntityListByPage()
-        // ajaxGet(this.urls.selectDictTypeAllList, null, function (d) {
-        //     app.options.dictType = d.data;
-        //     app.refreshTableEntity();
-        // })
+
+        ajaxGet(this.urls.selectDictTypeAllList, null, function (d) {
+            app.options.dictType = d.data;
+            app.refreshTableEntity();
+        })
     }
 })

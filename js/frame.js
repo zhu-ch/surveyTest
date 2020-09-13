@@ -132,7 +132,7 @@ let app = new Vue({
                     type: 'success'
                 });
                 setTimeout(function () {
-                    window.open("welcom.html", "_self");
+                    window.open("welcome.html", "_self");
                 }, 2000);
             })
         }

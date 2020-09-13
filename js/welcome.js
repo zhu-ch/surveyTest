@@ -6,7 +6,7 @@ let app = new Vue({
             if (value === '') {
                 return callback(new Error('请填写准考证号'));
             } else {
-                ajaxPost(this.urls.isNameUsed, {'userName': value},
+                ajaxPost(this.urls.isNameUsed, {'username': value},
                     function (result) {
                         if (result.data)
                             return callback(new Error('该准考证已注册'));
