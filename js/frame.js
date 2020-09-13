@@ -44,6 +44,7 @@ let app = new Vue({
         fullScreenLoading: false
     },
     created: function () {
+        setSessionStorage('user','aaa')
         this.checkStatus();
     },
     methods: {

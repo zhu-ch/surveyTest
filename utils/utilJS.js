@@ -82,3 +82,11 @@ const getSessionStorage = function (key) {
 var delSessionStorage = function (key) {
     window.sessionStorage.removeItem(key)
 };
+
+/**
+ * 复制对象
+ * @param object
+ */
+function copy(object) {
+    return JSON.parse(JSON.stringify(object));
+}
