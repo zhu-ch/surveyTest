@@ -50,7 +50,7 @@ let mySingleQuestion = Vue.extend({
                                 :disabled="disableEdit"></el-button>
                     <!--移除最后一个选项-->
                     <el-button type="danger" icon="el-icon-minus" circle @click="deleteContent"
-                                :disabled="disableEdit || answerList.length<=2"></el-button>
+                                :disabled="disableEdit || answerList.length<=1"></el-button>
                     <!--是否为隐私项-->
                     <el-switch v-model="isPrivate" :disabled="disableEdit" 
                                 active-text="隐私项" inactive-text="非隐私项"style="margin-left:20px;margin-right: 10px"
@@ -122,7 +122,7 @@ let mySingleQuestion = Vue.extend({
             this.answerList.push({index: '选项' + String.fromCharCode(65 + n), content: ''});
         },
         deleteContent: function () {
-            if (this.answerList.length <= 2)
+            if (this.answerList.length <= 1)
                 return;
             this.answerList.pop();
         }
