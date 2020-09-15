@@ -164,8 +164,7 @@ let mySingleQuestion = Vue.extend({
     }
 })
 
-let myMultipleQuestion;
-myMultipleQuestion = Vue.extend({
+let myMultipleQuestion = Vue.extend({
     props: {
         'question': {
             type: Object

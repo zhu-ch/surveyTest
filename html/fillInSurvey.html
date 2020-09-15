@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../utils/templateJS.js"></script>
+    <link rel="stylesheet" href="../css/fillInSurvey.css">
+</head>
+<body>
+<div id="app" v-cloak>
+    <el-container >
+        <!--主界面，预览问卷及具体设置-->
+        <el-main style="background-color: whitesmoke;padding: 0">
+            <div style="margin: 4px 0;"></div>
+            <!--使用row-col将提交按钮置右-->
+            <div style="width:910px;margin:0 auto;text-align:right;">
+
+<!--                <div ><el-button style="width: 150px"type="primary"@click="submitSurvey">提交</el-button></div>&lt;!&ndash;todo 建议放在右上角&ndash;&gt;-->
+            </div>
+            <div style="margin: 10px 0;"></div>
+            <div style="background-color: white;margin:0 auto;height:100%;overflow:scroll;width: 910px;">
+                <div style="height: 10px;width: 910px;"></div><!--人工增设一块，为了增加上边界距离-->
+                <div style="margin-left: 15px;margin-right: 15px;height: auto">
+                    <div style="width: 700px">
+                        <span v-text="survey.surveyTitle"></span>
+<!--                        <el-input v-model="survey.surveyTitle" placeholder="请填写问卷标题"></el-input>-->
+                    </div>
+                    <div style="margin-top: 10px;margin-bottom: 10px">
+                        <span v-text="survey.description"></span>
+<!--                        <el-input v-model="survey.description" placeholder="请填写问卷说明" type="textarea"></el-input>-->
+                    </div>
+
+                    <component :is="item.type" v-for="item in survey.questions" :question="item"
+                               :list="survey.questions" v-bind:key="item.id"
+                               >
+<!--                        v-on:delete-question-by-index="deleteQuestionByIndex"-->
+<!--                        v-on:submit-this-question="submitQuestionByIndex"-->
+<!--                        v-on:revert-this-question="revertQuestionByIndex"-->
+                    </component>
+                </div>
+            </div>
+        </el-main>
+    </el-container>
+</div>
+<script src="../js/fillInSurvey.js"></script>
+</body>
+</html>
