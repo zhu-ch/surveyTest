@@ -23,7 +23,7 @@ let mySingleQuestion = Vue.extend({
                 <span v-text="question.title"></span>
             </div>
             <div class="clearfix">
-                <el-radio-group v-model="question.selectedLists">
+                <el-radio-group v-model="question.selectedList[0]">
                     <el-radio v-for="item in answerList" :key="item.index" :label="item.index">{{item.content}}</el-radio>
                 </el-radio-group>  
             </div>
@@ -33,7 +33,25 @@ let mySingleQuestion = Vue.extend({
         this.title = this.question.title;
         this.isRequired = this.question.isRequired;
         this.answerList = this.question.answerList;
+        if(!this.isRequired){
+            this.question.checked = true;
+        }
     },
+    computed:{
+        selectedList(){
+            return this.question.selectedList;
+        }
+    },
+    watch: {
+        selectedList(val,oldval) {
+            console.log(val,oldval);
+            if(this.isRequired){
+                this.question.checked = true;
+            }
+        },
+        deep:true
+    }
+
 })
 
 let myMultipleQuestion = Vue.extend({
@@ -61,7 +79,7 @@ let myMultipleQuestion = Vue.extend({
                 <span v-text="question.title"></span> 
             </div>
             <div class="clearfix">
-                <el-checkbox-group v-model="question.selectedLists">
+                <el-checkbox-group v-model="question.selectedList">
                     <el-checkbox v-for="item in answerList" :key="item.index" :label="item.index">{{item.content}}</el-checkbox>
                 </el-checkbox-group>  
             </div>
@@ -71,6 +89,27 @@ let myMultipleQuestion = Vue.extend({
         this.title = this.question.title;
         this.isRequired = this.question.isRequired;
         this.answerList = this.question.answerList;
+        if(!this.isRequired){
+            this.question.checked = true;
+        }
+    },
+    computed:{
+        selectedList(){
+            return this.question.selectedList;
+        }
+    },
+    watch: {
+        selectedList(val,oldval) {
+            console.log(val,oldval);
+            if(val.length != 0){
+                this.question.checked = true;
+            }
+            else{
+                this.question.checked = false;
+                //todo 提示信息
+            }
+        },
+        deep:true
     }
 })
 
@@ -89,6 +128,8 @@ let myBlankQuestion = Vue.extend({
             // 题目属性
             title: "",
             isRequired: false,
+            validationCheck:false,
+            validationMessage:'',
             validationType: [
                 {type: 'phone', text: '手机号'},
                 {type: 'integer', text: '整数'},
@@ -101,6 +142,7 @@ let myBlankQuestion = Vue.extend({
             <div slot="header" class="clearfix">
                 <span v-if="question.isRequired" style="color: red">*</span>
                 <span v-text="question.title"></span>
+                <span v-if="validationCheck" style="color: red">{{validationMessage}}</span>
             </div>
             <div class="clearfix">
                 <el-input v-model="question.blankQuestionAns" :placeholder="question.defaultAns"></el-input>   
@@ -110,6 +152,77 @@ let myBlankQuestion = Vue.extend({
     created: function () {
         this.title = this.question.title;
         this.isRequired = this.question.isRequired;
+        if(this.question.validation == ''){
+            this.validationCheck = false;
+        }
+        else {
+            this.validationCheck = true;
+        }
+        this.validationMessage = '';
+        if(!this.isRequired){
+            this.question.checked  = true;
+        }
+    },
+    computed:{
+        blankQuestionAns(){
+            return this.question.blankQuestionAns;
+        }
+    },
+    watch: {
+        blankQuestionAns(val,oldval) {
+            console.log(val,oldval);
+            if(val.length != 0){
+                if(this.question.validation == ''){
+                    this.question.checked = true;
+                }
+                else if(this.question.validation == 'phone'){
+                    if(!(/^1[3456789]\d{9}$/.test(val))){
+                        this.question.checked = false;
+                        this.validationMessage = '手机号格式错误'
+                    }
+                    else{
+                        this.question.checked = true;
+                        this.validationMessage = ''
+                    }
+                }
+                else if(this.question.validation == 'integer'){
+                    if(!(/^-?[1-9]\d*$/.test(val))){
+                        this.question.checked = false;
+                        this.validationMessage = '整数格式错误'
+                    }
+                    else{
+                        this.question.checked = true;
+                        this.validationMessage = ''
+                    }
+                }
+                else if(this.question.validation == 'rank'){
+                    //todo 排名正则表达式
+                    // if(!(/^1[3456789]\d{9}$/.test(val))){
+                    //     this.question.checked = false;
+                    //     this.validationMessage = '排名格式错误'
+                    // }
+                    // else{
+                    //     this.question.checked = true;
+                    //     this.validationMessage = ''
+                    // }
+                }
+                else if(this.question.validation == 'grade'){
+                    //todo 成绩正则表达式
+                    // if(!(/^1[3456789]\d{9}$/.test(val))){
+                    //     this.question.checked = false;
+                    //     this.validationMessage = '成绩格式错误'
+                    // }
+                    // else{
+                    //     this.question.checked = true;
+                    //     this.validationMessage = ''
+                    // }
+                }
+            }
+            else{
+                this.question.checked = false;
+                //todo 提示信息
+            }
+        }
     }
 })
 
@@ -166,6 +279,9 @@ let myOrderQuestion = Vue.extend({
         // {index: '选项A', content: 'A'}, {index: '选项B', content: 'B'}, {index: '选项C', content: 'C'}
         this.rightArea = this.question.answerList;
         this.answerNum = this.question.answerList.length;
+        if(!this.isRequired){
+            this.question.checked  = true;
+        }
     },
     methods:{
         clickLeft: function (ansIndex){
@@ -188,6 +304,21 @@ let myOrderQuestion = Vue.extend({
                 }
             }
         }
+    },
+    watch: {
+        leftArea:{
+            handler(val,oldval){
+                console.log(val,oldval);
+                if(val.length == this.answerNum){
+                    this.question.checked = true;
+                }
+                else{
+                    this.question.checked = false;
+                    //todo 提示信息
+                }
+            },
+            deep:true
+        }
     }
 })
 
@@ -199,7 +330,12 @@ let app = new Vue({
         survey: {
             surveyTitle: '',
             description: '',
-            questions: [{
+            questions: [
+                {
+                    //前端
+                    checked:false,
+                    //后端
+                    id: '#1',
                     title: '单选',
                     index: 1,
                     type: "my-single",
@@ -210,38 +346,50 @@ let app = new Vue({
                     skipLogices: [],
                     validation: '',
                     isPrivate: false,
-                    selectedLists: [],
+                    selectedList: [],
                     blankQuestionAns:""
                 },
                 {
+                    //前端
+                    checked:false,
+                    //后端
+                    id: '#3',
                     title: '多选',
                     index: 2,
                     type: "my-multiple",
                     isRequired: true,
                     defaultAns: '',
                     answerList: [{index: '选项A', content: 'A'}, {index: '选项B', content: 'B'}],
-                    frontOptions: [],
+                    frontOptions: [{question_id:'#1',question_answer:'选项A'}],
                     skipLogices: [],
                     validation: '',
                     isPrivate: false,
-                    selectedLists: [],
+                    selectedList: [],
                     blankQuestionAns:""
                 },
                 {
+                    //前端
+                    checked:false,
+                    //后端
+                    id: '#5',
                     title: '填空',
                     index: 3,
                     type: "my-fill-blank",
                     isRequired: true,
                     defaultAns: '默认答案',
                     answerList: [],
-                    frontOptions: [],
+                    frontOptions: [{question_id:'#3',question_answer:'选项A'},{question_id:'#3',question_answer:'选项B'}],
                     skipLogices: [],
-                    validation: '',
+                    validation: 'phone',
                     isPrivate: false,
-                    selectedLists: [],
+                    selectedList: [],
                     blankQuestionAns:""
                 },
                 {
+                    //前端
+                    checked:false,
+                    //后端
+                    id: '#7',
                     title: '排序',
                     index: 4,
                     type: "my-order",
@@ -252,7 +400,7 @@ let app = new Vue({
                     skipLogices: [],
                     validation: '',
                     isPrivate: false,
-                    selectedLists: [],
+                    selectedList: [],
                     blankQuestionAns:""
                 }]
         }
@@ -270,12 +418,41 @@ let app = new Vue({
         // todo 权限检查
         // todo 从后端获取问卷
 
+    },
+    methods:{
+        clickSubmit: function () {
+            console.log("clickSubmit")
+            for(var i in this.survey.questions){
+                if(!this.survey.questions[i].checked){
+                    this.$message.error('您还有未填写完成的题目');
+                    return;
+                }
+            }
+            //todo 上传数据
+        },
+        checkFrontOptions:function (question) {
+            console.log("question:",question.id)
+            for(var i in question.frontOptions){
+                for(var j in this.survey.questions){
+
+                    if(question.frontOptions[i].question_id == this.survey.questions[j].id){
+                        console.log(question.frontOptions[i].question_id,this.survey.questions[j].id)
+                        var hasAns = false
+                        for(var k in this.survey.questions[j].selectedList){
+                            console.log(this.survey.questions[j].selectedList[k],question.frontOptions[i].question_answer)
+                            if(this.survey.questions[j].selectedList[k] == question.frontOptions[i].question_answer) {
+                                hasAns = true;
+                                break;
+                            }
+                        }
+                        if(!hasAns){
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
     }
 })
-
-// todo 填空数据类型校验
-// todo 必填校验
-// todo 数据获取
-// todo 数据上传
-// todo 跳题逻辑（多条件下）
 
