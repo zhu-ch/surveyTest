@@ -75,7 +75,7 @@ let mySingleQuestion = Vue.extend({
                     的<strong>选项</strong>
                     <el-select v-model="selectedOption" :disabled="disableEdit" v-if="selectedQuestionId != ''">
                         <el-option v-for="item in selectedQuestion.answerList" :key="item.index" 
-                                    :label="item.content" :value="item.content"></el-option>
+                                    :label="item.content" :value="item.index"></el-option>
                     </el-select>
                     选中时，显示此题目
                 </div>
@@ -238,7 +238,7 @@ let myMultipleQuestion = Vue.extend({
                     的<strong>选项</strong>
                     <el-select v-model="selectedOption" :disabled="disableEdit" v-if="selectedQuestionId != ''">
                         <el-option v-for="item in selectedQuestion.answerList" :key="item.index" 
-                                    :label="item.content" :value="item.content"></el-option>
+                                    :label="item.content" :value="item.index"></el-option>
                     </el-select>
                     选中时，显示此题目
                 </div>
@@ -406,7 +406,7 @@ let myBlankQuestion = Vue.extend({
                     的<strong>选项</strong>
                     <el-select v-model="selectedOption" :disabled="disableEdit" v-if="selectedQuestionId != ''">
                         <el-option v-for="item in selectedQuestion.answerList" :key="item.index" 
-                                    :label="item.content" :value="item.content"></el-option>
+                                    :label="item.content" :value="item.index"></el-option>
                     </el-select>
                     选中时，显示此题目
                 </div>
@@ -568,7 +568,7 @@ let myOrderQuestion = Vue.extend({
                     的<strong>选项</strong>
                     <el-select v-model="selectedOption" :disabled="disableEdit" v-if="selectedQuestionId != ''">
                         <el-option v-for="item in selectedQuestion.answerList" :key="item.index" 
-                                    :label="item.content" :value="item.content"></el-option>
+                                    :label="item.content" :value="item.index"></el-option>
                     </el-select>
                     选中时，显示此题目
                 </div>
@@ -733,8 +733,8 @@ let app = new Vue({
                 isRequired: true,
                 defaultAns: '',
                 answerList: [],
-                frontOptions: [{question_id: '#' + (this.questionCount - 1), question_answer: 'B志愿'},
-                    {question_id: '#' + (this.questionCount - 1), question_answer: 'C志愿'}],
+                frontOptions: [{question_id: '#' + (this.questionCount - 1), question_answer: '选项B'},
+                    {question_id: '#' + (this.questionCount - 1), question_answer: '选项C'}],
                 skipLogices: [],
                 validation: '',
                 isPrivate: false
@@ -756,7 +756,7 @@ let app = new Vue({
                 answerList: [],
                 frontOptions: [{
                     question_id: '#' + (this.questionCount - 2),
-                    question_answer: 'C志愿'
+                    question_answer: '选项C'
                 }],
                 skipLogices: [],
                 validation: '',
@@ -781,7 +781,7 @@ let app = new Vue({
                     {index: '选项C', content: 'F志愿'}],
                 frontOptions: [{
                     question_id: '#' + (this.questionCount - 3),
-                    question_answer: '其他'
+                    question_answer: '选项D'
                 }],
                 skipLogices: [],
                 validation: '',
@@ -825,7 +825,7 @@ let app = new Vue({
                 answerList: [],
                 frontOptions: [{
                     question_id: '#' + (this.questionCount - 1),
-                    question_answer: '是'
+                    question_answer: '选项A'
                 }],
                 skipLogices: [],
                 validation: '',
