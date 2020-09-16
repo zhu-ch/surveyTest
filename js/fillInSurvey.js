@@ -260,7 +260,7 @@ let myOrderQuestion = Vue.extend({
             <div class="clearfix">
                 <el-container> 
                     <el-main class="num">
-                        <span v-for=" i in this.answerNum">{{i}}</span>
+                        <span v-for=" i in this.answerNum" style="height: 40px;margin-bottom: 10px">{{i}}</span>
                     </el-main>           
                     <el-main stytle="display:grid !important; flex: 10;" class = "row">
                         <el-button plain v-for="item in leftArea" @click="clickLeft(item.index)">{{item.content}}</el-button> 
