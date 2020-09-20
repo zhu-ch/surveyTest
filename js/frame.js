@@ -7,21 +7,14 @@
 let urls = [
     ['null','null'],
     ['null','null'],
-    ['数据导入管理', 'management/ExcelManage.html'],
-    ['涉密计算机', 'computer/confidentialComputer.html'],
-    ['非涉密中间机', 'computer/nonConfidentialIntermediary.html'],
-    ['非涉密计算机', 'computer/nonConfidentialComputer.html'],
-    ['报废计算机', 'computer/scrappedComputer.html'],
-    ['涉密信息设备', 'informationDevice/confidentialInfoDevice.html'],
-    ['非涉密信息设备', 'informationDevice/nonConfidentialInfoDevice.html'],
-    ['报废信息设备', 'informationDevice/scrappedInfoDevice.html'],
-    ['涉密存储介质', 'storage/confidentialStorage.html'],
-    ['非涉密存储介质', 'storage/nonConfidentialStorage.html'],
-    ['报废涉密存储介质', 'storage/scrappedStorage.html'],
-    ['安全保密产品', 'securityProduct/securityProducts.html'],
-    ['报废安全保密产品', 'securityProduct/scrappedSecurityProducts.html'],
-    ['USB Key', 'usb/usb.html'],
-    ['报废USB Key', 'usb/scrappedUSB.html']
+    ['字典管理', '../html/sys'],
+    ['用户管理', 'computer/confidentialComputer.html'],
+    ['配置管理', 'computer/nonConfidentialIntermediary.html'],
+    ['创建问卷', 'computer/nonConfidentialComputer.html'],
+    ['问卷管理', 'computer/scrappedComputer.html'],
+    ['信息维护', 'informationDevice/confidentialInfoDevice.html'],
+    ['问卷列表', 'informationDevice/nonConfidentialInfoDevice.html'],
+    ['历史问卷', 'informationDevice/scrappedInfoDevice.html'],
 ];
 
 let app = new Vue({

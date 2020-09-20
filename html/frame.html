@@ -19,28 +19,25 @@
         <el-container style="height: 100%">
             <el-aside width="230px">
                 <el-menu text-color="#ccc" :default-openeds="default_openeds_array" @select="onSelect">
-                    <el-submenu index="userManagement">
-                        <template slot="title"><i class="el-icon-s-tools"></i>用户管理</template>
-                        <el-menu-item index="1">用户管理1</el-menu-item>
-                        <el-menu-item index="2">用户管理2</el-menu-item>
+                    <el-submenu index="systemManagement">
+                        <template slot="title"><i class="el-icon-s-tools"></i>系统管理</template>
+                        <el-menu-item index="1">字典管理</el-menu-item>
+                        <el-menu-item index="2">用户管理</el-menu-item>
+                        <el-menu-item index="3">配置管理</el-menu-item>
                     </el-submenu>
-                    <el-submenu index="surveyManagement">
-                        <template slot="title"><i class="el-icon-s-tools"></i>问卷管理</template>
-                        <el-menu-item index="3">问卷管理2</el-menu-item>
-                        <el-menu-item index="4">问卷管理3</el-menu-item>
-                        <el-menu-item index="5">问卷管理4</el-menu-item>
+                    <el-submenu index="surveySystem">
+                        <template slot="title"><i class="el-icon-s-tools"></i>问卷系统</template>
+                        <el-menu-item index="4">创建问卷</el-menu-item>
+                        <el-menu-item index="5">问卷管理</el-menu-item>
                     </el-submenu>
-                    <el-submenu index="infoDevice">
-                        <template slot="title"><i class="el-icon-s-tools"></i>配置管理</template>
-                        <el-menu-item index="6">配置管理1</el-menu-item>
-                        <el-menu-item index="7">配置管理2</el-menu-item>
-                        <el-menu-item index="8">配置管理3</el-menu-item>
+                    <el-submenu index="userInfo">
+                        <template slot="title"><i class="el-icon-s-tools"></i>个人信息维护</template>
+                        <el-menu-item index="6">信息维护</el-menu-item>
                     </el-submenu>
-                    <el-submenu index="storage">
-                        <template slot="title"><i class="el-icon-s-tools"></i>字典管理</template>
-                        <el-menu-item index="9">字典管理1</el-menu-item>
-                        <el-menu-item index="10">字典管理2</el-menu-item>
-                        <el-menu-item index="11">字典管理3</el-menu-item>
+                    <el-submenu index="surveyInfo">
+                        <template slot="title"><i class="el-icon-s-tools"></i>问卷信息</template>
+                        <el-menu-item index="7">问卷列表</el-menu-item>
+                        <el-menu-item index="8">历史问卷</el-menu-item>
                     </el-submenu>
                 </el-menu>
             </el-aside>
