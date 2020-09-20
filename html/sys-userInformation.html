@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../css/sys-userInformation.css">
+    <script src="../utils/templateJS.js"></script>
+
+</head>
+<body>
+<div id="app" v-cloak style="background: white;height: 90%;overflow: hidden;" v-loading="fullScreenLoading">
+    <el-container >
+        <el-header></el-header>
+        <el-container>
+            <el-aside style="text-align: center" width="400px" >
+                <h1 style="font-size:xx-large">{{formData.name}}</h1>
+                <el-button  @click="modify()" >{{buttonText}}</el-button>
+                <el-button  v-if="exitButton.visible"   @click="exit()" >退出修改</el-button>
+            </el-aside>
+            <el-main>
+                <el-form label-position="left" label-width="100px" style="padding: 0 100px; height: auto"
+                         :model="formData"
+                         ref="form_insertOrUpdate"
+                          status-icon>
+                    <el-form-item label="工号/准考证号" prop="admissionNumber">
+                        <el-input v-model="formData.admissionNumber"
+                                  :disabled="true"></el-input>
+                    </el-form-item>
+                    <el-form-item label="联系方式" prop="contact">
+                        <el-input v-model="formData.contact"
+                                  :disabled="unmodifiable"></el-input>
+                    </el-form-item>
+                    <el-form-item label="备用联系方式" prop="alternateContact">
+                        <el-input v-model="formData.alternateContact"
+                                  :disabled="unmodifiable"></el-input>
+                    </el-form-item>
+                    <el-form-item label="与考生关系" prop="type">
+                        <el-input v-model="formData.type"
+                                  :disabled="unmodifiable"></el-input>
+                    </el-form-item>
+                    <el-form-item label="考生姓名" prop="studentName">
+                        <el-input v-model="formData.studentName"
+                                  :disabled="unmodifiable"></el-input>
+                    </el-form-item>
+                    <el-form-item label="省份" prop="province">
+                        <el-input v-model="formData.province"
+                                  :disabled="unmodifiable"></el-input>
+                    </el-form-item>
+                    <el-form-item label="城市" prop="city">
+                        <el-input v-model="formData.city"
+                                  :disabled="unmodifiable"></el-input>
+                    </el-form-item>
+                    <el-form-item label="住址" prop="address">
+                        <el-input v-model="formData.address"
+                                  :disabled="unmodifiable"></el-input>
+                    </el-form-item>
+                    <el-form-item label="高中" prop="highSchool">
+                        <el-input v-model="formData.highSchool"
+                                  :disabled="unmodifiable"></el-input>
+                    </el-form-item>
+                    <el-form-item label="意向专业" prop="major">
+                        <el-input v-model="formData.major"
+                                  :disabled="unmodifiable"></el-input>
+                    </el-form-item>
+                    <el-form-item label="成绩分数段" prop="fractionalSegment">
+                        <el-input v-model="formData.fractionalSegment"
+                                  :disabled="unmodifiable"></el-input>
+                    </el-form-item>
+                    <el-form-item label="排名分数段" prop="rankingSection">
+                        <el-input v-model="formData.rankingSection"
+                                  :disabled="unmodifiable"></el-input>
+                    </el-form-item>
+                    <el-form-item label="高考模式" prop="model">
+                        <el-input v-model="formData.model"
+                                  :disabled="unmodifiable"></el-input>
+                    </el-form-item>
+                    <el-form-item label="所学科目" prop="subject">
+                        <el-input v-model="formData.subject"
+                                  :disabled="unmodifiable"></el-input>
+                    </el-form-item>
+                    <el-form-item label="是否为强基计划" prop="qiangjiPlan">
+                        <el-input v-model="formData.qiangjiPlan"
+                                  :disabled="unmodifiable"></el-input>
+                    </el-form-item>
+                    <el-form-item label="是否为提前批" prop="tiqianpi">
+                        <el-input v-model="formData.tiqianpi"
+                                  :disabled="unmodifiable"></el-input>
+                    </el-form-item>
+                    <el-form-item label="高考年份" prop="year">
+                        <el-input v-model="formData.year"
+                                  :disabled="unmodifiable"></el-input>
+                    </el-form-item>
+
+
+
+                </el-form>
+<!--                <el-button type="motify" @click="unmodifiable= 'false' ? 'true' : 'false'">修改信息</el-button>-->
+            </el-main>
+        </el-container>
+    </el-container>
+</div>
+
+</body>
+<script src="../js/sys-userInformation.js"></script>
+</html>

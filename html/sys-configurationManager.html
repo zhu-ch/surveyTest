@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../utils/templateJS.js"></script>
+<!--    <link rel="stylesheet" href="../css/survey-createSurvey.css">-->
+    <link rel="stylesheet" href="../css/sys-configurationManager.css">
+
+</head>
+<body>
+<div id="app" v-cloak style="background: white;height: 100%;overflow: hidden;" v-loading="fullScreenLoading">
+    <!--顶栏-->
+    <div style="padding: 15px 20px 0 15px;">
+        <span class="button-group">
+            <el-button size="small" type="success" @click="dialog.insertEntity.visible=true">
+                <span>添加配置项</span>
+            </el-button>
+            <el-button size="small" type="danger" @click="deleteEntityListByIds(table.entity.selectionList)">
+                <span>批量删除</span>
+            </el-button>
+        </span>
+        <span style="float: right;margin-right: 10px;">
+            <el-select v-model="table.entity.condition.configKey" size="small"
+                       @change="table.entity.params.pageIndex=1;refreshTableEntity()" clearable
+                       filterable placeholder="选择配置类型">
+                <el-option v-for="(item, index) in options.configType" :key="item" :label="item"
+                           :value="item"></el-option>
+            </el-select>
+            <el-input size="small" placeholder="请输入键值搜索相关配置项" suffix-icon="el-icon-search"
+                      style="width: 250px;margin-right: 10px;" v-model="table.entity.params.searchKey"
+                      @keyup.enter.native="table.entity.params.pageIndex=1;refreshTableEntity()">
+            </el-input>
+            <el-button size="small" type="primary" style="position:relative;"
+                       @click="table.entity.params.pageIndex=1;refreshTableEntity()">
+                <span>搜索</span>
+            </el-button>
+        </span>
+    </div>
+
+    <!--表格-->
+    <el-table :data="table.entity.data" height="calc(100% - 116px)" v-loading="table.entity.loading"
+              style="width: 100%;overflow-y: hidden;margin-top: 20px;" class="scroll-bar" @selection-change="onSelectionChange" stripe>
+        <el-table-column type="selection" width="40"></el-table-column>
+        <el-table-column label="配置项键" prop="configKey"></el-table-column>
+        <el-table-column label="配置项值" prop="configValue"></el-table-column>
+<!--        <el-table-column label="父键值" prop="father"></el-table-column>-->
+        <el-table-column label="排序" prop="sort"></el-table-column>
+        <el-table-column label="备注" prop="remark"></el-table-column>
+        <el-table-column label="操作" width="190" header-align="center" align="center">
+            <template slot-scope="scope">
+                <el-button type="warning" size="mini" style="position:relative;bottom: 1px;"
+                           @click="openUpdateDialog(scope.row)">
+                    <span>编辑</span>
+                </el-button>
+                <el-button type="danger" size="mini" style="position:relative;bottom: 1px;margin-left: 6px;"
+                           @click="deleteEntityListByIds([{id: scope.row.id}])">
+                    <span>删除</span>
+                </el-button>
+            </template>
+        </el-table-column>
+        <el-table-column width="50"></el-table-column>
+    </el-table>
+
+    <!--分页-->
+    <el-pagination style="text-align: center;margin: 8px auto;"
+                   @size-change="onPageSizeChange"
+                   @current-change="onPageIndexChange"
+                   :current-page="table.entity.params.pageIndex"
+                   :page-sizes="table.entity.params.pageSizes"
+                   :page-size="table.entity.params.pageSize"
+                   :total="table.entity.params.total"
+                   layout="total, sizes, prev, pager, next, jumper">
+    </el-pagination>
+
+    <!--添加窗口-->
+    <el-dialog title="添加" :visible.sync="dialog.insertEntity.visible"
+               @closed="resetForm('insert')"
+               @open="dialog.insertEntity.formData.typeId=table.entity.condition.typeId">
+        <el-form label-position="left" label-width="140px" style="padding: 0 100px;"
+                 :model="dialog.insertEntity.formData" :rules="dialog.insertEntity.rules"
+                 ref="insert" v-loading="dialog.insertEntity.loading" status-icon>
+            <el-form-item label="配置键" prop="configValue">
+<!--                <el-select v-model="dialog.insertEntity.formData.dicProperty" clearable>-->
+<!--                    <el-option v-for="(item, index) in options.dictType" :key="item" :label="item"-->
+<!--                               :value="item"></el-option>-->
+<!--                </el-select>-->
+                <el-input v-model="dialog.insertEntity.formData.configKey"></el-input>
+            </el-form-item>
+            <el-form-item label="配置值" prop="configValue">
+                <el-input v-model="dialog.insertEntity.formData.configValue"></el-input>
+            </el-form-item>
+            <el-form-item label="排序" prop="sort">
+                <el-input v-model="dialog.insertEntity.formData.sort"></el-input>
+            </el-form-item>
+            <el-form-item label="备注" prop="remark">
+                <el-input v-model="dialog.insertEntity.formData.remark"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button size="medium" @click="dialog.insertEntity.visible=false">取 消</el-button>
+            <el-button size="medium" type="primary" @click="insertEntity()" style="margin-left: 10px;">提 交</el-button>
+        </div>
+    </el-dialog>
+
+    <!-- 编辑窗口-->
+    <el-dialog title="编辑" :visible.sync="dialog.updateEntity.visible" @closed="resetForm('update')">
+        <el-form label-position="left" label-width="140px"
+                 style="padding: 0 100px;height: 350px;overflow-y: scroll;"
+                 :model="dialog.updateEntity.formData" :rules="dialog.updateEntity.rules"
+                 ref="update" v-loading="dialog.updateEntity.loading" status-icon size="medium">
+            <el-form-item label="选择类型" prop="configKey">
+                <el-select v-model="dialog.updateEntity.formData.configKey" clearable>
+                    <el-option v-for="(item, index) in options.configType" :key="item" :label="item"
+                               :value="item"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="键值" prop="configValue">
+                <el-input v-model="dialog.updateEntity.formData.configValue"></el-input>
+            </el-form-item>
+            <el-form-item label="排序" prop="sort">
+                <el-input v-model="dialog.updateEntity.formData.sort"></el-input>
+            </el-form-item>
+            <el-form-item label="备注" prop="remark">
+                <el-input v-model="dialog.updateEntity.formData.remark"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button size="medium" @click="dialog.updateEntity.visible=false">取 消</el-button>
+            <el-button size="medium" type="primary" @click="updateEntity()" style="margin-left: 10px;">提 交
+            </el-button>
+        </div>
+    </el-dialog>
+</div>
+</body>
+<script src="../js/sys-configurationManager.js"></script>
+</html>
