@@ -921,6 +921,7 @@ let app = new Vue({
                 let data = JSON.parse(JSON.stringify(this.survey))
                 data.ownerId = this.auth.userInfo.id
                 data.enable = true
+
                 data.questions.forEach(function (item) {
                     delete item.groupId
                     delete item.submitted
@@ -931,6 +932,13 @@ let app = new Vue({
                             newList.push(i.content)
                         })
                         item.answerList = newList
+                    }
+
+                    if (item.frontOptions.length > 0) {
+                        item.frontOptions.forEach(function (i) {
+                            let index = i.questionAnswer
+                            i.questionAnswer = index.charAt(index.length - 1).charCodeAt() - 'A'.charCodeAt()
+                        })
                     }
 
                     switch (item.type) {
