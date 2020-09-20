@@ -5,25 +5,25 @@ let myComponent = Vue.extend({
         }
     },
     template: `
-        <el-card>
-        <div slot="header">
+        <el-card style="margin:5px">
+        <div slot="header" >
             <span>
                 {{survey.title}}
             </span>
-            <span>
-                ID:{{survey.id}}
-                当前状态:{{survey.enable}}
-                答卷数量:100
+            <span style="float: right">
+                <span style="margin-right: 5px">ID:{{survey.id}} </span>
+                <span style="margin-right: 5px">当前状态:{{survey.enable}}</span>
+                <span style="margin-right: 5px">答卷数量:100</span>
 <!--                todo 答卷数量-->
             </span>
         </div>
         <div>
            <span>
                 <el-button>
-                    <span>全部答卷</span>
+                    <span>答题情况</span>
                 </el-button>
                 <el-button>
-                    <span>星标答卷</span>
+                    <span>问卷预览</span>
                 </el-button>
            </span>
             <span style="float: right">
@@ -95,17 +95,21 @@ let myComponent = Vue.extend({
             })
         }
     },
-    created: {},
-    data: {
-        urls: {
-            enableSurvey: serverUrl + "/api/survey/postSurvey",
-            deleteSurvey: serverUrl + "/api/survey/deleteSurvey"
+    data() {
+        return{
+            urls: {
+                enableSurvey: serverUrl + "/api/survey/postSurvey",
+                deleteSurvey: serverUrl + "/api/survey/deleteSurvey"
+            }
         }
     }
 })
 
 let app = new Vue({
     el: "#app",
+    components: {
+        'my-component': myComponent
+    },
     data: {
         fullScreenLoading: false,
         urls: {
@@ -120,6 +124,7 @@ let app = new Vue({
             params: {
                 pageIndex: 1,
                 pageSize: 10,
+                pageSizes: [5, 10, 20],
                 total: 500,       // 总数
             },
             condition: "",
@@ -151,7 +156,70 @@ let app = new Vue({
              *  private Date startTime;//问卷开始填写时间
              *  private Date endTime;//问卷结束填写时间
              */
-            entities: []
+            entities: [{
+                id: "0001",
+                ownerId: "0001",
+                title: "ssada",
+                description: "sdada",
+                enable: 0,
+                questions: [],
+                startTime: "",
+                endTime: "",
+            },{
+                id: "0002",
+                ownerId: "0002",
+                title: "dasadada",
+                description: "fsafasda",
+                enable: 0,
+                questions: [],
+                startTime: "",
+                endTime: "",
+            },{
+                id: "0003",
+                ownerId: "0002",
+                title: "dasadada",
+                description: "fsafasda",
+                enable: 0,
+                questions: [],
+                startTime: "",
+                endTime: "",
+            },{
+                id: "0004",
+                ownerId: "0002",
+                title: "dasadada",
+                description: "fsafasda",
+                enable: 0,
+                questions: [],
+                startTime: "",
+                endTime: "",
+            },{
+                id: "0005",
+                ownerId: "0002",
+                title: "dasadada",
+                description: "fsafasda",
+                enable: 0,
+                questions: [],
+                startTime: "",
+                endTime: "",
+            },{
+                id: "0006",
+                ownerId: "0002",
+                title: "dasadada",
+                description: "fsafasda",
+                enable: 0,
+                questions: [],
+                startTime: "",
+                endTime: "",
+            },{
+                id: "0007",
+                ownerId: "0002",
+                title: "dasadada",
+                description: "fsafasda",
+                enable: 0,
+                questions: [],
+                startTime: "",
+                endTime: "",
+            },]
         },
         surveyEntity: {
             id: "",
@@ -167,6 +235,10 @@ let app = new Vue({
     methods: {
         onPageIndexChange: function (currentIndex) {
             this.onShowTable.entities = this.totalTable.entities.slice((currentIndex - 1) * this.onShowTable.params.pageSize, (currentIndex * this.onShowTable.params.pageSize))
+        },
+        onPageSizeChange: function(newSize){
+            this.onShowTable.params.pageSize = newSize;
+            this.refresh(this.refreshType.reload)
         },
         refresh: function (type) {
             if (this.onShowTable.condition == "") {
@@ -238,6 +310,7 @@ let app = new Vue({
         },
         reloadRefreshMethod: function () {
             this.onShowTable.params.pageIndex = 1
+            this.onShowTable.entities = this.totalTable.entities.slice((this.onShowTable.params.pageIndex - 1) * this.onShowTable.params.pageSize, (this.onShowTable.params.pageIndex * this.onShowTable.params.pageSize))
         },
         initializeSurveyEntity: function () {
             this.surveyEntity.id = "";
@@ -252,14 +325,12 @@ let app = new Vue({
 
 
     },
-    components: {
-        'myComponent': myComponent
-    },
+
     created: function () {
         let app = this;
         app.user = getSessionStorage('user')
         //todo 权限验证
-
-        this.refresh(this.refreshType.reload)
+        this.reloadRefreshMethod()
+        // this.refresh(this.refreshType.reload)
     }
 })

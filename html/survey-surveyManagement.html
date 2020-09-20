@@ -15,7 +15,7 @@
             <el-select v-model="onShowTable.conditionType" size="small"
                        filterable placeholder="选择查找方式">
                 <el-option v-for="(item, index) in onShowTable.conditionTypes" :key="index" :label="item.value"
-                           :value="item"></el-option>
+                           :value="item.key"></el-option>
             </el-select>
             <el-input size="small" placeholder="请输入对应条件查找对应问卷" suffix-icon="el-icon-search"
                       style="width: 250px;margin-right: 10px;" v-model="onShowTable.condition"
@@ -35,8 +35,8 @@
     </div>
 
 
-    <div>
-        <component :is="myComponent" v-for="item in onShowTable.entities" :survery="item"
+    <div style="height:calc(100% - 116px);margin-top: 50px;padding-left: 15px;padding-right: 15px;overflow: auto;width: 100%">
+        <component is="my-component" v-for="item in onShowTable.entities" :survey="item"
                    v-bind:key="item.id">
         </component>
     </div>
@@ -47,10 +47,12 @@
     <!--分页-->
     <el-pagination style="text-align: center;margin: 8px auto;"
                    @current-change="onPageIndexChange"
+                   @size-change="onPageSizeChange"
                    :current-page="onShowTable.params.pageIndex"
                    :page-size="onShowTable.params.pageSize"
+                   :page-sizes="onShowTable.params.pageSizes"
                    :total="onShowTable.params.total"
-                   layout="total, prev, pager, next, jumper">
+                   layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
 
 
