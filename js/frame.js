@@ -5,8 +5,8 @@
 
 //标签名称、url
 let urls = [
-    ['null','null'],
-    ['null','null'],
+    ['null', 'null'],
+    ['null', 'null'],
     ['字典管理', '../html/sys'],
     ['用户管理', 'computer/confidentialComputer.html'],
     ['配置管理', 'computer/nonConfidentialIntermediary.html'],
@@ -20,8 +20,9 @@ let urls = [
 let app = new Vue({
     el: '#app',
     data: {
+        userInfo: null,
         showWindow: false,
-        default_openeds_array: [
+        default_open_array: [
             'management'
         ],
         tabList: [
@@ -37,13 +38,13 @@ let app = new Vue({
         fullScreenLoading: false
     },
     created: function () {
-        setSessionStorage('user','aaa')
         this.checkStatus();
     },
     methods: {
         //判断登录状态
         checkStatus() {
-            if (getSessionStorage('user') != null) {
+            this.userInfo = JSON.parse(getSessionStorage('user'))
+            if (this.userInfo != null) {
                 this.showWindow = true;
                 return;
             }
@@ -113,7 +114,7 @@ let app = new Vue({
             // document.getElementById(iframeId).contentWindow.location.reload(true);
             document.getElementById(iframeId).contentWindow.location.href = url;
         },
-        logout:function () {
+        logout: function () {
             app.$confirm('确认退出', '警告', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',

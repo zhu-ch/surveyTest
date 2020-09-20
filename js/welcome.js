@@ -77,7 +77,7 @@ let app = new Vue({
                                 message: '登录成功',
                                 type: 'success'
                             });
-                            setSessionStorage('user', result.data)
+                            setSessionStorage('user', JSON.stringify(result.data))
                             setTimeout(function () {
                                 window.open("./frame.html", "_self")
                             }, 2000);
