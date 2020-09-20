@@ -639,10 +639,17 @@ let myOrderQuestion = Vue.extend({
 let app = new Vue({
     el: '#app',
     data: {
+        auth: {
+            userInfo: null,
+            showWindow: false
+        },
+        urls: {
+            post: serverUrl + '/api/survey/insertOrUpdateSurvey',
+        },
         questionCount: 0,
         groupCount: 0,
         survey: {
-            surveyTitle: '',
+            title: '',
             description: '',
             questions: []
         }
@@ -811,20 +818,44 @@ let app = new Vue({
             };
             this.survey.questions.push(single)
             this.questionCount++
+
+            let plan = {
+                //前端使用
+                id: '#' + this.questionCount,
+                groupId: '$' + this.groupCount,
+                submitted: true,
+                //传至后端
+                title: '报考类别',
+                index: this.survey.questions.length + 1,
+                type: 'my-single',
+                isRequired: true,
+                defaultAns: '',
+                answerList: [{index: '选项A', content: '强基计划'}, {index: '选项B', content: '国家专项'}],
+                frontOptions: [{
+                    question_id: '#' + (this.questionCount - 1),
+                    question_answer: '选项A'
+                }],
+                skipLogices: [],
+                validation: '',
+                isPrivate: false
+            };
+            this.survey.questions.push(plan)
+            this.questionCount++
+
             let fillBlank = {
                 //前端使用
                 id: '#' + this.questionCount,
                 groupId: '$' + this.groupCount,
                 submitted: true,
                 //传至后端
-                title: '报考强基计划或国家专项学校名称',
+                title: '报考学校名称',
                 index: this.survey.questions.length + 1,
                 type: 'my-fill-blank',
                 isRequired: true,
                 defaultAns: '',
                 answerList: [],
                 frontOptions: [{
-                    question_id: '#' + (this.questionCount - 1),
+                    question_id: '#' + (this.questionCount - 2),
                     question_answer: '选项A'
                 }],
                 skipLogices: [],
@@ -887,14 +918,56 @@ let app = new Vue({
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                //todo 向后端提交问卷
-                console.log('调用提交API')
+                let data = JSON.parse(JSON.stringify(this.survey))
+                data.ownerId = this.auth.userInfo.id
+                data.enable = true
+                data.questions.forEach(function (item) {
+                    delete item.groupId
+                    delete item.submitted
+
+                    switch (item.type) {
+                        case 'my-single':
+                            item.type = 'SINGLE';
+                            break;
+                        case 'my-multiple':
+                            item.type = 'MULTIPLE';
+                            break;
+                        case 'my-fill-blank':
+                            item.type = 'FILL_BLANK';
+                            break;
+                        case 'my-order':
+                            item.type = 'ORDER';
+                            break;
+                    }
+                })
+                ajaxPostJSON(this.urls.post, data,
+                    function (r) {
+                        if (r.code === 'success')
+                            console.log('success')
+                    }, function () {
+
+                    })
                 //todo 跳转到详情页，待管理员启用
                 console.log('页面跳转')
             });
         }
     },
     created: function () {
-        //todo 根据cookie检查权限
+        this.auth.userInfo = JSON.parse(getSessionStorage('user'))
+        if (this.auth.userInfo == null) {
+            this.$message({
+                message: "请登录",
+                type: 'error'
+            });
+            return
+        }
+        if (this.auth.userInfo.role === 'admin') {
+            this.auth.showWindow = true
+            return
+        }
+        this.$message({
+            message: "您无权访问当前页面",
+            type: 'error'
+        });
     }
 })
