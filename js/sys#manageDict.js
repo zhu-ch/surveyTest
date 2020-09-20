@@ -4,12 +4,12 @@ let app = new Vue({
         user: {},
         urls: {
             // api for entity
-            insertEntity: 'http://localhost:8666/api/sys/dict/insertOrUpdateDict',
-            deleteEntityListByIds: 'http://localhost:8666/api/sys/dict/deleteDictByIds',
-            updateEntity: 'http://localhost:8666/api/sys/dict/insertOrUpdateDict',
-            selectEntityListByPage: 'http://localhost:8666/api/sys/dict/selectDictListByPage',
+            insertEntity: serverUrl + '/api/sys/dict/insertOrUpdateDict',
+            deleteEntityListByIds: serverUrl + '/api/sys/dict/deleteDictByIds',
+            updateEntity: serverUrl + '/api/sys/dict/insertOrUpdateDict',
+            selectEntityListByPage: serverUrl + '/api/sys/dict/selectDictListByPage',
             // api for dictType
-            selectDictTypeAllList: 'http://localhost:8666/api/sys/dict/getDictTypeList'
+            selectDictTypeAllList: serverUrl + '/api/sys/dict/getDictTypeList'
         },
         fullScreenLoading: false,
         table: {
@@ -68,7 +68,7 @@ let app = new Vue({
                 app.table.entity.loading = false;
                 app.table.entity.data = d.data.resultList;
                 app.table.entity.params.total = d.data.total;
-            },function () {
+            }, function () {
                 app.table.entity.loading = false;
                 app.$message({
                     message: '未知错误',

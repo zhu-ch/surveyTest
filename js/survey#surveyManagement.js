@@ -4,7 +4,7 @@ let myComponent = Vue.extend({
             type: Object
         }
     },
-    template:`
+    template: `
         <el-card>
         <div slot="header">
             <span>
@@ -41,8 +41,8 @@ let myComponent = Vue.extend({
     </el-card>
     `,
     methods: {
-        clickEnable : function () {
-            ajaxPostJSON(this.enableSurvey,this.survey,function (d) {
+        clickEnable: function () {
+            ajaxPostJSON(this.enableSurvey, this.survey, function (d) {
                 if (d.code === 'success') {
                     app.$message({
                         message: "操作成功",
@@ -59,18 +59,18 @@ let myComponent = Vue.extend({
                         message: '服务器错误，原因\n' + d.data,
                         type: 'error'
                     });
-            },function (d) {
+            }, function (d) {
                 app.$message({
                     message: '未知错误',
                     type: 'error'
                 });
             })
         },
-        clickStop : function () {
-        //    todo 停止问卷
+        clickStop: function () {
+            //    todo 停止问卷
         },
         clickDelete: function () {
-            ajaxPostJSON(this.deleteSurvey,this.survey,function (d) {
+            ajaxPostJSON(this.deleteSurvey, this.survey, function (d) {
                 if (d.code === 'success') {
                     app.$message({
                         message: "操作成功",
@@ -87,7 +87,7 @@ let myComponent = Vue.extend({
                         message: '服务器错误，原因\n' + d.data,
                         type: 'error'
                     });
-            },function (d) {
+            }, function (d) {
                 app.$message({
                     message: '未知错误',
                     type: 'error'
@@ -95,13 +95,11 @@ let myComponent = Vue.extend({
             })
         }
     },
-    created: {
-        
-    },
-    data:{
-        urls:{
-            enableSurvey: "http://localhost:8666/api/survey/postSurvey",
-            deleteSurvey: "http://localhost:8666/api/survey/deleteSurvey"
+    created: {},
+    data: {
+        urls: {
+            enableSurvey: serverUrl + "/api/survey/postSurvey",
+            deleteSurvey: serverUrl + "/api/survey/deleteSurvey"
         }
     }
 })
@@ -110,39 +108,39 @@ let app = new Vue({
     el: "#app",
     data: {
         fullScreenLoading: false,
-        urls:{
-            querySurveyByConditions: "http://localhost:8666/api/survey/getSurveyByConditions"
+        urls: {
+            querySurveyByConditions: serverUrl + "/api/survey/getSurveyByConditions"
         },
-        refreshType:{
-            reload:"reload",
-            update:"update"
+        refreshType: {
+            reload: "reload",
+            update: "update"
         },
-        onShowTable:{
-            entities:[],
+        onShowTable: {
+            entities: [],
             params: {
                 pageIndex: 1,
                 pageSize: 10,
                 total: 500,       // 总数
             },
             condition: "",
-            conditionType:"id",
-            conditionTypes:[
+            conditionType: "id",
+            conditionTypes: [
                 {
-                    key:"id",
-                    value:"问卷ID",
+                    key: "id",
+                    value: "问卷ID",
                 },
                 {
-                    key:"title",
-                    value:"问卷标题",
+                    key: "title",
+                    value: "问卷标题",
                 },
                 {
-                    key:"description",
-                    value:"问卷描述"
+                    key: "description",
+                    value: "问卷描述"
                 }
             ]
 
         },
-        totalTable:{
+        totalTable: {
             /**
              *  private String id;
              *  private String ownerId;//创建人ID
@@ -153,13 +151,13 @@ let app = new Vue({
              *  private Date startTime;//问卷开始填写时间
              *  private Date endTime;//问卷结束填写时间
              */
-            entities:[]
+            entities: []
         },
-        surveyEntity:{
-            id:"",
-            ownerId:"",
-            title:"",
-            description:"",
+        surveyEntity: {
+            id: "",
+            ownerId: "",
+            title: "",
+            description: "",
             enable: 0,
             questions: [],
             startTime: "",
@@ -168,87 +166,82 @@ let app = new Vue({
     },
     methods: {
         onPageIndexChange: function (currentIndex) {
-            this.onShowTable.entities = this.totalTable.entities.slice((currentIndex-1)*this.onShowTable.params.pageSize,(currentIndex*this.onShowTable.params.pageSize))
+            this.onShowTable.entities = this.totalTable.entities.slice((currentIndex - 1) * this.onShowTable.params.pageSize, (currentIndex * this.onShowTable.params.pageSize))
         },
-        refresh: function(type){
-            if(this.onShowTable.condition == ""){
+        refresh: function (type) {
+            if (this.onShowTable.condition == "") {
                 this.refreshTotalTable();
-            }
-            else {
-                if(this.onShowTable.conditionType == "id"){
+            } else {
+                if (this.onShowTable.conditionType == "id") {
                     this.refreshTotalTableByID(this.onShowTable.condition);
-                }
-                else if(this.onShowTable.conditionType == "title"){
+                } else if (this.onShowTable.conditionType == "title") {
                     this.refreshTotalTableByTitle(this.onShowTable.condition);
-                }
-                else if(this.onShowTable.conditionType == "description"){
+                } else if (this.onShowTable.conditionType == "description") {
                     this.refreshTotalTableByDescription(this.onShowTable.condition);
                 }
             }
-            if(type == "reload"){
+            if (type == "reload") {
                 this.reloadRefreshMethod()
-            }
-            else if(type == "update"){
+            } else if (type == "update") {
                 this.updateRefreshMethod()
-            }
-            else {
+            } else {
                 this.$message("error，参数错误")
             }
         },
         refreshTotalTable: function () {
             this.initializeSurveyEntity();
             let app = this
-            ajaxGet(this.urls.querySurveyByConditions,this.surveyEntity,function (d) {
+            ajaxGet(this.urls.querySurveyByConditions, this.surveyEntity, function (d) {
                 app.totalTable.entities = d.data;
-            },function (d) {
+            }, function (d) {
                 app.$message("服务器错误")
             })
         },
-        refreshTotalTableByID: function(condition){
+        refreshTotalTableByID: function (condition) {
             this.initializeSurveyEntity();
-            this.surveyEntity.id=condition;
+            this.surveyEntity.id = condition;
             let app = this;
-            ajaxGet(this.urls.querySurveyByConditions,this.surveyEntity,function (d) {
+            ajaxGet(this.urls.querySurveyByConditions, this.surveyEntity, function (d) {
                 app.totalTable.entities = d.data;
-            },function (d) {
+            }, function (d) {
                 app.$message("服务器错误")
             })
         },
-        refreshTotalTableByTitle: function(condition){
+        refreshTotalTableByTitle: function (condition) {
             this.initializeSurveyEntity();
-            this.surveyEntity.title=condition;
+            this.surveyEntity.title = condition;
             let app = this;
-            ajaxGet(this.urls.querySurveyByConditions,this.surveyEntity,function (d) {
+            ajaxGet(this.urls.querySurveyByConditions, this.surveyEntity, function (d) {
                 app.totalTable.entities = d.data;
-            },function (d) {
+            }, function (d) {
                 app.$message({
-                    message:"服务器错误",
-                    type:"error"
+                    message: "服务器错误",
+                    type: "error"
                 })
             })
         },
-        refreshTotalTableByDescription: function(condition){
+        refreshTotalTableByDescription: function (condition) {
             this.initializeSurveyEntity();
-            this.surveyEntity.description=condition;
+            this.surveyEntity.description = condition;
             let app = this;
-            ajaxGet(this.urls.querySurveyByConditions,this.surveyEntity,function (d) {
+            ajaxGet(this.urls.querySurveyByConditions, this.surveyEntity, function (d) {
                 app.totalTable.entities = d.data;
-            },function (d) {
+            }, function (d) {
                 app.$message({
-                    message:"服务器错误",
-                    type:"error"
+                    message: "服务器错误",
+                    type: "error"
                 })
             })
         },
-        updateRefreshMethod: function(){
-            this.onShowTable.entities = this.totalTable.entities.slice((this.onShowTable.params.pageIndex-1)*this.onShowTable.params.pageSize,(this.onShowTable.params.pageIndex*this.onShowTable.params.pageSize))
+        updateRefreshMethod: function () {
+            this.onShowTable.entities = this.totalTable.entities.slice((this.onShowTable.params.pageIndex - 1) * this.onShowTable.params.pageSize, (this.onShowTable.params.pageIndex * this.onShowTable.params.pageSize))
         },
-        reloadRefreshMethod: function(){
+        reloadRefreshMethod: function () {
             this.onShowTable.params.pageIndex = 1
         },
         initializeSurveyEntity: function () {
-            this.surveyEntity.id="";
-            this.surveyEntity.ownerId="";
+            this.surveyEntity.id = "";
+            this.surveyEntity.ownerId = "";
             this.surveyEntity.title = "";
             this.surveyEntity.description = "";
             this.surveyEntity.enable = 0;
@@ -258,12 +251,11 @@ let app = new Vue({
         }
 
 
-
     },
-    components:{
+    components: {
         'myComponent': myComponent
     },
-    created:function () {
+    created: function () {
         let app = this;
         app.user = getSessionStorage('user')
         //todo 权限验证

@@ -38,9 +38,9 @@ let app = new Vue({
         };
         return {
             urls: {
-                login: 'http://localhost:8666/api/sys/user/login',
-                register: 'http://localhost:8666/api/sys/user/register',
-                isNameUsed: 'http://localhost:8666/api/sys/user/isNameUsed'
+                login: serverUrl + '/api/sys/user/login',
+                register: serverUrl + '/api/sys/user/register',
+                isNameUsed: serverUrl + '/api/sys/user/isNameUsed'
             },
             activeName: 'login',
             ruleForm: {
@@ -77,7 +77,7 @@ let app = new Vue({
                                 message: '登录成功',
                                 type: 'success'
                             });
-                            setSessionStorage('user',result.data)
+                            setSessionStorage('user', result.data)
                             setTimeout(function () {
                                 window.open("./frame.html", "_self")
                             }, 2000);
