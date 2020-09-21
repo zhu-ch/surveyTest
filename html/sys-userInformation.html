@@ -12,10 +12,16 @@
     <el-container >
         <el-header></el-header>
         <el-container>
-            <el-aside style="text-align: center" width="400px" >
-                <h1 style="font-size:xx-large">{{formData.name}}</h1>
-                <el-button  @click="modify()" >{{buttonText}}</el-button>
-                <el-button  v-if="exitButton.visible"   @click="exit()" >退出修改</el-button>
+            <el-aside style="text-align: center;" width="55vh" >
+                <div style="height: 15vh;margin-top: 20vh;margin-left: 15vh" width="40vh">
+                    <h1 style="font-size:350%">{{formData.name}}</h1>
+                </div>
+                <div style="margin-top: 10vh;margin-left: 15vh" width="40vh">
+                    <el-button style="width: 25vh;font-size:100%"type="primary" @click="modify()" >{{buttonText}}</el-button>
+                </div>
+                <div style="margin-top: 3vh;margin-left: 15vh" width="40vh">
+                    <el-button  style="width: 25vh;font-size:100%" type="danger" v-if="exitButton.visible"   @click="exit()" >退出修改</el-button>
+                </div>
             </el-aside>
             <el-main>
                 <el-form label-position="left" label-width="150px" style="padding: 0 100px; height: auto"
