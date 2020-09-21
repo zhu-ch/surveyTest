@@ -37,6 +37,7 @@ let app = new Vue({
                     dicValue: '',
                     dicProperty: '',
                     sort: 0,
+                    father: '',
                     remark: '',
                     delFlag: 0
                 },

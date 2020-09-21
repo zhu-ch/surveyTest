@@ -57,20 +57,6 @@ function ajaxPostJSON(url, data, successCallback, errorCallback, async = true) {
     })
 }
 
-function ajaxPostJSONAsync(url, data, successCallback, errorCallback, async = true) {
-    $.ajax({
-        type: 'POST',
-        url: url,
-        data: JSON.stringify(data),
-        cache: false,
-        success: successCallback,
-        error: errorCallback,
-        dataType: 'json',
-        contentType: 'application/json;charset=utf-8',
-        async: false
-    })
-}
-
 /**
  * 设置sessionStorage
  * @param key sessionStorage的名称
@@ -106,3 +92,4 @@ function copy(object) {
 }
 
 let serverUrl='http://10.4.20.152:8666'
+// let serverUrl = 'http://wxxyx.m0yuqi.cn:8666'
