@@ -18,7 +18,7 @@
                 <el-button  v-if="exitButton.visible"   @click="exit()" >退出修改</el-button>
             </el-aside>
             <el-main>
-                <el-form label-position="left" label-width="100px" style="padding: 0 100px; height: auto"
+                <el-form label-position="left" label-width="150px" style="padding: 0 100px; height: auto"
                          :model="formData"
                          ref="form_insertOrUpdate"
                           status-icon>
@@ -26,6 +26,11 @@
                         <el-input v-model="formData.admissionNumber"
                                   :disabled="true"></el-input>
                     </el-form-item>
+                    <el-form-item label="本人姓名" prop="name">
+                        <el-input v-model="formData.name"
+                                  :disabled="unmodifiable"></el-input>
+                    </el-form-item>
+
                     <el-form-item label="联系方式" prop="contact">
                         <el-input v-model="formData.contact"
                                   :disabled="unmodifiable"></el-input>
@@ -42,16 +47,25 @@
                         <el-input v-model="formData.studentName"
                                   :disabled="unmodifiable"></el-input>
                     </el-form-item>
+
+                    <el-form-item label="与考生关系" prop="type">
+                        <el-select v-model="formData.type" placeholder="关系" :disabled="unmodifiable">
+                            <el-option
+                                    v-for="type in info.types"
+                                    :value="type"
+                            >
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+
                     <el-form-item label="省份" prop="province">
 <!--                        <el-input v-model="formData.province"-->
 <!--                                  :disabled="unmodifiable"></el-input>-->
                         <el-select v-model="formData.province" placeholder="省份" @change="getHighSchool($event)" :disabled="unmodifiable">
                             <el-option
                                     v-for="province in info.provinces"
-                                    :key="province"
-                                    :label="province"
-                                    :value="province"
 
+                                    :value="province"
                             >
                             </el-option>
                         </el-select>
@@ -68,8 +82,7 @@
                         <el-select v-model="formData.highSchool" placeholder="省份" :disabled="unmodifiable">
                             <el-option
                                     v-for="highSchool in info.highSchools"
-                                    :key="highSchool"
-                                    :label="highSchool"
+
                                     :value="highSchool"
                             >
                             </el-option>
@@ -81,8 +94,7 @@
                         <el-select v-model="formData.major" placeholder="专业" :disabled="unmodifiable">
                             <el-option
                                     v-for="major in info.majors"
-                                    :key="major"
-                                    :label="major"
+
                                     :value="major"
                             >
                             </el-option>
@@ -108,39 +120,39 @@
 <!--                            <el-button slot="reference">hover 激活</el-button>-->
                             <span slot="reference">高考模式</span>
                         </el-popover>
-<!--                        <el-input v-model="formData.model"-->
-<!--                                  :disabled="unmodifiable"></el-input>-->
                         <el-select v-model="formData.model" placeholder="高考模式"  :disabled="unmodifiable">
                             <el-option
                                     v-for="model in info.models"
                                     :key="model"
-                                    :label="model"
+
                                     :value="model"
                             >
                             </el-option>
                         </el-select>
+
+
                     </el-form-item>
                     <el-form-item label="所学科目" prop="subject">
                         <el-input v-model="formData.subject"
                                   :disabled="unmodifiable"></el-input>
                     </el-form-item>
-                    <el-form-item label="是否为强基计划" prop="qiangjiPlan">
-                        <el-input v-model="formData.qiangjiPlan"
-                                  :disabled="unmodifiable"></el-input>
-                    </el-form-item>
-                    <el-form-item label="是否为提前批" prop="tiqianpi">
-                        <el-input v-model="formData.tiqianpi"
-                                  :disabled="unmodifiable"></el-input>
-                    </el-form-item>
+
                     <el-form-item label="高考年份" prop="year">
-                        <el-input v-model="formData.year"
-                                  :disabled="unmodifiable"></el-input>
+
+                        <el-date-picker
+                                v-model="formData.year"
+                                type="year"
+                                format="yyyy"
+                                :disabled="unmodifiable"
+                                placeholder="高考年份">
+                        </el-date-picker>
+
                     </el-form-item>
 
 
 
                 </el-form>
-<!--                <el-button type="motify" @click="unmodifiable= 'false' ? 'true' : 'false'">修改信息</el-button>-->
+
             </el-main>
         </el-container>
     </el-container>
