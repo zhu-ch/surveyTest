@@ -7,12 +7,12 @@
 let urls = [
     ['null', 'null'],
     ['字典管理', 'sys-manageDict.html'],
-    ['用户管理', 'sys-manageUser.html'],
-    ['配置管理', 'sys-manageConfigue.html'],
+    ['用户管理', 'sys-userManager.html'],
+    ['配置管理', 'sys-configurationManager.html'],
     ['创建问卷', 'survey-createSurvey.html'],
     ['问卷管理', 'survey-surveyManagement.html'],
     //学生可看
-    ['信息维护', 'student-info.html'],
+    ['信息维护', 'sys-userInformation.html'],
     ['问卷列表', 'student-surveyList.html'],
     ['历史问卷', 'student-historySurvey.html'],
     //不直接展示

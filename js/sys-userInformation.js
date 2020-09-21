@@ -22,17 +22,25 @@ let app=new Vue({
             subject:'',
             model:''
         },
+        info:{
+            provinces:[],
+            highSchools:[],
+            majors:[],
+            models:[]
+        },
         unmodifiable: true,
         fullScreenLoading:false,
-        currentUserId:"997dbab0ddf8403d8ab0b4e243454222",
+        currentUserId:"5b22a4cd129e470ca7d41d9095b7e5bf",
         loading:false,
         buttonText:'修改信息',
         exitButton:{
             visible:false
         },
+
         urls:{
             getUserInfo: serverUrl + "/api/sys/user/getUserInfo",
-            updateUserInfo : serverUrl + "/api/sys/user/updateUserInfo"
+            updateUserInfo : serverUrl + "/api/sys/user/updateUserInfo",
+            selectDictListByPage:serverUrl + "/api/sys/dict/selectDictListByPage"
         }
     },
     methods:{
@@ -82,6 +90,126 @@ let app=new Vue({
                 console.log(d)
                 app.fullScreenLoading = false;
                 app.formData = d.data[0]
+                app.getHighSchool(app.formData.province)
+            },function (d) {
+                app.fullScreenLoading = false;
+                app.$message.error('获取失败，请重试' + d.message, 'warning');
+
+            })
+        },
+        getProvinces:function (){
+            console.log('getProvince')
+            let app = this
+            let params = {
+                pageIndex: 1,
+                pageSize: 100,
+                pageSizes: [5, 10, 20, 40, 100],
+                searchKey: '',  // 搜索词
+                total: 0,       // 总数
+            }
+            let data = {
+                dicProperty: '省份',
+                page:params
+            }
+
+            app.fullScreenLoading = true;
+            ajaxPostJSON(app.urls.selectDictListByPage, data, function (d) {
+                console.log(d)
+                app.fullScreenLoading = false;
+                let provinceList = []
+                // resultList = d.data(
+                for (i in d.data.resultList){
+                    provinceList[i] = d.data.resultList[i]['dicValue']
+                }
+                app.info.provinces = provinceList
+            },function (d) {
+                app.fullScreenLoading = false;
+                app.$message.error('获取失败，请重试' + d.message, 'warning');
+
+            })
+        },
+        getMajors:function (){
+            console.log('getMajors')
+            let app = this
+            let params = {
+                pageIndex: 1,
+                pageSize: 100,
+                pageSizes: [5, 10, 20, 40, 100],
+                searchKey: '',  // 搜索词
+                total: 0,       // 总数
+            }
+            let data = {
+                dicProperty: '专业',
+                page:params
+            }
+
+            app.fullScreenLoading = true;
+            ajaxPostJSON(app.urls.selectDictListByPage, data, function (d) {
+                console.log(d)
+                app.fullScreenLoading = false;
+                let majorList = []
+                // resultList = d.data(
+                for (i in d.data.resultList){
+                    majorList[i] = d.data.resultList[i]['dicValue']
+                }
+                app.info.majors = majorList
+            },function (d) {
+                app.fullScreenLoading = false;
+                app.$message.error('获取失败，请重试' + d.message, 'warning');
+
+            })
+        },
+        getModels:function (){
+            console.log('getModels')
+            let app = this
+            let params = {
+                pageIndex: 1,
+                pageSize: 100,
+                pageSizes: [5, 10, 20, 40, 100],
+                searchKey: '',  // 搜索词
+                total: 0,       // 总数
+            }
+            let data = {
+                dicProperty: '高考模式',
+                page:params
+            }
+
+            app.fullScreenLoading = true;
+            ajaxPostJSON(app.urls.selectDictListByPage, data, function (d) {
+                console.log(d)
+                app.fullScreenLoading = false;
+                let modelList = []
+                // resultList = d.data(
+                for (i in d.data.resultList){
+                    modelList[i] = d.data.resultList[i]['dicValue']
+                }
+                app.info.models = modelList
+            },function (d) {
+                app.fullScreenLoading = false;
+                app.$message.error('获取失败，请重试' + d.message, 'warning');
+
+            })
+        },
+        getHighSchool:function (province){
+            console.log('getHighSchool')
+
+            let app = this
+            let params = {
+                pageIndex: 1,
+                pageSize: 100,
+                pageSizes: [5, 10, 20, 40, 100],
+                searchKey: '',  // 搜索词
+                total: 0,       // 总数
+            }
+            let data = {
+                father:province,
+                page:params
+            }
+            app.fullScreenLoading = true;
+            ajaxPostJSON(app.urls.selectDictListByPage, data, function (d) {
+                console.log(d)
+                app.fullScreenLoading = false;
+                app.info.highSchools = d.data
             },function (d) {
                 app.fullScreenLoading = false;
                 app.$message.error('获取失败，请重试' + d.message, 'warning');
@@ -109,6 +237,10 @@ let app=new Vue({
         //权限验证
         //页面初始化（数据加载）
         this.getUserInfo()
+        this.getProvinces()
+        this.getMajors()
+        this.getModels()
+
 
     }
 })

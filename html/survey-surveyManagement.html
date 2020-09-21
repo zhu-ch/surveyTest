@@ -22,7 +22,7 @@
                       @keyup.enter.native="onShowTable.params.pageIndex=1;refreshTotalTable">
             </el-input>
             <el-button size="small" type="primary" style="position:relative;"
-                       @click="onShowTable.params.pageIndex=1;refreshTotalTable">
+                       @click="onShowTable.params.pageIndex=1;refresh('reload')">
                 <span>搜索</span>
             </el-button>
         </span>

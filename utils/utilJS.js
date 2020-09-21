@@ -91,4 +91,4 @@ function copy(object) {
     return JSON.parse(JSON.stringify(object));
 }
 
-let serverUrl='http://wxxyx.m0yuqi.cn:8666'
+let serverUrl='http://10.4.20.152:8666'

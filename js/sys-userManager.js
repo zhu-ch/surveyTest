@@ -72,7 +72,8 @@ let app = new Vue({
                 formData: {
                     username: '',
                     password: '',
-                    role: ''
+                    role: '',
+                    email:''
                 },
                 rules: {
                     username: [
@@ -271,7 +272,7 @@ let app = new Vue({
                         app.dialog.insertOrUpdate.loading = false;
                         app.dialog.insertOrUpdate.visible = false;
                         let successMes = app.dialog.insertOrUpdate.status === 'insert' ? '添加成功!' : '编辑成功!';
-                        app.$message.error(successMes, 'success');
+                        app.$message({message:successMes,type: 'success'});
                         app.getUserList(); // 添加完成后刷新页面
                     }, function () {
                         app.dialog.insertOrUpdate.loading = false;
