@@ -5,7 +5,7 @@ let myComponent = Vue.extend({
         }
     },
     template: `
-        <el-card style="margin:5px">
+        <el-card style="margin:5px" v-loading="cardloading">
         <div slot="header" >
             <span>
                 {{survey.title}}
@@ -45,8 +45,10 @@ let myComponent = Vue.extend({
             let app = this
             this.survey.enable = true
             console.log("enable")
+            this.cardloading = true
             ajaxPostJSON(this.urls.enableSurvey, this.survey, function (d) {
                 if (d.code == 'success') {
+                    app.cardloading = false
                     app.$message({
                         message: "操作成功",
                         type: 'success'
@@ -73,8 +75,10 @@ let myComponent = Vue.extend({
             //    todo 停止问卷
             let app = this
             this.survey.enable = false
+            this.cardloading = true
             ajaxPostJSON(this.urls.disableSurvey, this.survey, function (d) {
                 if (d.code == 'success') {
+                    app.cardloading = false
                     app.$message({
                         message: "操作成功",
                         type: 'success'
@@ -99,8 +103,10 @@ let myComponent = Vue.extend({
         },
         clickDelete: function () {
             let app = this
+            this.cardloading = true
             ajaxPostJSON(this.urls.deleteSurvey, this.survey, function (d) {
                 if (d.code == 'success') {
+                    app.cardloading = false
                     app.$message({
                         message: "操作成功",
                         type: 'success'
@@ -138,7 +144,8 @@ let myComponent = Vue.extend({
                 enableSurvey: serverUrl + "/api/survey/enableSurvey",
                 disableSurvey: serverUrl + "/api/survey/enableSurvey",
                 deleteSurvey: serverUrl + "/api/survey/deleteSurvey"
-            }
+            },
+            cardloading:false
         }
     }
 })
@@ -247,6 +254,7 @@ let app = new Vue({
         refreshTotalTable: function (type) {
             this.initializeSurveyEntity();
             let app = this;
+            // this.fullScreenLoading = true
             ajaxPostJSONAsync(this.urls.querySurveyByConditions, this.surveyEntity, function (d) {
                 app.totalTable.entities = d.data;
                 console.log("finish")
@@ -255,12 +263,15 @@ let app = new Vue({
             })
             for(i in app.totalTable.entities){
                 app.AnsEntity.questionId = app.totalTable.entities[i].id;
+
                 ajaxPostJSONAsync(this.urls.getAnswerCountByConditions,this.AnsEntity,function (d) {
+
                     app.totalTable.entities[i].answerNum = d.data
                 },function (d) {
                     app.$message("服务器错误")
                 })
             }
+            // this.fullScreenLoading = false
             if (type == "reload") {
                 app.reloadRefreshMethod()
             } else if (type == "update") {
@@ -273,6 +284,7 @@ let app = new Vue({
             this.initializeSurveyEntity();
             this.surveyEntity.id = condition;
             let app = this;
+            // this.fullScreenLoading = true
             ajaxPostJSONAsync(this.urls.querySurveyByConditions, this.surveyEntity, function (d) {
                 app.totalTable.entities = d.data;
                 if (type == "reload") {
@@ -295,6 +307,7 @@ let app = new Vue({
                     app.$message("服务器错误")
                 })
             }
+            // this.fullScreenLoading = false
             if (type == "reload") {
                 app.reloadRefreshMethod()
             } else if (type == "update") {
@@ -307,7 +320,8 @@ let app = new Vue({
             this.initializeSurveyEntity();
             this.surveyEntity.title = condition;
             let app = this;
-            ajaxPostJSON(this.urls.querySurveyByConditions, this.surveyEntity, function (d) {
+            // this.fullScreenLoading = true
+            ajaxPostJSONAsync(this.urls.querySurveyByConditions, this.surveyEntity, function (d) {
                 app.totalTable.entities = d.data;
                 if (type == "reload") {
                     app.reloadRefreshMethod()
@@ -331,6 +345,7 @@ let app = new Vue({
                     app.$message("服务器错误")
                 })
             }
+            // this.fullScreenLoading = false
             if (type == "reload") {
                 app.reloadRefreshMethod()
             } else if (type == "update") {
@@ -343,7 +358,9 @@ let app = new Vue({
             this.initializeSurveyEntity();
             this.surveyEntity.description = condition;
             let app = this;
-            ajaxPostJSON(this.urls.querySurveyByConditions, this.surveyEntity, function (d) {
+            // this.fullScreenLoading = true
+            ajaxPostJSONAsync(this.urls.querySurveyByConditions, this.surveyEntity, function (d) {
+                // this.fullScreenLoading = false
                 app.totalTable.entities = d.data;
                 if (type == "reload") {
                     app.reloadRefreshMethod()
@@ -359,6 +376,22 @@ let app = new Vue({
                     type: "error"
                 })
             })
+            for(i in app.totalTable.entities){
+                app.AnsEntity.questionId = app.totalTable.entities[i].id;
+                ajaxPostJSONAsync(this.urls.getAnswerCountByConditions,this.AnsEntity,function (d) {
+                    app.totalTable.entities[i].answerNum = d.data
+                },function (d) {
+                    app.$message("服务器错误")
+                })
+            }
+            // this.fullScreenLoading = false
+            if (type == "reload") {
+                app.reloadRefreshMethod()
+            } else if (type == "update") {
+                app.updateRefreshMethod()
+            } else {
+                app.$message("error，参数错误")
+            }
         },
         updateRefreshMethod: function () {
             console.log(this.totalTable.entities)
