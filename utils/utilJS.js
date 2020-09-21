@@ -5,7 +5,7 @@
  * @param successCallback 成功回调函数（可选）
  * @param errorCallBack 失败回调函数（可选）
  */
-function ajaxGet(url, data, successCallback, errorCallback) {
+function ajaxGet(url, data, successCallback, errorCallback,async = true) {
     $.ajax({
         type: 'GET',
         url: url,
