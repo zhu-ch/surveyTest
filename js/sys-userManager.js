@@ -13,7 +13,9 @@ let app = new Vue({
             updateUserRole: serverUrl + '/api/sys/map/userRole/update',
             initUser: serverUrl + '/api/sys/user/initUser',
             getSchoolList: serverUrl + '/api/sys/user/getSchoolList',
-            getMajorList: serverUrl + '/api/sys/user/getMajorList'
+            getMajorList: serverUrl + '/api/sys/user/getMajorList',
+            selectDictListByPage:serverUrl + "/api/sys/dict/selectDictListByPage",
+            updateUserInfo : serverUrl + "/api/sys/user/updateUserInfo",
         },
         fullScreenLoading: false,
         table: {
@@ -39,22 +41,29 @@ let app = new Vue({
                 role: ''
             }
         },
+        info:{
+            provinces:[],
+            highSchools:[],
+            majors:[],
+            models:[],
+            types:[]
+        },
         draw:{
             data:{
                 name:'',
-                admission_number:'',
+                admissionNumber:'',
                 contact:'',
-                alternate_contact:'',
+                alternateContact:'',
                 type:'',
-                student_name:'',
+                studentName:'',
                 province:'',
                 city:'',
                 address:'',
-                high_school:'',
+                highSchool:'',
                 major:'',
-                fractional_segment:'',
-                ranking_section:'',
-                qiangji_plan:'',
+                fractionalSegment:'',
+                rankingSection:'',
+                qiangjiPlan:'',
                 tiqianpi:'',
                 signed:'',
                 year:'',
@@ -135,6 +144,36 @@ let app = new Vue({
             this.table.params.pageIndex = newIndex;
             this.getUserList();
         },
+        updateUserInfo:function (){
+
+            let app = this
+            app.fullScreenLoading = true
+            // console.log('123')
+            // app.loading = true
+            let data = JSON.parse(JSON.stringify(app.draw.data))
+            console.log(data)
+            data.year=this.myGetYear
+            // console.log(data)
+            ajaxPostJSON(app.urls.updateUserInfo, data, function (d) {
+                console.log(d)
+                // app.loading = false;
+                app.$message({
+                    message: '修改成功',
+                    type: 'success'
+                });
+                // app.exit()
+                app.fullScreenLoading = false
+            }, function (e) {
+                console.log(e)
+                // app.loading = false;
+                app.$message({
+                    message: '修改失败',
+                    type: 'error'
+                });
+                app.fullScreenLoading = false
+            });
+
+        },
         // 刷新table的数据
         getUserList: function () {
             let data = {
@@ -207,6 +246,7 @@ let app = new Vue({
         },
         // 打开详细信息
         getUserInfo: function (user) {
+            console.log(user)
             this.draw.visible = true
             this.selectUser.username = user.username
             this.selectUser.password = user.password
@@ -216,18 +256,19 @@ let app = new Vue({
                 id: userid
             }
             ajaxPostJSON(app.urls.getUserInfo, data, function (d) {
-                console.log(d)
+                // console.log(d.data[0])
                 app.fullScreenLoading = false;
                 app.draw.data = d.data[0]
-                // app.$message.error('删除成功！', 'success');
-                // if (app.table.data.length === 1 && app.table.params.pageIndex > 0)
-                //     app.table.params.pageIndex -= 1;
-                // app.getUserList();
+                let newData = new Date(d.data[0].year+',01,01')
+                app.draw.data.year = newData.toDateString()
+                // console.log(app.draw.data)
+
             },function (d) {
                 app.fullScreenLoading = false;
                 app.$message.error('查询失败，请重试' + d.message, 'warning');
 
             })
+            // console.log('test',app.draw.data)
 
         },
         // 更新用户和角色的关联
@@ -242,7 +283,7 @@ let app = new Vue({
             app.dialog.mapRole.loading = true;
             ajaxPostJSON(app.urls.updateUserRole, data, function (d) {
                 app.dialog.mapRole.loading = false;
-                app.$message.error('保存成功!');
+                app.$message.success('保存成功!');
             })
         },
         // 打开添加用户窗口
@@ -253,6 +294,7 @@ let app = new Vue({
         },
         // 打开编辑用户窗口
         openUpdate: function (user) {
+            console.log(user)
             // console.log('user',user)
             this.dialog.insertOrUpdate.visible = true;
             this.dialog.insertOrUpdate.status = 'update';
@@ -301,6 +343,162 @@ let app = new Vue({
                 })
             });
         },
+        getProvinces:function (){
+            // console.log('getProvince')
+            let app = this
+            let params = {
+                pageIndex: 1,
+                pageSize: 100,
+                pageSizes: [5, 10, 20, 40, 100],
+                searchKey: '',  // 搜索词
+                total: 0,       // 总数
+            }
+            let data = {
+                dicProperty: '省份',
+                page:params
+            }
+
+            app.fullScreenLoading = true;
+            ajaxPostJSON(app.urls.selectDictListByPage, data, function (d) {
+                // console.log(d)
+                app.fullScreenLoading = false;
+                let provinceList = []
+                // resultList = d.data(
+                for (i in d.data.resultList){
+                    provinceList[i] = d.data.resultList[i]['dicValue']
+                }
+                app.info.provinces = provinceList
+            },function (d) {
+                app.fullScreenLoading = false;
+                app.$message.error('获取失败，请重试' + d.message, 'warning');
+
+            })
+        },
+        getMajors:function (){
+            // console.log('getMajors')
+            let app = this
+            let params = {
+                pageIndex: 1,
+                pageSize: 100,
+                pageSizes: [5, 10, 20, 40, 100],
+                searchKey: '',  // 搜索词
+                total: 0,       // 总数
+            }
+            let data = {
+                dicProperty: '专业',
+                page:params
+            }
+
+            app.fullScreenLoading = true;
+            ajaxPostJSON(app.urls.selectDictListByPage, data, function (d) {
+                // console.log(d)
+                app.fullScreenLoading = false;
+                let majorList = []
+                // resultList = d.data(
+                for (i in d.data.resultList){
+                    majorList[i] = d.data.resultList[i]['dicValue']
+                }
+                app.info.majors = majorList
+            },function (d) {
+                app.fullScreenLoading = false;
+                app.$message.error('获取失败，请重试' + d.message, 'warning');
+
+            })
+        },
+        getModels:function (){
+            // console.log('getModels')
+            let app = this
+            let params = {
+                pageIndex: 1,
+                pageSize: 100,
+                pageSizes: [5, 10, 20, 40, 100],
+                searchKey: '',  // 搜索词
+                total: 0,       // 总数
+            }
+            let data = {
+                dicProperty: '高考模式',
+                page:params
+            }
+
+            app.fullScreenLoading = true;
+            ajaxPostJSON(app.urls.selectDictListByPage, data, function (d) {
+                // console.log(d)
+                app.fullScreenLoading = false;
+                let modelList = []
+                // resultList = d.data(
+                for (i in d.data.resultList){
+                    modelList[i] = d.data.resultList[i]['dicValue']
+                }
+                app.info.models = modelList
+            },function (d) {
+                app.fullScreenLoading = false;
+                app.$message.error('获取失败，请重试' + d.message, 'warning');
+
+            })
+        },
+        getTypes:function (){
+            // console.log('getModels')
+            let app = this
+            let params = {
+                pageIndex: 1,
+                pageSize: 100,
+                pageSizes: [5, 10, 20, 40, 100],
+                searchKey: '',  // 搜索词
+                total: 0,       // 总数
+            }
+            let data = {
+                dicProperty: '关系',
+                page:params
+            }
+
+            app.fullScreenLoading = true;
+            ajaxPostJSON(app.urls.selectDictListByPage, data, function (d) {
+                // console.log(d)
+                app.fullScreenLoading = false;
+                let typeList = []
+                // resultList = d.data(
+                for (i in d.data.resultList){
+                    typeList[i] = d.data.resultList[i]['dicValue']
+                }
+                app.info.types = typeList
+            },function (d) {
+                app.fullScreenLoading = false;
+                app.$message.error('获取失败，请重试' + d.message, 'warning');
+
+            })
+        },
+        getHighSchool:function (province){
+            console.log('getHighSchools')
+            if (!this.draw.data.province) return
+            let app = this
+            let params = {
+                pageIndex: 1,
+                pageSize: 100,
+                pageSizes: [5, 10, 20, 40, 100],
+                searchKey: '',  // 搜索词
+                total: 0,       // 总数
+            }
+            let data = {
+                father:province,
+                page:params
+            }
+            app.fullScreenLoading = true;
+
+            ajaxPostJSON(app.urls.selectDictListByPage, data, function (d) {
+                // console.log(d)
+                app.fullScreenLoading = false;
+                let highSchoolList = []
+                // resultList = d.data(
+                for (i in d.data.resultList){
+                    highSchoolList[i] = d.data.resultList[i]['dicValue']
+                }
+                app.info.highSchools = highSchoolList
+            },function (d) {
+                app.fullScreenLoading = false;
+                app.$message.error('获取失败，请重试' + d.message, 'warning');
+
+            })
+        },
 
         resetDialog: function () {
             console.log('resetDialog被打开了')
@@ -319,9 +517,17 @@ let app = new Vue({
         app.fullScreenLoading = true;
 
         app.getUserList();
-
+        this.getTypes()
+        this.getProvinces()
+        this.getMajors()
+        this.getModels()
 
         app.fullScreenLoading = false;
+    },computed:{
+        myGetYear:function (){
+            let date=new Date(this.draw.data.year)
+            return date.getFullYear()
+        }
     }
 });
 

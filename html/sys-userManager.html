@@ -71,6 +71,7 @@
         <el-table-column label="操作" header-align="center" align="center">
             <template slot-scope="scope">
                 <el-button type="success" size="mini" style="position:relative;bottom: 1px;"
+                           :disabled="scope.row.role != 'student'"
                            @click="getUserInfo(scope.row)">
                     <span>详情</span>
                 </el-button>
@@ -100,7 +101,7 @@
     <el-dialog :title="dialog.insertOrUpdate.status == 'insert' ? '添加用户' : '编辑用户'"
                :visible.sync="dialog.insertOrUpdate.visible" @close="resetDialog()">
         <el-form label-position="left" label-width="80px" style="padding: 0 100px;"
-                 :model="dialog.insertOrUpdate.formData"
+                 :model="dialog.insertOrUpdate.formData.data"
                  ref="form_insertOrUpdate" label-width="100px"
                  v-loading="dialog.insertOrUpdate.loading" status-icon>
             <el-form-item label="工号/准考证号" :prop="dialog.insertOrUpdate.status == 'insert' ? 'username' : null"
@@ -140,103 +141,122 @@
             >
 <!--        <span>我来啦!</span>-->
 
-        <el-form label-position="left" label-width="80px" style="padding: 0 100px;"
+        <el-form label-position="left" label-width="150px" style="padding: 0 100px;"
                  :model="draw.data"
-
-
                  ref="form_insertOrUpdate"
-                 label-width="100px"
+                 label-width="200px"
                  status-icon>
-            <el-form-item label="用户名" :prop="selectUser.username">
-                <el-input v-model="selectUser.username"
-                          :disabled=true ></el-input>
-            </el-form-item>
-            <el-form-item label="密码" prop="selectUser.password">
-                <el-input v-model="selectUser.password"
-                          :disabled=false></el-input>
-            </el-form-item>
-<!--            <el-form-item label="用户类型" prop="userType">-->
-<!--                <el-select v-model="dialog.insertOrUpdate.formData.userType" placeholder="请选择">-->
-<!--                    <el-option v-for="userType in dialog.insertOrUpdate.userTypeList" :key="userType.value"-->
-<!--                               :label="userType.label" :value="userType.value"></el-option>-->
-<!--                </el-select>-->
-<!--            </el-form-item>-->
-            <el-form-item label="姓名" prop="name">
-                <el-input v-model="draw.data.name"
-                          :disabled=false></el-input>
-            </el-form-item>
-            <el-form-item label="工号/准考证号" prop="admissionNumber">
-                <el-input v-model="draw.data.admissionNumber"
-                          :disabled=false></el-input>
-            </el-form-item>
-            <el-form-item label="联系方式" prop="contact">
-                <el-input v-model="draw.data.contact"
-                          :disabled=false></el-input>
-            </el-form-item>
-            <el-form-item label="备用联系方式" prop="alternateContact">
-                <el-input v-model="draw.data.alternateContact"
-                          :disabled=false></el-input>
-            </el-form-item>
-            <el-form-item label="与考生关系" prop="type">
-                <el-input v-model="draw.data.type"
-                          :disabled=false></el-input>
-            </el-form-item>
-            <el-form-item label="考生姓名" prop="studentName">
-                <el-input v-model="draw.data.studenName"
-                          :disabled=false></el-input>
-            </el-form-item>
-            <el-form-item label="省份" prop="province">
-                <el-input v-model="draw.data.province"
-                          :disabled=false></el-input>
-            </el-form-item>
-            <el-form-item label="城市" prop="city">
-                <el-input v-model="draw.data.city"
-                          :disabled=false></el-input>
-            </el-form-item>
-            <el-form-item label="住址" prop="address">
-                <el-input v-model="draw.data.address"
-                          :disabled=false></el-input>
-            </el-form-item>
-            <el-form-item label="高中" prop="highSchool">
-                <el-input v-model="draw.data.highSchool"
-                          :disabled=false></el-input>
-            </el-form-item>
-            <el-form-item label="意向专业" prop="major">
-                <el-input v-model="draw.data.major"
-                          :disabled=false></el-input>
-            </el-form-item>
-            <el-form-item label="成绩分数段" prop="fractionalSegment">
-                <el-input v-model="draw.data.fractionalSegment"
-                          :disabled=false></el-input>
-            </el-form-item>
-            <el-form-item label="排名分数段" prop="rankingSection">
-                <el-input v-model="draw.data.rankingSection"
-                          :disabled=false></el-input>
-            </el-form-item>
-            <el-form-item label="高考模式" prop="model">
-                <el-input v-model="draw.data.model"
-                          :disabled=false></el-input>
-            </el-form-item>
-            <el-form-item label="所学科目" prop="subject">
-                <el-input v-model="draw.data.subject"
-                          :disabled=false></el-input>
-            </el-form-item>
-            <el-form-item label="是否为强基计划" prop="qiangjiPlan">
-                <el-input v-model="draw.data.qiangjiPlan"
-                          :disabled=false></el-input>
-            </el-form-item>
-            <el-form-item label="是否为提前批" prop="tiqianpi">
-                <el-input v-model="draw.data.tiqianpi"
-                          :disabled=false></el-input>
-            </el-form-item>
-            <el-form-item label="高考年份" prop="year">
-                <el-input v-model="draw.data.year"
-                          :disabled=false></el-input>
-            </el-form-item>
 
+                <el-form-item label="工号/准考证号" prop="admissionNumber">
+                    <el-input v-model="draw.data.admissionNumber"
+                              :disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item label="本人姓名" prop="name">
+                    <el-input v-model="draw.data.name"
+                              :disabled=false></el-input>
+                </el-form-item>
 
+                <el-form-item label="联系方式" prop="contact">
+                    <el-input v-model="draw.data.contact"
+                              :disabled=false></el-input>
+                </el-form-item>
+                <el-form-item label="备用联系方式" prop="alternateContact">
+                    <el-input v-model="draw.data.alternateContact"
+                              :disabled=false></el-input>
+                </el-form-item>
+
+                <el-form-item label="考生姓名" prop="studentName">
+                    <el-input v-model="draw.data.studentName"
+                              :disabled=false></el-input>
+                </el-form-item>
+
+                <el-form-item label="与考生关系" prop="type">
+                    <el-select v-model="draw.data.type" placeholder="关系" :disabled=false>
+                        <el-option
+                                v-for="type in info.types"
+                                :value="type"
+                        >
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+
+                <el-form-item label="省份" prop="province">
+
+                    <el-select v-model="draw.data.province" placeholder="省份" @change="getHighSchool($event)" :disabled=false>
+                        <el-option
+                                v-for="province in info.provinces"
+                                :value="province"
+                        >
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+
+                </el-form-item>
+
+                <el-form-item label="高中" prop="highSchool">
+
+                    <el-select v-model="draw.data.highSchool" placeholder="省份" :disabled=false>
+                        <el-option
+                                v-for="highSchool in info.highSchools"
+
+                                :value="highSchool"
+                        >
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="意向专业" prop="major">
+                    <!--                        <el-input v-model="draw.data.major"-->
+                    <!--                                  :disabled=false></el-input>-->
+                    <el-select v-model="draw.data.major" placeholder="专业" :disabled=false>
+                        <el-option
+                                v-for="major in info.majors"
+
+                                :value="major"
+                        >
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="高考模式" prop="model">
+                    <el-popover
+                            slot="label"
+                            placement="top-start"
+                            title="提示"
+                            width="200"
+                            trigger="hover"
+                            content="传统模式：理科文科模式； 新高考：六选三； 其他：自填高考考试科目。">
+                        <span slot="reference">高考模式</span>
+                    </el-popover>
+                    <el-select v-model="draw.data.model" placeholder="高考模式"  :disabled=false>
+                        <el-option
+                                v-for="model in info.models"
+                                :key="model"
+
+                                :value="model"
+                        >
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="所学科目" prop="subject">
+                    <el-input v-model="draw.data.subject"
+                              :disabled=false></el-input>
+                </el-form-item>
+
+                <el-form-item label="高考年份" prop="year">
+
+                    <el-date-picker
+                            v-model="draw.data.year"
+                            type="year"
+                            format="yyyy"
+                            :disabled=false
+                            placeholder="高考年份">
+                    </el-date-picker>
+                </el-form-item>
 
         </el-form>
+        <div style="text-align: center; padding-top: 20px">
+            <el-button type="primary" @click="updateUserInfo" > 提交修改</el-button>
+        </div>
+
     </el-drawer>
 
 

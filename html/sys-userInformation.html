@@ -45,10 +45,7 @@
                         <el-input v-model="formData.alternateContact"
                                   :disabled="unmodifiable"></el-input>
                     </el-form-item>
-<!--                    <el-form-item label="与考生关系" prop="type">-->
-<!--                        <el-input v-model="formData.type"-->
-<!--                                  :disabled="unmodifiable"></el-input>-->
-<!--                    </el-form-item>-->
+
                     <el-form-item label="考生姓名" prop="studentName">
                         <el-input v-model="formData.studentName"
                                   :disabled="unmodifiable"></el-input>
@@ -65,12 +62,10 @@
                     </el-form-item>
 
                     <el-form-item label="省份" prop="province">
-<!--                        <el-input v-model="formData.province"-->
-<!--                                  :disabled="unmodifiable"></el-input>-->
+
                         <el-select v-model="formData.province" placeholder="省份" @change="getHighSchool($event)" :disabled="unmodifiable">
                             <el-option
                                     v-for="province in info.provinces"
-
                                     :value="province"
                             >
                             </el-option>
@@ -78,13 +73,9 @@
                     </el-form-item>
 
                     </el-form-item>
-<!--                    <el-form-item label="住址" prop="address">-->
-<!--                        <el-input v-model="formData.address"-->
-<!--                                  :disabled="unmodifiable"></el-input>-->
-<!--                    </el-form-item>-->
+
                     <el-form-item label="高中" prop="highSchool">
-<!--                        <el-input v-model="formData.highSchool"-->
-<!--                                  :disabled="unmodifiable"></el-input>-->
+
                         <el-select v-model="formData.highSchool" placeholder="省份" :disabled="unmodifiable">
                             <el-option
                                     v-for="highSchool in info.highSchools"
@@ -106,15 +97,6 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-<!--                    <el-form-item label="成绩分数段" prop="fractionalSegment">-->
-<!--                        <el-input v-model="formData.fractionalSegment"-->
-<!--                                  :disabled="unmodifiable"></el-input>-->
-<!--                    </el-form-item>-->
-<!--                    <el-form-item label="排名分数段" prop="rankingSection">-->
-<!--                        <el-input v-model="formData.rankingSection"-->
-<!--                                  :disabled="unmodifiable"></el-input>-->
-<!--                    </el-form-item>-->
-
                     <el-form-item label="高考模式" prop="model">
                         <el-popover
                                 slot="label"
@@ -123,7 +105,6 @@
                                 width="200"
                                 trigger="hover"
                                 content="传统模式：理科文科模式； 新高考：六选三； 其他：自填高考考试科目。">
-<!--                            <el-button slot="reference">hover 激活</el-button>-->
                             <span slot="reference">高考模式</span>
                         </el-popover>
                         <el-select v-model="formData.model" placeholder="高考模式"  :disabled="unmodifiable">
@@ -135,8 +116,6 @@
                             >
                             </el-option>
                         </el-select>
-
-
                     </el-form-item>
                     <el-form-item label="所学科目" prop="subject">
                         <el-input v-model="formData.subject"
