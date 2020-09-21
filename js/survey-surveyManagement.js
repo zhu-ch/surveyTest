@@ -13,7 +13,7 @@ let myComponent = Vue.extend({
             <span style="float: right">
                 <span style="margin-right: 5px">ID:{{survey.id}} </span>
                 <span style="margin-right: 5px">当前状态:{{survey.enable}}</span>
-                <span style="margin-right: 5px">答卷数量:100</span>
+                <span style="margin-right: 5px">答卷数量:{{survey.answerCount}}</span>
 <!--                todo 答卷数量-->
             </span>
         </div>
@@ -22,7 +22,7 @@ let myComponent = Vue.extend({
                 <el-button>
                     <span>答题情况</span>
                 </el-button>
-                <el-button>
+                <el-button @click="clickPreview">
                     <span>问卷预览</span>
                 </el-button>
            </span>
@@ -93,6 +93,14 @@ let myComponent = Vue.extend({
                     type: 'error'
                 });
             })
+        },
+        clickPreview: function () {
+            window.parent.postMessage({
+                data: {
+                    code:"success",
+                    message:"addTabSurveyPreview"
+                }
+            }, '*');
         }
     },
     data() {
@@ -113,7 +121,9 @@ let app = new Vue({
     data: {
         fullScreenLoading: false,
         urls: {
-            querySurveyByConditions: serverUrl + "/api/survey/getSurveyByConditions"
+            querySurveyByConditions: serverUrl + "/api/survey/getSurveyByConditions",
+            getAnswerCountByConditions: serverUrl+"/api/survey/getAnswerCountByConditions"
+
         },
         refreshType: {
             reload: "reload",
@@ -123,7 +133,7 @@ let app = new Vue({
             entities: [],
             params: {
                 pageIndex: 1,
-                pageSize: 10,
+                pageSize: 5,
                 pageSizes: [5, 10, 20],
                 total: 500,       // 总数
             },
@@ -156,70 +166,7 @@ let app = new Vue({
              *  private Date startTime;//问卷开始填写时间
              *  private Date endTime;//问卷结束填写时间
              */
-            entities: [{
-                id: "0001",
-                ownerId: "0001",
-                title: "ssada",
-                description: "sdada",
-                enable: 0,
-                questions: [],
-                startTime: "",
-                endTime: "",
-            },{
-                id: "0002",
-                ownerId: "0002",
-                title: "dasadada",
-                description: "fsafasda",
-                enable: 0,
-                questions: [],
-                startTime: "",
-                endTime: "",
-            },{
-                id: "0003",
-                ownerId: "0002",
-                title: "dasadada",
-                description: "fsafasda",
-                enable: 0,
-                questions: [],
-                startTime: "",
-                endTime: "",
-            },{
-                id: "0004",
-                ownerId: "0002",
-                title: "dasadada",
-                description: "fsafasda",
-                enable: 0,
-                questions: [],
-                startTime: "",
-                endTime: "",
-            },{
-                id: "0005",
-                ownerId: "0002",
-                title: "dasadada",
-                description: "fsafasda",
-                enable: 0,
-                questions: [],
-                startTime: "",
-                endTime: "",
-            },{
-                id: "0006",
-                ownerId: "0002",
-                title: "dasadada",
-                description: "fsafasda",
-                enable: 0,
-                questions: [],
-                startTime: "",
-                endTime: "",
-            },{
-                id: "0007",
-                ownerId: "0002",
-                title: "dasadada",
-                description: "fsafasda",
-                enable: 0,
-                questions: [],
-                startTime: "",
-                endTime: "",
-            },]
+            entities: []
         },
         surveyEntity: {
             id: "",
@@ -235,6 +182,9 @@ let app = new Vue({
     methods: {
         onPageIndexChange: function (currentIndex) {
             this.onShowTable.entities = this.totalTable.entities.slice((currentIndex - 1) * this.onShowTable.params.pageSize, (currentIndex * this.onShowTable.params.pageSize))
+            for (var j = 0, i = (currentIndex - 1) * this.onShowTable.params.pageSize;i<(currentIndex * this.onShowTable.params.pageSize);i++,j++){
+                this.onShowTable.entities[j].questions = this.totalTable.entities[i].questions.slice(0)
+            }
         },
         onPageSizeChange: function(newSize){
             this.onShowTable.params.pageSize = newSize;
@@ -242,49 +192,66 @@ let app = new Vue({
         },
         refresh: function (type) {
             if (this.onShowTable.condition == "") {
-                this.refreshTotalTable();
+                this.refreshTotalTable(type);
             } else {
                 if (this.onShowTable.conditionType == "id") {
-                    this.refreshTotalTableByID(this.onShowTable.condition);
+                    this.refreshTotalTableByID(this.onShowTable.condition,type);
                 } else if (this.onShowTable.conditionType == "title") {
-                    this.refreshTotalTableByTitle(this.onShowTable.condition);
+                    this.refreshTotalTableByTitle(this.onShowTable.condition,type);
                 } else if (this.onShowTable.conditionType == "description") {
-                    this.refreshTotalTableByDescription(this.onShowTable.condition);
+                    this.refreshTotalTableByDescription(this.onShowTable.condition,type);
                 }
             }
-            if (type == "reload") {
-                this.reloadRefreshMethod()
-            } else if (type == "update") {
-                this.updateRefreshMethod()
-            } else {
-                this.$message("error，参数错误")
-            }
         },
-        refreshTotalTable: function () {
+        refreshTotalTable: function (type) {
             this.initializeSurveyEntity();
-            let app = this
-            ajaxGet(this.urls.querySurveyByConditions, this.surveyEntity, function (d) {
+            let app = this;
+            ajaxPostJSON(this.urls.querySurveyByConditions, this.surveyEntity, function (d) {
                 app.totalTable.entities = d.data;
+                if (type == "reload") {
+                    app.reloadRefreshMethod()
+
+                } else if (type == "update") {
+                    app.updateRefreshMethod()
+                } else {
+                    app.$message("error，参数错误")
+                }
             }, function (d) {
                 app.$message("服务器错误")
             })
         },
-        refreshTotalTableByID: function (condition) {
+        refreshTotalTableByID: function (condition,type) {
             this.initializeSurveyEntity();
             this.surveyEntity.id = condition;
             let app = this;
-            ajaxGet(this.urls.querySurveyByConditions, this.surveyEntity, function (d) {
+            ajaxPostJSON(this.urls.querySurveyByConditions, this.surveyEntity, function (d) {
                 app.totalTable.entities = d.data;
+                if (type == "reload") {
+                    app.reloadRefreshMethod()
+
+                } else if (type == "update") {
+                    app.updateRefreshMethod()
+                } else {
+                    app.$message("error，参数错误")
+                }
             }, function (d) {
                 app.$message("服务器错误")
             })
         },
-        refreshTotalTableByTitle: function (condition) {
+        refreshTotalTableByTitle: function (condition,type) {
             this.initializeSurveyEntity();
             this.surveyEntity.title = condition;
             let app = this;
-            ajaxGet(this.urls.querySurveyByConditions, this.surveyEntity, function (d) {
+            ajaxPostJSON(this.urls.querySurveyByConditions, this.surveyEntity, function (d) {
                 app.totalTable.entities = d.data;
+                if (type == "reload") {
+                    app.reloadRefreshMethod()
+
+                } else if (type == "update") {
+                    app.updateRefreshMethod()
+                } else {
+                    app.$message("error，参数错误")
+                }
             }, function (d) {
                 app.$message({
                     message: "服务器错误",
@@ -292,12 +259,20 @@ let app = new Vue({
                 })
             })
         },
-        refreshTotalTableByDescription: function (condition) {
+        refreshTotalTableByDescription: function (condition,type) {
             this.initializeSurveyEntity();
             this.surveyEntity.description = condition;
             let app = this;
-            ajaxGet(this.urls.querySurveyByConditions, this.surveyEntity, function (d) {
+            ajaxPostJSON(this.urls.querySurveyByConditions, this.surveyEntity, function (d) {
                 app.totalTable.entities = d.data;
+                if (type == "reload") {
+                    app.reloadRefreshMethod()
+
+                } else if (type == "update") {
+                    app.updateRefreshMethod()
+                } else {
+                    app.$message("error，参数错误")
+                }
             }, function (d) {
                 app.$message({
                     message: "服务器错误",
@@ -306,11 +281,18 @@ let app = new Vue({
             })
         },
         updateRefreshMethod: function () {
+            console.log(this.totalTable.entities)
             this.onShowTable.entities = this.totalTable.entities.slice((this.onShowTable.params.pageIndex - 1) * this.onShowTable.params.pageSize, (this.onShowTable.params.pageIndex * this.onShowTable.params.pageSize))
+            for (var j = 0, i = (currentIndex - 1) * this.onShowTable.params.pageSize;i<(currentIndex * this.onShowTable.params.pageSize);i++,j++){
+                this.onShowTable.entities[j].questions = this.totalTable.entities[i].questions.slice(0)
+            }
         },
         reloadRefreshMethod: function () {
             this.onShowTable.params.pageIndex = 1
             this.onShowTable.entities = this.totalTable.entities.slice((this.onShowTable.params.pageIndex - 1) * this.onShowTable.params.pageSize, (this.onShowTable.params.pageIndex * this.onShowTable.params.pageSize))
+            for (var j = 0, i = (currentIndex - 1) * this.onShowTable.params.pageSize;i<(currentIndex * this.onShowTable.params.pageSize);i++,j++){
+                this.onShowTable.entities[j].questions = this.totalTable.entities[i].questions.slice(0)
+            }
         },
         initializeSurveyEntity: function () {
             this.surveyEntity.id = "";
@@ -325,12 +307,12 @@ let app = new Vue({
 
 
     },
-
     created: function () {
         let app = this;
         app.user = getSessionStorage('user')
         //todo 权限验证
-        this.reloadRefreshMethod()
-        // this.refresh(this.refreshType.reload)
+        // this.reloadRefreshMethod()
+        this.refresh(this.refreshType.reload)
     }
 })
+

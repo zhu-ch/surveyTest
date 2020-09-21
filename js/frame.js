@@ -6,20 +6,23 @@
 //标签名称、url
 let urls = [
     ['null', 'null'],
-    ['null', 'null'],
-    ['字典管理', '../html/sys'],
-    ['用户管理', 'computer/confidentialComputer.html'],
-    ['配置管理', 'computer/nonConfidentialIntermediary.html'],
-    ['创建问卷', 'computer/nonConfidentialComputer.html'],
-    ['问卷管理', 'computer/scrappedComputer.html'],
-    ['信息维护', 'informationDevice/confidentialInfoDevice.html'],
-    ['问卷列表', 'informationDevice/nonConfidentialInfoDevice.html'],
-    ['历史问卷', 'informationDevice/scrappedInfoDevice.html'],
+    ['字典管理', 'sys-manageDict.html'],
+    ['用户管理', 'sys-manageUser.html'],
+    ['配置管理', 'sys-manageConfigue.html'],
+    ['创建问卷', 'survey-createSurvey.html'],
+    ['问卷管理', 'survey-surveyManagement.html'],
+    //学生可看
+    ['信息维护', 'student-info.html'],
+    ['问卷列表', 'student-surveyList.html'],
+    ['历史问卷', 'student-historySurvey.html'],
+    //不直接展示
+    ['问卷预览', 'survey-surveyPreview.html']
 ];
 
 let app = new Vue({
     el: '#app',
     data: {
+        iframeWin:{},
         userInfo: null,
         showWindow: false,
         default_open_array: [
@@ -129,6 +132,16 @@ let app = new Vue({
                     window.open("welcome.html", "_self");
                 }, 2000);
             })
+        },
+        handleMessage: function(event) {
+            const data = event.data
+            if(data.code === "success"){
+                alert(data.test)
+            }
         }
+    },
+    mounted:function(){
+        window.addEventListener('message', this.handleMessage);
+        this.iframeWin = this.$refs.iframe.contentWindow;
     }
 });

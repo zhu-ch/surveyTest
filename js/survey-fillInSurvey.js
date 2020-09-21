@@ -330,86 +330,27 @@ let app = new Vue({
         survey: {
             surveyTitle: '',
             description: '',
-            questions: [
-                {
-                    //前端
-                    checked:false,
-                    //后端
-                    id: '#1',
-                    title: '单选',
-                    index: 1,
-                    type: "my-single",
-                    isRequired: true,
-                    defaultAns: '',
-                    answerList: [{index: '选项A', content: 'A'}, {index: '选项B', content: 'B'}],
-                    frontOptions: [],
-                    skipLogices: [],
-                    validation: '',
-                    isPrivate: false,
-                    selectedList: [],
-                    blankQuestionAns:""
-                },
-                {
-                    //前端
-                    checked:false,
-                    //后端
-                    id: '#3',
-                    title: '多选',
-                    index: 2,
-                    type: "my-multiple",
-                    isRequired: true,
-                    defaultAns: '',
-                    answerList: [{index: '选项A', content: 'A'}, {index: '选项B', content: 'B'}],
-                    frontOptions: [{question_id:'#1',question_answer:'选项A'}],
-                    skipLogices: [],
-                    validation: '',
-                    isPrivate: false,
-                    selectedList: [],
-                    blankQuestionAns:""
-                },
-                {
-                    //前端
-                    checked:false,
-                    //后端
-                    id: '#5',
-                    title: '填空',
-                    index: 3,
-                    type: "my-fill-blank",
-                    isRequired: true,
-                    defaultAns: '默认答案',
-                    answerList: [],
-                    frontOptions: [{question_id:'#3',question_answer:'选项A'},{question_id:'#3',question_answer:'选项B'}],
-                    skipLogices: [],
-                    validation: 'phone',
-                    isPrivate: false,
-                    selectedList: [],
-                    blankQuestionAns:""
-                },
-                {
-                    //前端
-                    checked:false,
-                    //后端
-                    id: '#7',
-                    title: '排序',
-                    index: 4,
-                    type: "my-order",
-                    isRequired: true,
-                    defaultAns: '',
-                    answerList: [{index: '选项A', content: 'A'}, {index: '选项B', content: 'B'}, {index: '选项C', content: 'C'}],
-                    frontOptions: [],
-                    skipLogices: [],
-                    validation: '',
-                    isPrivate: false,
-                    selectedList: [],
-                    blankQuestionAns:""
-                }]
+            questions: []
+        },
+        urls:{
+            getSurveyByConditions:serverUrl+"/api/survey/getSurveyByConditions"
+        },
+        surveyEntity: {
+            id: "",
+            ownerId: "",
+            title: "",
+            description: "",
+            enable: 0,
+            questions: [],
+            startTime: "",
+            endTime: "",
         }
     },
     components: {
-        'my-single': mySingleQuestion,
-        'my-multiple': myMultipleQuestion,
-        'my-fill-blank': myBlankQuestion,
-        'my-order': myOrderQuestion,
+        'SINGLE': mySingleQuestion,
+        'MULTIPLE': myMultipleQuestion,
+        'FILL_BLANK': myBlankQuestion,
+        'ORDER': myOrderQuestion,
     },
     created: function () {
         // 设置默认内容
@@ -417,9 +358,24 @@ let app = new Vue({
         this.survey.description = "默认问卷描述";
         // todo 权限检查
         // todo 从后端获取问卷
-
+        this.getSurvey("a094ef34e83648e89718e6605d4b97e3")
     },
     methods:{
+        getSurvey: function(id){
+            this.initializeSurveyEntity();
+            this.surveyEntity.id = id;
+            let app = this;
+            ajaxPostJSON(this.urls.getSurveyByConditions, this.surveyEntity, function (d) {
+                app.survey.questions= d.data[0].questions;
+                for(i in app.survey.questions){
+                    app.survey.questions[i].selectedList=[];
+                    app.survey.questions[i].blankQuestionAns = ""
+                }
+                console.log(d.data)
+            }, function (d) {
+                app.$message("服务器错误")
+            })
+        },
         clickSubmit: function () {
             console.log("clickSubmit")
             for(var i in this.survey.questions){
@@ -430,8 +386,17 @@ let app = new Vue({
             }
             //todo 上传数据
         },
+        initializeSurveyEntity: function () {
+            this.surveyEntity.id = "";
+            this.surveyEntity.ownerId = "";
+            this.surveyEntity.title = "";
+            this.surveyEntity.description = "";
+            this.surveyEntity.enable = 0;
+            this.surveyEntity.questions = [];
+            this.surveyEntity.startTime = "";
+            this.surveyEntity.endTime = "";
+        },
         checkFrontOptions:function (question) {
-            console.log("question:",question.id)
             for(var i in question.frontOptions){
                 for(var j in this.survey.questions){
 
