@@ -19,7 +19,7 @@ let mySingleQuestion = Vue.extend({
             selectedOption: '',
             //题目属性
             title: this.question.title,
-            isRequired: this.question.isRequired,
+            required: this.question.required,
             answerList: [{index: '选项A', content: ''}, {index: '选项B', content: ''}],
             frontOptions: [],
             isPrivate: false
@@ -56,7 +56,7 @@ let mySingleQuestion = Vue.extend({
                                 active-text="隐私项" inactive-text="非隐私项"style="margin-left:20px;margin-right: 10px"
                                 active-color="#13ce66" inactive-color="#ff4949"></el-switch>
                     <!--是否必填-->
-                    <el-switch v-model="isRequired" :disabled="disableEdit" 
+                    <el-switch v-model="required" :disabled="disableEdit" 
                                 active-text="必填项" inactive-text="非必填项" style="margin-left:20px;margin-right: 10px"
                                 active-color="#13ce66" inactive-color="#ff4949"></el-switch>
                     <!--是否启用跳题逻辑-->
@@ -97,7 +97,7 @@ let mySingleQuestion = Vue.extend({
                 this.disableEdit = false
             } else {
                 this.question.title = this.title;
-                this.question.isRequired = this.isRequired;
+                this.question.required = this.required;
                 this.question.answerList = this.answerList;
                 this.question.isPrivate = this.isPrivate;
                 if (!this.enableFrontOptions) {
@@ -155,7 +155,7 @@ let mySingleQuestion = Vue.extend({
                 this.disableChangeStatus = true;
             }
             this.title = this.question.title;
-            this.isRequired = this.question.isRequired;
+            this.required = this.question.required;
             this.answerList = this.question.answerList;
             this.frontOptions = this.question.frontOptions;
             this.isPrivate = this.question.isPrivate;
@@ -182,7 +182,7 @@ let myMultipleQuestion = Vue.extend({
             selectedOption: '',
             //题目属性
             title: this.question.title,
-            isRequired: this.question.isRequired,
+            required: this.question.required,
             answerList: [{index: '选项A', content: ''}, {index: '选项B', content: ''}],
             frontOptions: [],
             isPrivate: false
@@ -219,7 +219,7 @@ let myMultipleQuestion = Vue.extend({
                                 active-text="隐私项" inactive-text="非隐私项"style="margin-left:20px;margin-right: 10px"
                                 active-color="#13ce66" inactive-color="#ff4949"></el-switch>
                     <!--是否必填-->
-                    <el-switch v-model="isRequired" :disabled="disableEdit" 
+                    <el-switch v-model="required" :disabled="disableEdit" 
                                 active-text="必填项" inactive-text="非必填项" style="margin-left:20px;margin-right: 10px"
                                 active-color="#13ce66" inactive-color="#ff4949"></el-switch>
                     <!--是否启用跳题逻辑-->
@@ -260,7 +260,7 @@ let myMultipleQuestion = Vue.extend({
                 this.disableEdit = false
             } else {
                 this.question.title = this.title;
-                this.question.isRequired = this.isRequired;
+                this.question.required = this.required;
                 this.question.answerList = this.answerList;
                 this.question.isPrivate = this.isPrivate;
                 if (!this.enableFrontOptions) {
@@ -311,7 +311,7 @@ let myMultipleQuestion = Vue.extend({
                 this.selectedOption = this.question.frontOptions[0].questionAnswer;
             }
             this.title = this.question.title;
-            this.isRequired = this.question.isRequired;
+            this.required = this.question.required;
             this.answerList = this.question.answerList;
             this.frontOptions = this.question.frontOptions;
             this.isPrivate = this.question.isPrivate;
@@ -327,6 +327,9 @@ let myBlankQuestion = Vue.extend({
         },
         'list': {
             type: Array
+        },
+        'config': {
+            type: Array
         }
     },
     data() {
@@ -340,14 +343,10 @@ let myBlankQuestion = Vue.extend({
             selectedQuestionId: '',
             selectedOption: '',
             enableValidation: false,
-            validationType: [
-                {type: 'phone', text: '手机号'},
-                {type: 'integer', text: '整数'},
-                {type: 'rank', text: '分数段（管理员预置）'},
-                {type: 'grade', text: '成绩（管理员预置）'}],
+
             //题目属性
             title: this.question.title,
-            isRequired: this.question.isRequired,
+            required: this.question.required,
             frontOptions: [],
             validation: '',
             isPrivate: false
@@ -376,7 +375,7 @@ let myBlankQuestion = Vue.extend({
                                 active-text="隐私项" inactive-text="非隐私项"style="margin-left:0px;margin-right: 8px"
                                 active-color="#13ce66" inactive-color="#ff4949"></el-switch>
                     <!--是否必填-->
-                    <el-switch v-model="isRequired" :disabled="disableEdit" 
+                    <el-switch v-model="required" :disabled="disableEdit" 
                                 active-text="必填项" inactive-text="非必填项" style="margin-left:0px;margin-right: 8px"
                                 active-color="#13ce66" inactive-color="#ff4949"></el-switch>
                     <!--是否启用数据验证-->
@@ -429,7 +428,7 @@ let myBlankQuestion = Vue.extend({
                 this.disableEdit = false
             } else {
                 this.question.title = this.title;
-                this.question.isRequired = this.isRequired;
+                this.question.required = this.required;
                 this.question.answerList = this.answerList;
                 this.question.isPrivate = this.isPrivate;
 
@@ -468,6 +467,16 @@ let myBlankQuestion = Vue.extend({
                 if (this.selectedQuestionId === this.list[i].id)
                     return this.list[i]
             }
+        },
+        validationType: function () {
+            let ret = [
+                {type: 'phone', text: '手机号'},
+                {type: 'integer', text: '整数'}
+            ]
+            this.config.forEach(function (item) {
+                ret.push({type: item, key: item})
+            })
+            return ret
         }
     },
     created: function () {
@@ -485,7 +494,7 @@ let myBlankQuestion = Vue.extend({
             }
             this.enableValidation = this.question.validation !== '';
             this.title = this.question.title;
-            this.isRequired = this.question.isRequired;
+            this.required = this.question.required;
             this.frontOptions = this.question.frontOptions;
             this.validation = this.question.validation;
             this.isPrivate = this.question.isPrivate;
@@ -513,7 +522,7 @@ let myOrderQuestion = Vue.extend({
             //题目属性
             title: this.question.title,
             answerList: [{index: '选项A', content: ''}, {index: '选项B', content: ''}],
-            isRequired: this.question.isRequired,
+            required: this.question.required,
             frontOptions: [],
             isPrivate: false
         }
@@ -549,7 +558,7 @@ let myOrderQuestion = Vue.extend({
                                 active-text="隐私项" inactive-text="非隐私项"style="margin-left:20px;margin-right: 10px"
                                 active-color="#13ce66" inactive-color="#ff4949"></el-switch>
                     <!--是否必填-->
-                    <el-switch v-model="isRequired" :disabled="disableEdit" 
+                    <el-switch v-model="required" :disabled="disableEdit" 
                                 active-text="必填项" inactive-text="非必填项" style="margin-left:20px;margin-right: 10px"
                                 active-color="#13ce66" inactive-color="#ff4949"></el-switch>
                     <!--是否启用跳题逻辑-->
@@ -590,7 +599,7 @@ let myOrderQuestion = Vue.extend({
                 this.disableEdit = false
             } else {
                 this.question.title = this.title;
-                this.question.isRequired = this.isRequired;
+                this.question.required = this.required;
                 this.question.answerList = this.answerList;
                 this.question.isPrivate = this.isPrivate;
 
@@ -645,6 +654,7 @@ let app = new Vue({
         },
         urls: {
             post: serverUrl + '/api/survey/insertOrUpdateSurvey',
+            getConfigKey: serverUrl + '/api/sys/config/getConfigTypeList'
         },
         questionCount: 0,
         groupCount: 0,
@@ -652,7 +662,9 @@ let app = new Vue({
             title: '',
             description: '',
             questions: []
-        }
+        },
+        configKey: [],
+        fullScreenLoading: false
     },
     //注册组件
     components: {
@@ -672,7 +684,7 @@ let app = new Vue({
                 title: '',
                 index: this.survey.questions.length + 1,
                 type: questionType,
-                isRequired: true,
+                required: true,
                 defaultAns: '',
                 answerList: [],
                 frontOptions: [],
@@ -693,7 +705,7 @@ let app = new Vue({
                 title: '手机号',
                 index: this.survey.questions.length + 1,
                 type: 'my-fill-blank',
-                isRequired: true,
+                required: true,
                 defaultAns: '',
                 answerList: [],
                 frontOptions: [],
@@ -714,7 +726,7 @@ let app = new Vue({
                 title: '平行志愿报考北京理工大学顺序',
                 index: this.survey.questions.length + 1,
                 type: 'my-single',
-                isRequired: true,
+                required: true,
                 defaultAns: '',
                 answerList: [{index: '选项A', content: 'A志愿'},
                     {index: '选项B', content: 'B志愿'},
@@ -737,7 +749,7 @@ let app = new Vue({
                 title: '请填写A志愿学校名称',
                 index: this.survey.questions.length + 1,
                 type: 'my-fill-blank',
-                isRequired: true,
+                required: true,
                 defaultAns: '',
                 answerList: [],
                 frontOptions: [{questionId: '#' + (this.questionCount - 1), questionAnswer: '选项B'},
@@ -758,7 +770,7 @@ let app = new Vue({
                 title: '请填写B志愿学校名称',
                 index: this.survey.questions.length + 1,
                 type: 'my-fill-blank',
-                isRequired: true,
+                required: true,
                 defaultAns: '',
                 answerList: [],
                 frontOptions: [{
@@ -781,7 +793,7 @@ let app = new Vue({
                 title: '请填写报考北京理工大学的院校顺序',
                 index: this.survey.questions.length + 1,
                 type: 'my-single',
-                isRequired: true,
+                required: true,
                 defaultAns: '',
                 answerList: [{index: '选项A', content: 'D志愿'},
                     {index: '选项B', content: 'E志愿'},
@@ -808,7 +820,7 @@ let app = new Vue({
                 title: '是否报考其他学校的强基计划或国家专项',
                 index: this.survey.questions.length + 1,
                 type: 'my-single',
-                isRequired: true,
+                required: true,
                 defaultAns: '',
                 answerList: [{index: '选项A', content: '是'}, {index: '选项B', content: '否'}],
                 frontOptions: [],
@@ -828,7 +840,7 @@ let app = new Vue({
                 title: '报考类别',
                 index: this.survey.questions.length + 1,
                 type: 'my-single',
-                isRequired: true,
+                required: true,
                 defaultAns: '',
                 answerList: [{index: '选项A', content: '强基计划'}, {index: '选项B', content: '国家专项'}],
                 frontOptions: [{
@@ -851,7 +863,7 @@ let app = new Vue({
                 title: '报考学校名称',
                 index: this.survey.questions.length + 1,
                 type: 'my-fill-blank',
-                isRequired: true,
+                required: true,
                 defaultAns: '',
                 answerList: [],
                 frontOptions: [{
@@ -920,7 +932,7 @@ let app = new Vue({
             }).then(() => {
                 let data = JSON.parse(JSON.stringify(this.survey))
                 data.ownerId = this.auth.userInfo.id
-                data.enable = true
+                data.enable = false
 
                 data.questions.forEach(function (item) {
                     delete item.groupId
@@ -958,18 +970,22 @@ let app = new Vue({
                 })
                 console.log(JSON.stringify(data))
                 let app = this
+                app.fullScreenLoading = true
                 ajaxPostJSON(this.urls.post, data,
                     function (r) {
-                        if (r.code === 'success')
+                        if (r.code === 'success') {
+                            app.fullScreenLoading = false
                             app.$message({
                                 message: '创建成功',
                                 type: 'success'
                             })
+                            //todo 跳转到详情页，待管理员启用
+                            console.log('页面跳转')
+                        }
                     }, function () {
-
+                        app.fullScreenLoading = false
+                        console.log('error')
                     })
-                //todo 跳转到详情页，待管理员启用
-                console.log('页面跳转')
             });
         }
     },
@@ -984,6 +1000,14 @@ let app = new Vue({
         }
         if (this.auth.userInfo.role === 'admin') {
             this.auth.showWindow = true
+            let app = this
+            console.log(111)
+            ajaxGet(this.urls.getConfigKey, null,
+                function (result) {
+                    app.configKey = result.data
+                }, function () {
+
+                }, false)
             return
         }
         this.$message({

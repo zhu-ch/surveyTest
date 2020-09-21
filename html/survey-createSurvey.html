@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../css/survey-createSurvey.css">
 </head>
 <body>
-<div id="app" v-if="auth.showWindow" v-cloak>
+<div id="app" v-if="auth.showWindow" v-cloak v-loading="fullScreenLoading">
     <el-container>
         <!--侧边栏，添加基础题型及常用题目-->
         <el-aside style="width: 200px;background-color: unset">
@@ -47,7 +47,7 @@
                     </div>
 
                     <component :is="item.type" v-for="item in survey.questions" :question="item"
-                               :list="survey.questions" v-bind:key="item.id"
+                               :list="survey.questions" :config="configKey" v-bind:key="item.id"
                                v-on:delete-question-by-index="deleteQuestionByIndex"
                                v-on:submit-this-question="submitQuestionByIndex"
                                v-on:revert-this-question="revertQuestionByIndex">
