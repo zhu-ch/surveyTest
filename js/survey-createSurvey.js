@@ -106,8 +106,8 @@ let mySingleQuestion = Vue.extend({
                     this.question.frontOptions = []
                 } else {
                     this.question.frontOptions = [{
-                        question_id: this.selectedQuestionId,
-                        question_answer: this.selectedOption
+                        questionId: this.selectedQuestionId,
+                        questionAnswer: this.selectedOption
                     }];
                     if (this.multipleFrontOptions)
                         this.question.frontOptions.push(this.furtherOption)
@@ -147,8 +147,8 @@ let mySingleQuestion = Vue.extend({
             this.enableFrontOptions = !!this.question.frontOptions.length;
             this.multipleFrontOptions = this.question.frontOptions.length > 1;
             if (this.enableFrontOptions) {
-                this.selectedQuestionId = this.question.frontOptions[0].question_id;
-                this.selectedOption = this.question.frontOptions[0].question_answer;
+                this.selectedQuestionId = this.question.frontOptions[0].questionId;
+                this.selectedOption = this.question.frontOptions[0].questionAnswer;
             }
             if (this.multipleFrontOptions) {
                 this.furtherOption = this.question.frontOptions[1];
@@ -269,8 +269,8 @@ let myMultipleQuestion = Vue.extend({
                     this.question.frontOptions = []
                 } else {
                     this.question.frontOptions = [{
-                        question_id: this.selectedQuestionId,
-                        question_answer: this.selectedOption
+                        questionId: this.selectedQuestionId,
+                        questionAnswer: this.selectedOption
                     }];
                 }
 
@@ -307,8 +307,8 @@ let myMultipleQuestion = Vue.extend({
             this.disableEdit = false;
             this.enableFrontOptions = !!this.question.frontOptions.length;
             if (this.enableFrontOptions) {
-                this.selectedQuestionId = this.question.frontOptions[0].question_id;
-                this.selectedOption = this.question.frontOptions[0].question_answer;
+                this.selectedQuestionId = this.question.frontOptions[0].questionId;
+                this.selectedOption = this.question.frontOptions[0].questionAnswer;
             }
             this.title = this.question.title;
             this.isRequired = this.question.isRequired;
@@ -439,8 +439,8 @@ let myBlankQuestion = Vue.extend({
                     this.question.frontOptions = []
                 } else {
                     this.question.frontOptions = [{
-                        question_id: this.selectedQuestionId,
-                        question_answer: this.selectedOption
+                        questionId: this.selectedQuestionId,
+                        questionAnswer: this.selectedOption
                     }];
                     if (this.multipleFrontOptions)
                         this.question.frontOptions.push(this.furtherOption)
@@ -476,8 +476,8 @@ let myBlankQuestion = Vue.extend({
             this.enableFrontOptions = !!this.question.frontOptions.length;
             this.multipleFrontOptions = this.question.frontOptions.length > 1;
             if (this.enableFrontOptions) {
-                this.selectedQuestionId = this.question.frontOptions[0].question_id;
-                this.selectedOption = this.question.frontOptions[0].question_answer;
+                this.selectedQuestionId = this.question.frontOptions[0].questionId;
+                this.selectedOption = this.question.frontOptions[0].questionAnswer;
             }
             if (this.multipleFrontOptions) {
                 this.furtherOption = this.question.frontOptions[1];
@@ -600,8 +600,8 @@ let myOrderQuestion = Vue.extend({
                     this.question.frontOptions = []
                 } else {
                     this.question.frontOptions = [{
-                        question_id: this.selectedQuestionId,
-                        question_answer: this.selectedOption
+                        questionId: this.selectedQuestionId,
+                        questionAnswer: this.selectedOption
                     }];
                 }
 
@@ -639,10 +639,17 @@ let myOrderQuestion = Vue.extend({
 let app = new Vue({
     el: '#app',
     data: {
+        auth: {
+            userInfo: null,
+            showWindow: false
+        },
+        urls: {
+            post: serverUrl + '/api/survey/insertOrUpdateSurvey',
+        },
         questionCount: 0,
         groupCount: 0,
         survey: {
-            surveyTitle: '',
+            title: '',
             description: '',
             questions: []
         }
@@ -733,8 +740,8 @@ let app = new Vue({
                 isRequired: true,
                 defaultAns: '',
                 answerList: [],
-                frontOptions: [{question_id: '#' + (this.questionCount - 1), question_answer: '选项B'},
-                    {question_id: '#' + (this.questionCount - 1), question_answer: '选项C'}],
+                frontOptions: [{questionId: '#' + (this.questionCount - 1), questionAnswer: '选项B'},
+                    {questionId: '#' + (this.questionCount - 1), questionAnswer: '选项C'}],
                 skipLogices: [],
                 validation: '',
                 isPrivate: false
@@ -755,8 +762,8 @@ let app = new Vue({
                 defaultAns: '',
                 answerList: [],
                 frontOptions: [{
-                    question_id: '#' + (this.questionCount - 2),
-                    question_answer: '选项C'
+                    questionId: '#' + (this.questionCount - 2),
+                    questionAnswer: '选项C'
                 }],
                 skipLogices: [],
                 validation: '',
@@ -780,8 +787,8 @@ let app = new Vue({
                     {index: '选项B', content: 'E志愿'},
                     {index: '选项C', content: 'F志愿'}],
                 frontOptions: [{
-                    question_id: '#' + (this.questionCount - 3),
-                    question_answer: '选项D'
+                    questionId: '#' + (this.questionCount - 3),
+                    questionAnswer: '选项D'
                 }],
                 skipLogices: [],
                 validation: '',
@@ -811,21 +818,45 @@ let app = new Vue({
             };
             this.survey.questions.push(single)
             this.questionCount++
+
+            let plan = {
+                //前端使用
+                id: '#' + this.questionCount,
+                groupId: '$' + this.groupCount,
+                submitted: true,
+                //传至后端
+                title: '报考类别',
+                index: this.survey.questions.length + 1,
+                type: 'my-single',
+                isRequired: true,
+                defaultAns: '',
+                answerList: [{index: '选项A', content: '强基计划'}, {index: '选项B', content: '国家专项'}],
+                frontOptions: [{
+                    questionId: '#' + (this.questionCount - 1),
+                    questionAnswer: '选项A'
+                }],
+                skipLogices: [],
+                validation: '',
+                isPrivate: false
+            };
+            this.survey.questions.push(plan)
+            this.questionCount++
+
             let fillBlank = {
                 //前端使用
                 id: '#' + this.questionCount,
                 groupId: '$' + this.groupCount,
                 submitted: true,
                 //传至后端
-                title: '报考强基计划或国家专项学校名称',
+                title: '报考学校名称',
                 index: this.survey.questions.length + 1,
                 type: 'my-fill-blank',
                 isRequired: true,
                 defaultAns: '',
                 answerList: [],
                 frontOptions: [{
-                    question_id: '#' + (this.questionCount - 1),
-                    question_answer: '选项A'
+                    questionId: '#' + (this.questionCount - 2),
+                    questionAnswer: '选项A'
                 }],
                 skipLogices: [],
                 validation: '',
@@ -887,14 +918,77 @@ let app = new Vue({
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                //todo 向后端提交问卷
-                console.log('调用提交API')
+                let data = JSON.parse(JSON.stringify(this.survey))
+                data.ownerId = this.auth.userInfo.id
+                data.enable = true
+
+                data.questions.forEach(function (item) {
+                    delete item.groupId
+                    delete item.submitted
+
+                    if (item.type !== 'my-fill-blank') {
+                        let newList = []
+                        item.answerList.forEach(function (i) {
+                            newList.push(i.content)
+                        })
+                        item.answerList = newList
+                    }
+
+                    if (item.frontOptions.length > 0) {
+                        item.frontOptions.forEach(function (i) {
+                            let index = i.questionAnswer
+                            i.questionAnswer = index.charAt(index.length - 1).charCodeAt() - 'A'.charCodeAt()
+                        })
+                    }
+
+                    switch (item.type) {
+                        case 'my-single':
+                            item.type = 'SINGLE';
+                            break;
+                        case 'my-multiple':
+                            item.type = 'MULTIPLE';
+                            break;
+                        case 'my-fill-blank':
+                            item.type = 'FILL_BLANK';
+                            break;
+                        case 'my-order':
+                            item.type = 'ORDER';
+                            break;
+                    }
+                })
+                console.log(JSON.stringify(data))
+                let app = this
+                ajaxPostJSON(this.urls.post, data,
+                    function (r) {
+                        if (r.code === 'success')
+                            app.$message({
+                                message: '创建成功',
+                                type: 'success'
+                            })
+                    }, function () {
+
+                    })
                 //todo 跳转到详情页，待管理员启用
                 console.log('页面跳转')
             });
         }
     },
     created: function () {
-        //todo 根据cookie检查权限
+        this.auth.userInfo = JSON.parse(getSessionStorage('user'))
+        if (this.auth.userInfo == null) {
+            this.$message({
+                message: "请登录",
+                type: 'error'
+            });
+            return
+        }
+        if (this.auth.userInfo.role === 'admin') {
+            this.auth.showWindow = true
+            return
+        }
+        this.$message({
+            message: "您无权访问当前页面",
+            type: 'error'
+        });
     }
 })

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../css/statistic-overall.css">
+    <script src="../plugins/echarts.js"></script>
+    <script src="../utils/templateJS.js"></script>
+</head>
+<body>
+<div id="app" v-cloak v-if="showWindow" v-loading="fullScreenLoading">
+    <compent is="my-card" v-for="item in resultList" :entity="item" v-if="true">
+    </compent>
+</div>
+</body>
+<script src="../js/statistic-overall.js"></script>
+</html>

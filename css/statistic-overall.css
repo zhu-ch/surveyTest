@@ -1,0 +1,6 @@
+@import "../utils/templateCSS.css";
+
+.el-card__body {
+    overflow: auto;
+}
+
