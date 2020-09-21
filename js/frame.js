@@ -134,9 +134,12 @@ let app = new Vue({
             })
         },
         handleMessage: function(event) {
-            const data = event.data
-            if(data.code === "success"){
-                alert(data.test)
+            const data = event.data.data
+            if(data && data.type == "addTabSurveyPreview"){
+                this.addTab("问卷预览","survey-surveyPreview.html")
+            }
+            else if(data && data.type == "addTabCreateSurvey"){
+                this.addTab('创建问卷', 'survey-createSurvey.html')
             }
         }
     },

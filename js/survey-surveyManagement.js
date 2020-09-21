@@ -11,9 +11,9 @@ let myComponent = Vue.extend({
                 {{survey.title}}
             </span>
             <span style="float: right">
-                <span style="margin-right: 5px">ID:{{survey.id}} </span>
-                <span style="margin-right: 5px">当前状态:{{survey.enable}}</span>
-                <span style="margin-right: 5px">答卷数量:{{survey.answerCount}}</span>
+<!--                <span style="margin-right: 5px">ID:{{survey.id}} </span>-->
+                <span style="margin-right: 5px">当前状态:{{survey.enable == true ? "启用" : "停用"}}</span>
+                <span style="margin-right: 5px">答卷数量:{{survey.answerNum}}</span>
 <!--                todo 答卷数量-->
             </span>
         </div>
@@ -42,14 +42,17 @@ let myComponent = Vue.extend({
     `,
     methods: {
         clickEnable: function () {
-            ajaxPostJSON(this.enableSurvey, this.survey, function (d) {
-                if (d.code === 'success') {
+            let app = this
+            this.survey.enable = true
+            console.log("enable")
+            ajaxPostJSON(this.urls.enableSurvey, this.survey, function (d) {
+                if (d.code == 'success') {
                     app.$message({
                         message: "操作成功",
                         type: 'success'
                     });
-                    app.refresh("update"); // 添加完成后刷新页面
-                } else if (d.code === 'warning')
+                    app.$emit("refresh","update");
+                } else if (d.code == 'warning')
                     app.$message({
                         message: "操作失败",
                         type: 'error'
@@ -68,16 +71,42 @@ let myComponent = Vue.extend({
         },
         clickStop: function () {
             //    todo 停止问卷
-        },
-        clickDelete: function () {
-            ajaxPostJSON(this.deleteSurvey, this.survey, function (d) {
-                if (d.code === 'success') {
+            let app = this
+            this.survey.enable = false
+            ajaxPostJSON(this.urls.disableSurvey, this.survey, function (d) {
+                if (d.code == 'success') {
                     app.$message({
                         message: "操作成功",
                         type: 'success'
                     });
-                    app.refresh("update"); // 添加完成后刷新页面
-                } else if (d.code === 'warning')
+                    app.$emit("refresh","update"); // 添加完成后刷新页面
+                } else if (d.code == 'warning')
+                    app.$message({
+                        message: "操作失败",
+                        type: 'error'
+                    });
+                else
+                    app.$message({
+                        message: '服务器错误，原因\n' + d.data,
+                        type: 'error'
+                    });
+            }, function (d) {
+                app.$message({
+                    message: '未知错误',
+                    type: 'error'
+                });
+            })
+        },
+        clickDelete: function () {
+            let app = this
+            ajaxPostJSON(this.urls.deleteSurvey, this.survey, function (d) {
+                if (d.code == 'success') {
+                    app.$message({
+                        message: "操作成功",
+                        type: 'success'
+                    });
+                    app.$emit("refresh","update"); // 添加完成后刷新页面
+                } else if (d.code == 'warning')
                     app.$message({
                         message: "操作失败",
                         type: 'error'
@@ -97,8 +126,8 @@ let myComponent = Vue.extend({
         clickPreview: function () {
             window.parent.postMessage({
                 data: {
-                    code:"success",
-                    message:"addTabSurveyPreview"
+                    type:"addTabSurveyPreview",
+                    params:[]
                 }
             }, '*');
         }
@@ -106,7 +135,8 @@ let myComponent = Vue.extend({
     data() {
         return{
             urls: {
-                enableSurvey: serverUrl + "/api/survey/postSurvey",
+                enableSurvey: serverUrl + "/api/survey/enableSurvey",
+                disableSurvey: serverUrl + "/api/survey/enableSurvey",
                 deleteSurvey: serverUrl + "/api/survey/deleteSurvey"
             }
         }
@@ -123,7 +153,6 @@ let app = new Vue({
         urls: {
             querySurveyByConditions: serverUrl + "/api/survey/getSurveyByConditions",
             getAnswerCountByConditions: serverUrl+"/api/survey/getAnswerCountByConditions"
-
         },
         refreshType: {
             reload: "reload",
@@ -177,14 +206,26 @@ let app = new Vue({
             questions: [],
             startTime: "",
             endTime: "",
+        },
+        AnsEntity:{
+            questionId:"",
+            answer:""
         }
     },
     methods: {
+        clickCreate: function(){
+            window.parent.postMessage({
+                data: {
+                    type:"addTabCreateSurvey",
+                    params:[]
+                }
+            }, '*');
+        },
         onPageIndexChange: function (currentIndex) {
             this.onShowTable.entities = this.totalTable.entities.slice((currentIndex - 1) * this.onShowTable.params.pageSize, (currentIndex * this.onShowTable.params.pageSize))
-            for (var j = 0, i = (currentIndex - 1) * this.onShowTable.params.pageSize;i<(currentIndex * this.onShowTable.params.pageSize);i++,j++){
-                this.onShowTable.entities[j].questions = this.totalTable.entities[i].questions.slice(0)
-            }
+            // for (var j = 0, i = (currentIndex - 1) * this.onShowTable.params.pageSize;i<(currentIndex * this.onShowTable.params.pageSize);i++,j++){
+            //     this.onShowTable.entities[j].questions = this.totalTable.entities[i].questions.slice(0)
+            // }
         },
         onPageSizeChange: function(newSize){
             this.onShowTable.params.pageSize = newSize;
@@ -206,25 +247,33 @@ let app = new Vue({
         refreshTotalTable: function (type) {
             this.initializeSurveyEntity();
             let app = this;
-            ajaxPostJSON(this.urls.querySurveyByConditions, this.surveyEntity, function (d) {
+            ajaxPostJSONAsync(this.urls.querySurveyByConditions, this.surveyEntity, function (d) {
                 app.totalTable.entities = d.data;
-                if (type == "reload") {
-                    app.reloadRefreshMethod()
-
-                } else if (type == "update") {
-                    app.updateRefreshMethod()
-                } else {
-                    app.$message("error，参数错误")
-                }
+                console.log("finish")
             }, function (d) {
                 app.$message("服务器错误")
             })
+            for(i in app.totalTable.entities){
+                app.AnsEntity.questionId = app.totalTable.entities[i].id;
+                ajaxPostJSONAsync(this.urls.getAnswerCountByConditions,this.AnsEntity,function (d) {
+                    app.totalTable.entities[i].answerNum = d.data
+                },function (d) {
+                    app.$message("服务器错误")
+                })
+            }
+            if (type == "reload") {
+                app.reloadRefreshMethod()
+            } else if (type == "update") {
+                app.updateRefreshMethod()
+            } else {
+                app.$message("error，参数错误")
+            }
         },
         refreshTotalTableByID: function (condition,type) {
             this.initializeSurveyEntity();
             this.surveyEntity.id = condition;
             let app = this;
-            ajaxPostJSON(this.urls.querySurveyByConditions, this.surveyEntity, function (d) {
+            ajaxPostJSONAsync(this.urls.querySurveyByConditions, this.surveyEntity, function (d) {
                 app.totalTable.entities = d.data;
                 if (type == "reload") {
                     app.reloadRefreshMethod()
@@ -237,6 +286,22 @@ let app = new Vue({
             }, function (d) {
                 app.$message("服务器错误")
             })
+
+            for(i in app.totalTable.entities){
+                app.AnsEntity.questionId = app.totalTable.entities[i].id;
+                ajaxPostJSONAsync(this.urls.getAnswerCountByConditions,this.AnsEntity,function (d) {
+                    app.totalTable.entities[i].answerNum = d.data
+                },function (d) {
+                    app.$message("服务器错误")
+                })
+            }
+            if (type == "reload") {
+                app.reloadRefreshMethod()
+            } else if (type == "update") {
+                app.updateRefreshMethod()
+            } else {
+                app.$message("error，参数错误")
+            }
         },
         refreshTotalTableByTitle: function (condition,type) {
             this.initializeSurveyEntity();
@@ -258,6 +323,21 @@ let app = new Vue({
                     type: "error"
                 })
             })
+            for(i in app.totalTable.entities){
+                app.AnsEntity.questionId = app.totalTable.entities[i].id;
+                ajaxPostJSONAsync(this.urls.getAnswerCountByConditions,this.AnsEntity,function (d) {
+                    app.totalTable.entities[i].answerNum = d.data
+                },function (d) {
+                    app.$message("服务器错误")
+                })
+            }
+            if (type == "reload") {
+                app.reloadRefreshMethod()
+            } else if (type == "update") {
+                app.updateRefreshMethod()
+            } else {
+                app.$message("error，参数错误")
+            }
         },
         refreshTotalTableByDescription: function (condition,type) {
             this.initializeSurveyEntity();
@@ -283,16 +363,16 @@ let app = new Vue({
         updateRefreshMethod: function () {
             console.log(this.totalTable.entities)
             this.onShowTable.entities = this.totalTable.entities.slice((this.onShowTable.params.pageIndex - 1) * this.onShowTable.params.pageSize, (this.onShowTable.params.pageIndex * this.onShowTable.params.pageSize))
-            for (var j = 0, i = (currentIndex - 1) * this.onShowTable.params.pageSize;i<(currentIndex * this.onShowTable.params.pageSize);i++,j++){
-                this.onShowTable.entities[j].questions = this.totalTable.entities[i].questions.slice(0)
-            }
+            // for (var j = 0, i = (this.onShowTable.params.pageIndex - 1) * this.onShowTable.params.pageSize;i<(this.onShowTable.params.pageIndex  * this.onShowTable.params.pageSize);i++,j++){
+            //     this.onShowTable.entities[j].questions = this.totalTable.entities[i].questions.slice(0)
+            // }
         },
         reloadRefreshMethod: function () {
             this.onShowTable.params.pageIndex = 1
             this.onShowTable.entities = this.totalTable.entities.slice((this.onShowTable.params.pageIndex - 1) * this.onShowTable.params.pageSize, (this.onShowTable.params.pageIndex * this.onShowTable.params.pageSize))
-            for (var j = 0, i = (currentIndex - 1) * this.onShowTable.params.pageSize;i<(currentIndex * this.onShowTable.params.pageSize);i++,j++){
-                this.onShowTable.entities[j].questions = this.totalTable.entities[i].questions.slice(0)
-            }
+            // for (var j = 0, i = (this.onShowTable.params.pageIndex  - 1) * this.onShowTable.params.pageSize;i<(this.onShowTable.params.pageIndex  * this.onShowTable.params.pageSize);i++,j++){
+            //     this.onShowTable.entities[j].questions = this.totalTable.entities[i].questions.slice(0)
+            // }
         },
         initializeSurveyEntity: function () {
             this.surveyEntity.id = "";

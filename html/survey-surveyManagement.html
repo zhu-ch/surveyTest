@@ -22,12 +22,12 @@
                       @keyup.enter.native="onShowTable.params.pageIndex=1;refreshTotalTable">
             </el-input>
             <el-button size="small" type="primary" style="position:relative;"
-                       @click="onShowTable.params.pageIndex=1;refresh('reload')">
+                       @click="onShowTable.params.pageIndex=1;refresh(reload)">
                 <span>搜索</span>
             </el-button>
         </span>
         <span class="button-group" style="float: right">
-            <el-button size="small" type="success">
+            <el-button size="small" type="success" @click="clickCreate">
                 <span>创建问卷</span>
 <!--                todo-->
             </el-button>
@@ -37,7 +37,7 @@
 
     <div style="height:calc(100% - 116px);margin-top: 50px;padding-left: 15px;padding-right: 15px;overflow: auto;width: 100%">
         <component is="my-component" v-for="item in onShowTable.entities" :survey="item"
-                   v-bind:key="item.id">
+                   v-bind:key="item.id" v-on:refresh="refresh">
         </component>
     </div>
 
