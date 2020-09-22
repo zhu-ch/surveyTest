@@ -386,6 +386,7 @@ let app = new Vue({
         // todo 权限检查
         // todo 从后端获取问卷
         var tmp_id = getSessionStorage("fill-in-survey-id")
+        delSessionStorage("fill-in-survey-id")
         if(tmp_id != ""){
             this.getSurvey(tmp_id)
         }

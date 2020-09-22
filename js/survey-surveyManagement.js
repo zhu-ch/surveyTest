@@ -139,7 +139,7 @@ let myComponent = Vue.extend({
                 data: {
                     type: "addTabSurveyPreview",
                     title: this.survey.title,
-                    params: []
+                    params: [this.survey.id]
                 }
             }, '*');
         },
@@ -293,9 +293,10 @@ let app = new Vue({
                 app.$message("服务器错误")
             })
             for (i in app.totalTable.entities) {
-                app.AnsEntity.questionId = app.totalTable.entities[i].id;
+                var AnsServeyEntity ={}
+                AnsServeyEntity.surveyId = app.totalTable.entities[i].id
 
-                ajaxPostJSONAsync(this.urls.getAnswerCountByConditions, this.AnsEntity, function (d) {
+                ajaxPostJSONAsync(this.urls.getAnswerCountByConditions, AnsServeyEntity, function (d) {
 
                     app.totalTable.entities[i].answerNum = d.data
                 }, function (d) {

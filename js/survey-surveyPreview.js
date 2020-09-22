@@ -143,11 +143,15 @@ let myBlankQuestion = Vue.extend({
             questionInner: {},
             validationCheck: false,
             validationMessage: '',
+            configParam:"",
             validationType: [
                 {type: 'phone', text: '手机号'},
                 {type: 'integer', text: '整数'},
                 {type: 'rank', text: '分数段（管理员预置）'},
                 {type: 'grade', text: '成绩（管理员预置）'}],
+            urls:{
+                selectConfig:"/api/sys/config/selectConfigListByPage"
+            }
         }
     },
     template: `
@@ -202,28 +206,25 @@ let myBlankQuestion = Vue.extend({
                         this.questionInner.checked = true;
                         this.validationMessage = ''
                     }
-                } else if (this.questionInner.validation == 'rank') {
-                    //todo 排名正则表达式
-                    // if(!(/^1[3456789]\d{9}$/.test(val))){
-                    //     this.question.checked = false;
-                    //     this.validationMessage = '排名格式错误'
-                    // }
-                    // else{
-                    //     this.$emit("submit-questions", this.questionInner)
-                    //     this.question.checked = true;
-                    //     this.validationMessage = ''
-                    // }
-                } else if (this.questionInner.validation == 'grade') {
-                    //todo 成绩正则表达式
-                    // if(!(/^1[3456789]\d{9}$/.test(val))){
-                    //     this.$emit("submit-questions", this.questionInner)
-                    //     this.question.checked = false;
-                    //     this.validationMessage = '成绩格式错误'
-                    // }
-                    // else{
-                    //     this.question.checked = true;
-                    //     this.validationMessage = ''
-                    // }
+                } else {
+
+                    this.questionInner.validation
+                    var ConfigEntity={}
+                    ConfigEntity.id = ""
+                    ConfigEntity.configKey = this.questionInner.validation
+                    ConfigEntity.configValue = ""
+                    ConfigEntity.remark = ""
+                    app = this
+                    ajaxPostJSONAsync(this.urls.selectConfig,ConfigEntity,function (d) {
+                        var resList = d.result;
+                        app.configParam = resList[0];
+                        console.log(app.configParam)
+                    })
+                    this.validationMessage = this.questionInner.validation + this.configParam
+                    if(eval(val+this.configParam)){
+                        this.validationMessage = ''
+                    }
+
                 }
             } else {
                 this.questionInner.checked = false;
@@ -384,9 +385,14 @@ let app = new Vue({
         this.survey.description = "默认问卷描述";
         // todo 权限检查
         // todo 从后端获取问卷
-        this.getSurvey("59e84b944f014ab181036013e6b4aee3")
-
-
+        var tmp_id = getSessionStorage("fill-in-survey-id")
+        delSessionStorage("fill-in-survey-id")
+        if(tmp_id != ""){
+            this.getSurvey(tmp_id)
+        }
+        else{
+            this.$message("问卷参数错误")
+        }
 
     },
     methods:{
@@ -424,98 +430,98 @@ let app = new Vue({
             })
         },
         clickSubmit: function () {
-            // console.log("clickSubmit")
-            //
-            // for(var i in this.survey.questions){
-            //     if(this.renderStatus[i]){
-            //         if(!this.survey.questions[i].checked){
-            //             this.$message.error('您还有未填写完成的题目');
-            //             return;
-            //         }
-            //     }
-            // }
-            //
-            //
-            //
-            //
-            // this.$emit("collectQuestions")
-            //
-            // var AnsSurveyEntity={}
-            // AnsSurveyEntity.surveyId = this.survey.id
-            // AnsSurveyEntity.respondentId = JSON.parse(getSessionStorage("user"))
-            // AnsSurveyEntity.ansList = []
-            //
-            //
-            //
-            //
-            // for(var i in this.survey.questions){
-            //     var AnsEntity={}
-            //     var ans = ""
-            //     AnsEntity.questionId = this.survey.questions[i].id
-            //     if(this.survey.questions[i].type === "SINGLE"){
-            //
-            //         for(j in this.survey.questions[i].selectedList){
-            //             ans+=this.survey.questions[i].selectedList[j]
-            //             if(j != this.survey.questions[i].selectedList.length-1){
-            //                 ans+="@@"
-            //             }
-            //         }
-            //         AnsEntity.answer = ans
-            //     }
-            //     else if(this.survey.questions[i].type === "MULTIPLE"){
-            //         for(j in this.survey.questions[i].selectedList){
-            //             ans+=this.survey.questions[i].selectedList[j]
-            //             if(j !== this.survey.questions[i].selectedList.length-1){
-            //                 ans+="@@"
-            //             }
-            //         }
-            //         AnsEntity.answer = ans
-            //     }
-            //     else if(this.survey.questions[i].type === "FILL_BLANK"){
-            //         AnsEntity.answer = this.survey.questions[i].blankQuestionAns
-            //     }
-            //     else if(this.survey.questions[i].type === "ORDER"){
-            //         for(j in this.survey.questions[i].orderAnswer){
-            //             ans+=this.survey.questions[i].orderAnswer[j]
-            //             if(j !== this.survey.questions[i].orderAnswer.length-1){
-            //                 ans+="@@"
-            //             }
-            //         }
-            //         AnsEntity.answer = ans
-            //     }
-            //     AnsSurveyEntity.ansList.push(AnsEntity)
-            // }
-            // console.log(AnsSurveyEntity)
-            //
-            // app = this
-            // ajaxPostJSONAsync(this.urls.insertAnswer,AnsSurveyEntity,function (d) {
-            //     if (d.status == 'success') {
-            //         app.cardloading = false
-            //         app.$message({
-            //             message: "保存成功",
-            //             type: 'success'
-            //         });
-            //         window.parent.postMessage({
-            //             data: {
-            //                 type:"addTabHistorySurvey",
-            //                 params:[]
-            //             }
-            //         }, '*');
-            //
-            //     } else if (d.status == 'warning'){
-            //         app.$message({
-            //             message: "操作失败",
-            //             type: 'error'
-            //         });
-            //     }
-            //
-            //
-            // },function (d) {
-            //     app.$message({
-            //         message: '未知错误',
-            //         type: 'error'
-            //     });
-            // })
+            console.log("clickSubmit")
+
+            for(var i in this.survey.questions){
+                if(this.renderStatus[i]){
+                    if(!this.survey.questions[i].checked){
+                        this.$message.error('您还有未填写完成的题目');
+                        return;
+                    }
+                }
+            }
+
+
+
+
+            this.$emit("collectQuestions")
+
+            var AnsSurveyEntity={}
+            AnsSurveyEntity.surveyId = this.survey.id
+            AnsSurveyEntity.respondentId = JSON.parse(getSessionStorage("user")).id
+            AnsSurveyEntity.ansList = []
+
+
+
+
+            for(var i in this.survey.questions){
+                var AnsEntity={}
+                var ans = ""
+                AnsEntity.questionId = this.survey.questions[i].id
+                if(this.survey.questions[i].type === "SINGLE"){
+
+                    for(j in this.survey.questions[i].selectedList){
+                        ans+=this.survey.questions[i].selectedList[j]
+                        if(j != this.survey.questions[i].selectedList.length-1){
+                            ans+="@@"
+                        }
+                    }
+                    AnsEntity.answer = ans
+                }
+                else if(this.survey.questions[i].type === "MULTIPLE"){
+                    for(j in this.survey.questions[i].selectedList){
+                        ans+=this.survey.questions[i].selectedList[j]
+                        if(j != this.survey.questions[i].selectedList.length-1){
+                            ans+="@@"
+                        }
+                    }
+                    AnsEntity.answer = ans
+                }
+                else if(this.survey.questions[i].type === "FILL_BLANK"){
+                    AnsEntity.answer = this.survey.questions[i].blankQuestionAns
+                }
+                else if(this.survey.questions[i].type === "ORDER"){
+                    for(j in this.survey.questions[i].orderAnswer){
+                        ans+=this.survey.questions[i].orderAnswer[j]
+                        if(j != this.survey.questions[i].orderAnswer.length-1){
+                            ans+="@@"
+                        }
+                    }
+                    AnsEntity.answer = ans
+                }
+                AnsSurveyEntity.ansList.push(AnsEntity)
+            }
+            console.log(AnsSurveyEntity)
+
+            app = this
+            ajaxPostJSONAsync(this.urls.insertAnswer,AnsSurveyEntity,function (d) {
+                if (d.status == 'success') {
+                    app.cardloading = false
+                    app.$message({
+                        message: "保存成功",
+                        type: 'success'
+                    });
+                    window.parent.postMessage({
+                        data: {
+                            type:"addTabHistorySurvey",
+                            params:[]
+                        }
+                    }, '*');
+
+                } else if (d.status == 'warning'){
+                    app.$message({
+                        message: "操作失败",
+                        type: 'error'
+                    });
+                }
+
+
+            },function (d) {
+                app.$message({
+                    message: '未知错误',
+                    type: 'error'
+                });
+            })
 
         },
         initializeSurveyEntity: function () {
