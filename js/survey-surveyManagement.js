@@ -178,7 +178,8 @@ let app = new Vue({
     data: {
         qcode:{
             loading:false,
-            visible:false
+            visible:false,
+            qrcodeObjcet:''
         },
         user: {},
         showWindow: false,
@@ -451,8 +452,15 @@ let app = new Vue({
                 let a=document.getElementById('codeArea')
                 console.log(a)
 
-                new QRCode(a,'https://wxxxyx.m0yuqi.cn/survey/html/frame.html?surveyId='+id);
-                app.qcode.loading = false
+                if (app.qcode.qrcodeObjcet != ''){
+                    app.qcode.qrcodeObjcet.clear()
+                    app.qcode.qrcodeObjcet.makeCode('https://wxxxyx.m0yuqi.cn/survey/html/frame.html?surveyId='+id)
+                }else{
+                    app.qcode.qrcodeObjcet = new QRCode(a,'https://wxxxyx.m0yuqi.cn/survey/html/frame.html?surveyId='+id);
+                    app.qcode.loading = false
+                }
+
+
             },100)
 
 
