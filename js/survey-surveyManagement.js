@@ -454,9 +454,9 @@ let app = new Vue({
 
                 if (app.qcode.qrcodeObjcet != ''){
                     app.qcode.qrcodeObjcet.clear()
-                    app.qcode.qrcodeObjcet.makeCode('https://wxxxyx.m0yuqi.cn/survey/html/frame.html?surveyId='+id)
+                    app.qcode.qrcodeObjcet.makeCode('https://wxxyx.m0yuqi.cn/survey/html/frame.html?surveyId='+id)
                 }else{
-                    app.qcode.qrcodeObjcet = new QRCode(a,'https://wxxxyx.m0yuqi.cn/survey/html/frame.html?surveyId='+id);
+                    app.qcode.qrcodeObjcet = new QRCode(a,'https://wxxyx.m0yuqi.cn/survey/html/frame.html?surveyId='+id);
                     app.qcode.loading = false
                 }
 
