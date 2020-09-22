@@ -14,10 +14,10 @@
         <div style="width: 30px"></div>
     </div>
 
-    <!--筛选-->
     <el-collapse v-model="filter.activeNames">
+        <!--筛选-->
         <el-collapse-item title="筛选面板" name="1">
-            <p>个人信息</p>
+            <p class="sub-title">个人信息</p>
             <el-form :model="queryEntity.userConditions" label-width="80px">
                 <el-form-item label="高考年份">
                     <el-input v-model="queryEntity.userConditions.year" clearable></el-input>
@@ -35,7 +35,7 @@
 
             <el-divider></el-divider>
 
-            <p>作答情况</p>
+            <p class="sub-title">作答情况</p>
             <el-button type="primary" icon="el-icon-plus" circle @click="addSurveyFilter"></el-button>
             <component is="my-survey-filter" v-for="(item,index) in filter.surveyFilterList" :key="index"
                        :questions="filter.questionList" :condition="item"

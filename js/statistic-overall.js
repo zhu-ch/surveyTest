@@ -153,7 +153,7 @@ let card = Vue.extend({
             }
             myChart.setOption(option)
         },
-        changeSort (val) {
+        changeSort(val) {
             console.log(val) // column: {…} order: "ascending" prop: "date"
             // 根据当前排序重新获取后台数据,一般后台会需要一个排序的参数
 
@@ -365,7 +365,7 @@ let app = new Vue({
     created: function () {
         //todo 权限检查
         this.showWindow = true
-        this.queryEntity.surveyEntity.id = '79aef530b1894beb89f8c8e80bfa25db'
+        this.queryEntity.surveyEntity.id = getSessionStorage('overall-survey-id')
 
         //获取题目信息
         let app = this
@@ -382,5 +382,7 @@ let app = new Vue({
 
         //获取数据
         this.getSurveyStatistics()
+        delSessionStorage('overall-survey-id')
+
     }
 })
