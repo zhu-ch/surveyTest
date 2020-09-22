@@ -54,12 +54,29 @@ let app = new Vue({
             this.userInfo = JSON.parse(getSessionStorage('user'))
             if (this.userInfo != null) {
                 this.showWindow = true;
+                console.log(getSessionStorage("fill-in-survey-id"))
+                if(getSessionStorage("fill-in-survey-id") != null){
+                    this.addTab("问卷填写","survey-fillInSurvey.html")
+                }
                 return;
             }
             this.$message({
                 message: "请登录",
                 type: 'error'
             });
+            console.log(window.location.search)
+            var tmp_str = window.location.search.substring(1,window.location.search.length)
+            var arr = tmp_str.split("&")
+            var object = new Object()
+            for (var i = 0; i < arr.length; i++) {
+                var tmp_arr = arr[i].split("=");
+                object[decodeURIComponent(tmp_arr[0])] = decodeURIComponent(tmp_arr[1]);
+            }
+
+
+            var surveyId = object["surveyId"]
+            if(surveyId!=null)
+                setSessionStorage("fill-in-survey-id",surveyId)
             setTimeout(function () {
                 window.open("welcome.html", "_self")
             }, 2000);
