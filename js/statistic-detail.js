@@ -206,9 +206,8 @@ let app = new Vue({
         }
     },
     created: function () {
-        //todo 权限验证
         this.showWindow = true
-        this.queryEntity.surveyEntity.id = '79aef530b1894beb89f8c8e80bfa25db'
+        this.queryEntity.surveyEntity.id = getSessionStorage('detail-survey-id')
 
         //获取题目信息
         let app = this
@@ -229,5 +228,6 @@ let app = new Vue({
 
         //获取数据
         this.queryData()
+        delSessionStorage('detail-survey-id')
     }
 })
