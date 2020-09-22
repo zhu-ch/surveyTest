@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../css/statistic-detail.css">
+    <script src="../utils/templateJS.js"></script>
+</head>
+<body>
+<div id="app" v-cloak v-if="showWindow" v-loading="fullScreenLoading">
+    <div style="display: flex; justify-content: flex-end">
+        <el-button type="primary" size="small" @click="queryData">查询</el-button>
+        <el-button type="success" size="small" @click="exportExcel">导出为Excel</el-button>
+        <div style="width: 30px"></div>
+    </div>
+
+    <!--筛选-->
+    <el-collapse v-model="filter.activeNames">
+        <el-collapse-item title="筛选面板" name="1">
+            <p>个人信息</p>
+            <el-form :model="queryEntity.userConditions" label-width="80px">
+                <el-form-item label="高考年份">
+                    <el-input v-model="queryEntity.userConditions.year" clearable></el-input>
+                </el-form-item>
+                <el-form-item label="毕业中学">
+                    <el-input v-model="queryEntity.userConditions.high_school" clearable></el-input>
+                </el-form-item>
+                <el-form-item label="选考科目">
+                    <el-input v-model="queryEntity.userConditions.subject" clearable></el-input>
+                </el-form-item>
+                <el-form-item label="高考模式">
+                    <el-input v-model="queryEntity.userConditions.model" clearable></el-input>
+                </el-form-item>
+            </el-form>
+
+            <el-divider></el-divider>
+
+            <p>作答情况</p>
+            <el-button type="primary" icon="el-icon-plus" circle @click="addSurveyFilter"></el-button>
+            <component is="my-survey-filter" v-for="(item,index) in filter.surveyFilterList" :key="index"
+                       :questions="filter.questionList" :condition="item"
+                       v-on:submit-this-question="submitQuestionByIndex"
+                       v-on:delete-this-question="deleteQuestionByIndex"></component>
+        </el-collapse-item>
+    </el-collapse>
+
+    <!--表格-->
+    <el-table :data="table.tableData" style="width: 100%" max-height="600" height="600" stripe
+              @sort-change="changeSort">
+        <!--个人信息-->
+        <el-table-column label="个人信息" align="center">
+            <el-table-column prop="name" label="姓名" fixed sortable></el-table-column>
+            <el-table-column prop="highSchool" label="毕业高中" sortable></el-table-column>
+            <el-table-column prop="contact" label="联系方式" sortable></el-table-column>
+        </el-table-column>
+
+        <!--问卷-->
+        <el-table-column label="作答情况" align="center">
+            <el-table-column v-for="(item, idx) in table.questionList" :key="item.id"
+                             :label="item.index + '.' + item.title" sortable>
+                <template slot-scope="scope">
+                    <span>{{scope.row[item.id]}}</span>
+                </template>
+            </el-table-column>
+        </el-table-column>
+    </el-table>
+</div>
+</body>
+<script src="../js/statistic-detail.js"></script>
+</html>

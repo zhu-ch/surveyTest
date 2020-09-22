@@ -1,0 +1,11 @@
+@import "../utils/templateCSS.css";
+
+.el-collapse-item__header {
+    padding: 10px 20px 10px 20px;
+    font-size: large !important;
+}
+
+.el-collapse-item__content{
+    padding-left: 50px;
+    padding-right: 50px;
+}
