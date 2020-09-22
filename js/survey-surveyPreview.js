@@ -393,7 +393,6 @@ let app = new Vue({
         else{
             this.$message("问卷参数错误")
         }
-
     },
     methods:{
         getSurvey: function(id){

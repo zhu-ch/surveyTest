@@ -303,6 +303,9 @@ let app = new Vue({
                     app.$message("服务器错误")
                 })
             }
+
+            
+
             // this.fullScreenLoading = false
             if (type == "reload") {
                 app.reloadRefreshMethod()
@@ -332,13 +335,18 @@ let app = new Vue({
             })
 
             for (i in app.totalTable.entities) {
-                app.AnsEntity.questionId = app.totalTable.entities[i].id;
-                ajaxPostJSONAsync(this.urls.getAnswerCountByConditions, this.AnsEntity, function (d) {
+                var AnsServeyEntity ={}
+                AnsServeyEntity.surveyId = app.totalTable.entities[i].id
+
+                ajaxPostJSONAsync(this.urls.getAnswerCountByConditions, AnsServeyEntity, function (d) {
+
                     app.totalTable.entities[i].answerNum = d.data
                 }, function (d) {
                     app.$message("服务器错误")
                 })
             }
+            
+
             // this.fullScreenLoading = false
             if (type == "reload") {
                 app.reloadRefreshMethod()
@@ -370,13 +378,19 @@ let app = new Vue({
                 })
             })
             for (i in app.totalTable.entities) {
-                app.AnsEntity.questionId = app.totalTable.entities[i].id;
-                ajaxPostJSONAsync(this.urls.getAnswerCountByConditions, this.AnsEntity, function (d) {
+                var AnsServeyEntity ={}
+                AnsServeyEntity.surveyId = app.totalTable.entities[i].id
+
+                ajaxPostJSONAsync(this.urls.getAnswerCountByConditions, AnsServeyEntity, function (d) {
+
                     app.totalTable.entities[i].answerNum = d.data
                 }, function (d) {
                     app.$message("服务器错误")
                 })
             }
+
+            
+
             // this.fullScreenLoading = false
             if (type == "reload") {
                 app.reloadRefreshMethod()
@@ -409,13 +423,19 @@ let app = new Vue({
                 })
             })
             for (i in app.totalTable.entities) {
-                app.AnsEntity.questionId = app.totalTable.entities[i].id;
-                ajaxPostJSONAsync(this.urls.getAnswerCountByConditions, this.AnsEntity, function (d) {
+                var AnsServeyEntity ={}
+                AnsServeyEntity.surveyId = app.totalTable.entities[i].id
+
+                ajaxPostJSONAsync(this.urls.getAnswerCountByConditions, AnsServeyEntity, function (d) {
+
                     app.totalTable.entities[i].answerNum = d.data
                 }, function (d) {
                     app.$message("服务器错误")
                 })
             }
+
+            
+
             // this.fullScreenLoading = false
             if (type == "reload") {
                 app.reloadRefreshMethod()
