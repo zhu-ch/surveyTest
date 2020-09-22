@@ -4,10 +4,14 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="../utils/templateJS.js"></script>
+    <script src="../plugins/qrcode.js"></script>
     <link rel="stylesheet" href="../css/survey-surveyManagement.css">
+
+
 
 </head>
 <body>
+
 <div id="app" v-cloak style="background: white;height: 100%;overflow: hidden;" v-loading="fullScreenLoading" v-if="showWindow">
     <!--顶栏-->
     <div style="padding: 15px 20px 0 15px;">
@@ -37,12 +41,15 @@
 
     <div style="height:calc(100% - 116px);margin-top: 50px;padding-left: 15px;padding-right: 15px;overflow: auto;width: 100%">
         <component is="my-component" v-for="item in onShowTable.entities" :survey="item"
-                   v-bind:key="item.id" v-on:refresh="refresh">
+                   v-bind:key="item.id" v-on:refresh="refresh" v-on:qrcode="openDialog">
         </component>
     </div>
 
 
-
+    <el-dialog width="300px" title="二维码" :visible.sync="qcode.visible"
+               v-loading="qcode.loading">
+        <div id="codeArea" style="height: 250px; width: 100px"></div>
+    </el-dialog>
 
     <!--分页-->
     <el-pagination style="text-align: center;margin: 8px auto;"
@@ -57,6 +64,7 @@
 
 
 </div>
+
 </body>
 <script src="../js/survey-surveyManagement.js"></script>
 </html>

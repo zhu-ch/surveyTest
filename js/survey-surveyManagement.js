@@ -54,9 +54,10 @@ let myComponent = Vue.extend({
                     app.cardloading = false
                     app.$message({
                         message: "操作成功",
-                        type: 'success'
+                        type: 'success',
                     });
                     app.$emit("refresh", "update");
+                    app.$emit('qrcode',app.survey.id)
                 } else if (d.code == 'warning')
                     app.$message({
                         message: "操作失败",
@@ -175,6 +176,10 @@ let app = new Vue({
         'my-component': myComponent
     },
     data: {
+        qcode:{
+            loading:false,
+            visible:false
+        },
         user: {},
         showWindow: false,
         fullScreenLoading: false,
@@ -437,6 +442,21 @@ let app = new Vue({
             this.surveyEntity.questions = [];
             this.surveyEntity.startTime = "";
             this.surveyEntity.endTime = "";
+        },
+        openDialog:function (id){
+            let app=this
+            app.qcode.visible = true
+
+            setTimeout(function (){
+                let a=document.getElementById('codeArea')
+                console.log(a)
+
+                new QRCode(a,'https://wxxxyx.m0yuqi.cn/survey/html/frame.html?surveyId='+id);
+                app.qcode.loading = false
+            },100)
+
+
+
         }
 
 

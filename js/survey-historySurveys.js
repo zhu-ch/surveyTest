@@ -5,7 +5,8 @@ let app = new Vue({
         showWindow: false,
         urls: {
             getAnswerByConditions: serverUrl + '/api/survey/getAnswerByConditions',
-            deleteAnswer: serverUrl + '/api/survey/deleteAnswer'
+            deleteAnswer: serverUrl + '/api/survey/deleteAnswer',
+            getSurveyByConditions : serverUrl + '/api/survey/getSurveyByConditions'
         },
         fullScreenLoading: false,
         table: {
@@ -48,8 +49,20 @@ let app = new Vue({
             let app = this;
             app.table.entity.loading = true;
             ajaxPostJSON(this.urls.getAnswerByConditions, data, function (d) {
+                console.log(d)
                 app.table.entity.loading = false;
-                app.table.entity.data = d.data.resultList;
+                let resData = d.data;
+                app.table.entity.data = []
+                console.log(resData)
+                for ( i in resData){
+                    app.table.entity.data[i] = {surveyId:resData[i].surveyId}
+                    let tempData = {surveyId: resData[i].surveyId}
+                    tempData.page = app.table.entity.params
+                    ajaxPostJSON(app.urls.getSurveyByConditions, tempData,function (d){
+                        app.table.entity.data[i].title = d.data[0].title
+                    },function (){},false)
+                }
+
                 app.table.entity.params.total = d.data.total;
             }, function () {
                 app.table.entity.loading = false;
@@ -57,7 +70,7 @@ let app = new Vue({
                     message: '未知错误',
                     type: 'error'
                 });
-            });
+            },false);
         },
 
         deleteEntityListByIds: function (val) {

@@ -16,24 +16,24 @@
     <el-table :data="table.entity.data" height="calc(100% - 116px)" v-loading="table.entity.loading"
               style="width: 100%;overflow-y: hidden;margin-top: 20px;" class="scroll-bar"
               @selection-change="onSelectionChange" stripe>
-        <el-table-column type="selection" width="40"></el-table-column>
-        <el-table-column label="问卷编号" prop="id"></el-table-column>
+        <el-table-column  width="40"></el-table-column>
+        <el-table-column width="290" label="问卷编号" prop="surveyId"></el-table-column>
         <el-table-column label="标题" prop="title"></el-table-column>
-        <el-table-column label="填写时间" prop="writeTime"></el-table-column>
+<!--        <el-table-column label="填写时间" prop="writeTime"></el-table-column>-->
         <!--        <el-table-column label="排序" prop="sort"></el-table-column>-->
         <el-table-column label="备注" prop="remark"></el-table-column>
-        <el-table-column label="操作" width="190" header-align="center" align="center">
-            <template slot-scope="scope">
-                <el-button type="warning" size="mini" style="position:relative;bottom: 1px;"
-                           @click="openUpdateDialog(scope.row)">
-                    <span>编辑</span>
-                </el-button>
-                <el-button type="danger" size="mini" style="position:relative;bottom: 1px;margin-left: 6px;"
-                           @click="deleteEntityListByIds([{id: scope.row.id}])">
-                    <span>删除</span>
-                </el-button>
-            </template>
-        </el-table-column>
+<!--        <el-table-column label="操作" width="190" header-align="center" align="center">-->
+<!--            <template slot-scope="scope">-->
+<!--                <el-button type="warning" size="mini" style="position:relative;bottom: 1px;"-->
+<!--                           @click="openUpdateDialog(scope.row)">-->
+<!--                    <span>编辑</span>-->
+<!--                </el-button>-->
+<!--                <el-button type="danger" size="mini" style="position:relative;bottom: 1px;margin-left: 6px;"-->
+<!--                           @click="deleteEntityListByIds([{id: scope.row.id}])">-->
+<!--                    <span>删除</span>-->
+<!--                </el-button>-->
+<!--            </template>-->
+<!--        </el-table-column>-->
         <el-table-column width="50"></el-table-column>
     </el-table>
 
