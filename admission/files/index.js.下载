@@ -1,0 +1,41 @@
+/**
+ * @Description: 首页脚本文件
+ * @Author: z
+ * @Date: 2018/12/24.
+ */
+$(document).ready(function () {
+    var mySwiper = new Swiper('.swiper-container',{
+        direction : 'vertical',
+        autoplay: 5000,//可选选项，自动滑动
+        speed:1000,
+        loop : true,
+        autoplayDisableOnInteraction: false,
+        pagination: '.swiper-pagination',
+        paginationType : 'custom',
+        paginationClickable :true,
+        paginationCustomRender: function (swiper, current, total) {
+            var customPaginationHtml = "";
+            for(var i = 0; i < total; i++) {
+                var index = 0;
+                if(i<10){
+                    index = "0"+(i+1);
+                }else{
+                    index = i+1;
+                }
+                //判断哪个分页器此刻应该被激活
+                if(i == (current - 1)) {
+                    customPaginationHtml += '<p class="swiper-pagination-customs swiper-pagination-customs-active">'+index+'</p>';
+                } else {
+                    customPaginationHtml += '<p class="swiper-pagination-customs">'+index+'</p>';
+                }
+            }
+            return customPaginationHtml;
+        },
+    });
+
+    //给每个页码绑定跳转的事件
+    $('.swiper-pagination').on('click','p',function(){
+        var index = parseInt(this.innerHTML);
+        mySwiper.slideTo(index, 1000, true);//切换到第一个slide，速度为1秒
+    })
+})

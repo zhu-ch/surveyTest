@@ -35,7 +35,7 @@ let app = new Vue({
         ],
         tabList: [
             {
-                url: 'http://admission.bit.edu.cn/',
+                url: '../admission/admission.html',
                 title: '北京理工大学本科招生网',
                 name: 'tab0',
                 loading: true // tab页进入加载状态
