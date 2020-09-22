@@ -5,7 +5,7 @@
  * @param successCallback 成功回调函数（可选）
  * @param errorCallBack 失败回调函数（可选）
  */
-function ajaxGet(url, data, successCallback, errorCallback,async = true) {
+function ajaxGet(url, data, successCallback, errorCallback, async = true) {
     $.ajax({
         type: 'GET',
         url: url,
@@ -108,3 +108,4 @@ function copy(object) {
 
 // let serverUrl='http://10.4.20.152:8666'
 let serverUrl = 'http://wxxyx.m0yuqi.cn:8666'
+// let serverUrl = 'http://localhost:8666'

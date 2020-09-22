@@ -8,7 +8,8 @@
 
 </head>
 <body>
-<div id="app" v-cloak style="background: white;height: 100%;overflow: hidden;" v-loading="fullScreenLoading">
+<div id="app" v-cloak style="background: white;height: 100%;overflow: hidden;" v-loading="fullScreenLoading"
+     v-if="showWindow">
     <!--顶栏-->
     <div style="padding: 15px 20px 0 15px;">
         <span class="button-group">
@@ -39,7 +40,8 @@
 
     <!--表格-->
     <el-table :data="table.entity.data" height="calc(100% - 116px)" v-loading="table.entity.loading"
-              style="width: 100%;overflow-y: hidden;margin-top: 20px;" class="scroll-bar" @selection-change="onSelectionChange" stripe>
+              style="width: 100%;overflow-y: hidden;margin-top: 20px;" class="scroll-bar"
+              @selection-change="onSelectionChange" stripe>
         <el-table-column type="selection" width="40"></el-table-column>
         <el-table-column label="键值" prop="dicValue"></el-table-column>
         <el-table-column label="类型" prop="dicProperty"></el-table-column>

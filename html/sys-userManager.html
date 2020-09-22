@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>用户管理</title>
-<!--    <meta charset="UTF-8">-->
-<!--    <%@include file="/WEB-INF/views/include/blankHead.jsp" %>-->
-<!--    <link rel="stylesheet" href="/static/css/functions/sys/userManager.css"/>-->
+    <!--    <meta charset="UTF-8">-->
+    <!--    <%@include file="/WEB-INF/views/include/blankHead.jsp" %>-->
+    <!--    <link rel="stylesheet" href="/static/css/functions/sys/userManager.css"/>-->
     <link rel="stylesheet" href="../css/sys-userManager.css">
     <script src="../utils/templateJS.js"></script>
 
 </head>
 <body>
-<div id="app" v-cloak style="background: white;height: 100%;overflow: hidden;" v-loading="fullScreenLoading">
-<!--    <%&#45;&#45; 顶栏 &#45;&#45;%>-->
+<div id="app" v-cloak style="background: white;height: 100%;overflow: hidden;" v-loading="fullScreenLoading"
+     v-if="showWindow">
+    <!--    <%&#45;&#45; 顶栏 &#45;&#45;%>-->
     <div style="padding: 15px 20px 0px 15px;">
         <span class="button-group">
             <el-button size="small" type="success" @click="openInsert()">
@@ -21,9 +22,9 @@
             <el-button size="small" type="danger" @click="deleteUser(table.selectionList)" style="margin-left: 10px;">
                 <span>批量删除</span>
             </el-button>
-<!--            <el-button size="small" type="warning" @click="initUser()" style="margin-left: 10px;">-->
-<!--                <span>初始化</span>-->
-<!--            </el-button>-->
+            <!--            <el-button size="small" type="warning" @click="initUser()" style="margin-left: 10px;">-->
+            <!--                <span>初始化</span>-->
+            <!--            </el-button>-->
         </span>
         <span style="float: right;margin-right: 10px;">
             <el-select v-model="table.params.role" size="small" style="margin-right: 10px;"
@@ -41,15 +42,15 @@
             </el-button>
         </span>
     </div>
-<!--    <%&#45;&#45; 表格 &#45;&#45;%>-->
+    <!--    <%&#45;&#45; 表格 &#45;&#45;%>-->
     <el-table :data="table.data" height="calc(100% - 116px)" v-loading="table.loading"
               style="width: 100%;overflow-y: hidden;margin-top: 20px;" class="scroll-bar"
               @selection-change="handleSelectionChange" stripe>
         <el-table-column type="selection" width="40"></el-table-column>
-<!--        <el-table-column label="姓名" width="100" prop="realName"></el-table-column>-->
+        <!--        <el-table-column label="姓名" width="100" prop="realName"></el-table-column>-->
         <el-table-column label="工号/准考证号" width="150" prop="username"></el-table-column>
 
-<!--        <el-table-column label="用户名" prop="username" width="100"></el-table-column>-->
+        <!--        <el-table-column label="用户名" prop="username" width="100"></el-table-column>-->
         <el-table-column label="密码" prop="password" width="200"></el-table-column>
         <el-table-column label="邮箱" prop="email" width="200"></el-table-column>
 
@@ -59,14 +60,14 @@
             <!--            </template>-->
         </el-table-column>
         <el-table-column label="创建时间" prop="registerTime">
-<!--            <template slot-scope="scope">-->
-<!--                {{ formatTimestamp(scope.row.createDate) }}-->
-<!--            </template>-->
+            <!--            <template slot-scope="scope">-->
+            <!--                {{ formatTimestamp(scope.row.createDate) }}-->
+            <!--            </template>-->
         </el-table-column>
-        <el-table-column label="最后登录时间"  prop="lastLoginTime">
-<!--            <template slot-scope="scope">-->
-<!--                {{  translateStatus(scope.row.status) }}-->
-<!--            </template>-->
+        <el-table-column label="最后登录时间" prop="lastLoginTime">
+            <!--            <template slot-scope="scope">-->
+            <!--                {{  translateStatus(scope.row.status) }}-->
+            <!--            </template>-->
         </el-table-column>
         <el-table-column label="操作" header-align="center" align="center">
             <template slot-scope="scope">
@@ -97,7 +98,7 @@
                    :total="table.params.total"
                    layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
-<!--    <%&#45;&#45; 添加或编辑窗口 &#45;&#45;%>-->
+    <!--    <%&#45;&#45; 添加或编辑窗口 &#45;&#45;%>-->
     <el-dialog :title="dialog.insertOrUpdate.status == 'insert' ? '添加用户' : '编辑用户'"
                :visible.sync="dialog.insertOrUpdate.visible" @close="resetDialog()">
         <el-form label-position="left" label-width="80px" style="padding: 0 100px;"
@@ -138,8 +139,8 @@
             title="个人信息"
             :visible.sync="draw.visible"
             :direction="draw.direction"
-            >
-<!--        <span>我来啦!</span>-->
+    >
+        <!--        <span>我来啦!</span>-->
 
         <el-form label-position="left" label-width="150px" style="padding: 0 100px;"
                  :model="draw.data"
@@ -147,114 +148,115 @@
                  label-width="200px"
                  status-icon>
 
-                <el-form-item label="工号/准考证号" prop="admissionNumber">
-                    <el-input v-model="draw.data.admissionNumber"
-                              :disabled="true"></el-input>
-                </el-form-item>
-                <el-form-item label="本人姓名" prop="name">
-                    <el-input v-model="draw.data.name"
-                              :disabled=false></el-input>
-                </el-form-item>
+            <el-form-item label="工号/准考证号" prop="admissionNumber">
+                <el-input v-model="draw.data.admissionNumber"
+                          :disabled="true"></el-input>
+            </el-form-item>
+            <el-form-item label="本人姓名" prop="name">
+                <el-input v-model="draw.data.name"
+                          :disabled=false></el-input>
+            </el-form-item>
 
-                <el-form-item label="联系方式" prop="contact">
-                    <el-input v-model="draw.data.contact"
-                              :disabled=false></el-input>
-                </el-form-item>
-                <el-form-item label="备用联系方式" prop="alternateContact">
-                    <el-input v-model="draw.data.alternateContact"
-                              :disabled=false></el-input>
-                </el-form-item>
+            <el-form-item label="联系方式" prop="contact">
+                <el-input v-model="draw.data.contact"
+                          :disabled=false></el-input>
+            </el-form-item>
+            <el-form-item label="备用联系方式" prop="alternateContact">
+                <el-input v-model="draw.data.alternateContact"
+                          :disabled=false></el-input>
+            </el-form-item>
 
-                <el-form-item label="考生姓名" prop="studentName">
-                    <el-input v-model="draw.data.studentName"
-                              :disabled=false></el-input>
-                </el-form-item>
+            <el-form-item label="考生姓名" prop="studentName">
+                <el-input v-model="draw.data.studentName"
+                          :disabled=false></el-input>
+            </el-form-item>
 
-                <el-form-item label="与考生关系" prop="type">
-                    <el-select v-model="draw.data.type" placeholder="关系" :disabled=false>
-                        <el-option
-                                v-for="type in info.types"
-                                :value="type"
-                        >
-                        </el-option>
-                    </el-select>
-                </el-form-item>
+            <el-form-item label="与考生关系" prop="type">
+                <el-select v-model="draw.data.type" placeholder="关系" :disabled=false>
+                    <el-option
+                            v-for="type in info.types"
+                            :value="type"
+                    >
+                    </el-option>
+                </el-select>
+            </el-form-item>
 
-                <el-form-item label="省份" prop="province">
+            <el-form-item label="省份" prop="province">
 
-                    <el-select v-model="draw.data.province" placeholder="省份" @change="getHighSchool($event)" :disabled=false>
-                        <el-option
-                                v-for="province in info.provinces"
-                                :value="province"
-                        >
-                        </el-option>
-                    </el-select>
-                </el-form-item>
+                <el-select v-model="draw.data.province" placeholder="省份" @change="getHighSchool($event)"
+                           :disabled=false>
+                    <el-option
+                            v-for="province in info.provinces"
+                            :value="province"
+                    >
+                    </el-option>
+                </el-select>
+            </el-form-item>
 
-                </el-form-item>
+            </el-form-item>
 
-                <el-form-item label="高中" prop="highSchool">
+            <el-form-item label="高中" prop="highSchool">
 
-                    <el-select v-model="draw.data.highSchool" placeholder="省份" :disabled=false>
-                        <el-option
-                                v-for="highSchool in info.highSchools"
+                <el-select v-model="draw.data.highSchool" placeholder="省份" :disabled=false>
+                    <el-option
+                            v-for="highSchool in info.highSchools"
 
-                                :value="highSchool"
-                        >
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="意向专业" prop="major">
-                    <!--                        <el-input v-model="draw.data.major"-->
-                    <!--                                  :disabled=false></el-input>-->
-                    <el-select v-model="draw.data.major" placeholder="专业" :disabled=false>
-                        <el-option
-                                v-for="major in info.majors"
+                            :value="highSchool"
+                    >
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="意向专业" prop="major">
+                <!--                        <el-input v-model="draw.data.major"-->
+                <!--                                  :disabled=false></el-input>-->
+                <el-select v-model="draw.data.major" placeholder="专业" :disabled=false>
+                    <el-option
+                            v-for="major in info.majors"
 
-                                :value="major"
-                        >
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="高考模式" prop="model">
-                    <el-popover
-                            slot="label"
-                            placement="top-start"
-                            title="提示"
-                            width="200"
-                            trigger="hover"
-                            content="传统模式：理科文科模式； 新高考：六选三； 其他：自填高考考试科目。">
-                        <span slot="reference">高考模式</span>
-                    </el-popover>
-                    <el-select v-model="draw.data.model" placeholder="高考模式"  :disabled=false>
-                        <el-option
-                                v-for="model in info.models"
-                                :key="model"
+                            :value="major"
+                    >
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="高考模式" prop="model">
+                <el-popover
+                        slot="label"
+                        placement="top-start"
+                        title="提示"
+                        width="200"
+                        trigger="hover"
+                        content="传统模式：理科文科模式； 新高考：六选三； 其他：自填高考考试科目。">
+                    <span slot="reference">高考模式</span>
+                </el-popover>
+                <el-select v-model="draw.data.model" placeholder="高考模式" :disabled=false>
+                    <el-option
+                            v-for="model in info.models"
+                            :key="model"
 
-                                :value="model"
-                        >
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="所学科目" prop="subject">
-                    <el-input v-model="draw.data.subject"
-                              :disabled=false></el-input>
-                </el-form-item>
+                            :value="model"
+                    >
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="所学科目" prop="subject">
+                <el-input v-model="draw.data.subject"
+                          :disabled=false></el-input>
+            </el-form-item>
 
-                <el-form-item label="高考年份" prop="year">
+            <el-form-item label="高考年份" prop="year">
 
-                    <el-date-picker
-                            v-model="draw.data.year"
-                            type="year"
-                            format="yyyy"
-                            :disabled=false
-                            placeholder="高考年份">
-                    </el-date-picker>
-                </el-form-item>
+                <el-date-picker
+                        v-model="draw.data.year"
+                        type="year"
+                        format="yyyy"
+                        :disabled=false
+                        placeholder="高考年份">
+                </el-date-picker>
+            </el-form-item>
 
         </el-form>
         <div style="text-align: center; padding-top: 20px">
-            <el-button type="primary" @click="updateUserInfo" > 提交修改</el-button>
+            <el-button type="primary" @click="updateUserInfo"> 提交修改</el-button>
         </div>
 
     </el-drawer>

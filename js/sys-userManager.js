@@ -1,7 +1,8 @@
-
 let app = new Vue({
     el: '#app',
     data: {
+        showWindow: false,
+        user: {},
         urls: {
             getUserList: serverUrl + "/api/sys/user/getUser",
             getUserInfo: serverUrl + "/api/sys/user/getUserInfo",
@@ -14,8 +15,8 @@ let app = new Vue({
             initUser: serverUrl + '/api/sys/user/initUser',
             getSchoolList: serverUrl + '/api/sys/user/getSchoolList',
             getMajorList: serverUrl + '/api/sys/user/getMajorList',
-            selectDictListByPage:serverUrl + "/api/sys/dict/selectDictListByPage",
-            updateUserInfo : serverUrl + "/api/sys/user/updateUserInfo",
+            selectDictListByPage: serverUrl + "/api/sys/dict/selectDictListByPage",
+            updateUserInfo: serverUrl + "/api/sys/user/updateUserInfo",
         },
         fullScreenLoading: false,
         table: {
@@ -29,8 +30,8 @@ let app = new Vue({
             loading: false,
             selectionList: [],
             params: {
-                id : '',
-                page:{
+                id: '',
+                page: {
                     pageIndex: 1,
                     pageSize: 10,
                     pageSizes: [5, 10, 20, 40],
@@ -41,37 +42,37 @@ let app = new Vue({
                 role: ''
             }
         },
-        info:{
-            provinces:[],
-            highSchools:[],
-            majors:[],
-            models:[],
-            types:[]
+        info: {
+            provinces: [],
+            highSchools: [],
+            majors: [],
+            models: [],
+            types: []
         },
-        draw:{
-            data:{
-                name:'',
-                admissionNumber:'',
-                contact:'',
-                alternateContact:'',
-                type:'',
-                studentName:'',
-                province:'',
-                city:'',
-                address:'',
-                highSchool:'',
-                major:'',
-                fractionalSegment:'',
-                rankingSection:'',
-                qiangjiPlan:'',
-                tiqianpi:'',
-                signed:'',
-                year:'',
-                subject:'',
-                model:''
+        draw: {
+            data: {
+                name: '',
+                admissionNumber: '',
+                contact: '',
+                alternateContact: '',
+                type: '',
+                studentName: '',
+                province: '',
+                city: '',
+                address: '',
+                highSchool: '',
+                major: '',
+                fractionalSegment: '',
+                rankingSection: '',
+                qiangjiPlan: '',
+                tiqianpi: '',
+                signed: '',
+                year: '',
+                subject: '',
+                model: ''
             },
-            visible:false,
-            direction:'ltr'
+            visible: false,
+            direction: 'ltr'
         }
         ,
         dialog: {
@@ -82,7 +83,7 @@ let app = new Vue({
                     username: '',
                     password: '',
                     role: '',
-                    email:''
+                    email: ''
                 },
                 rules: {
                     username: [
@@ -124,9 +125,9 @@ let app = new Vue({
 
             ]
         },
-        selectUser:{
-            username:'',
-            password:''
+        selectUser: {
+            username: '',
+            password: ''
         }
     },
     methods: {
@@ -144,7 +145,7 @@ let app = new Vue({
             this.table.params.pageIndex = newIndex;
             this.getUserList();
         },
-        updateUserInfo:function (){
+        updateUserInfo: function () {
 
             let app = this
             app.fullScreenLoading = true
@@ -152,7 +153,7 @@ let app = new Vue({
             // app.loading = true
             let data = JSON.parse(JSON.stringify(app.draw.data))
             console.log(data)
-            data.year=this.myGetYear
+            data.year = this.myGetYear
             // console.log(data)
             ajaxPostJSON(app.urls.updateUserInfo, data, function (d) {
                 console.log(d)
@@ -190,7 +191,7 @@ let app = new Vue({
                 app.table.params.total = d.data.length;
             }, function () {
                 app.table.loading = false;
-                app.$message.error('查找失败！' , 'error');
+                app.$message.error('查找失败！', 'error');
             });
         },
         // 重置表单
@@ -233,7 +234,7 @@ let app = new Vue({
                     // if (app.table.data.length === 1 && app.table.params.pageIndex > 0)
                     //     app.table.params.pageIndex -= 1;
                     app.getUserList();
-                },function (d) {
+                }, function (d) {
                     app.fullScreenLoading = false;
                     app.$message.error('操作失败，请重试' + d.message, 'warning');
 
@@ -259,11 +260,11 @@ let app = new Vue({
                 // console.log(d.data[0])
                 app.fullScreenLoading = false;
                 app.draw.data = d.data[0]
-                let newData = new Date(d.data[0].year+',01,01')
+                let newData = new Date(d.data[0].year + ',01,01')
                 app.draw.data.year = newData.toDateString()
                 // console.log(app.draw.data)
 
-            },function (d) {
+            }, function (d) {
                 app.fullScreenLoading = false;
                 app.$message.error('查询失败，请重试' + d.message, 'warning');
 
@@ -305,7 +306,7 @@ let app = new Vue({
             this.$refs['form_insertOrUpdate'].validate((valid) => {
                 if (valid) {
                     let data = copy(this.dialog.insertOrUpdate.formData);
-                    console.log('xiugaihou',data)
+                    console.log('xiugaihou', data)
                     let app = this;
                     let url = app.dialog.insertOrUpdate.status === 'insert' ? app.urls.addUser : app.urls.updateUser;
                     app.dialog.insertOrUpdate.loading = true;
@@ -314,7 +315,7 @@ let app = new Vue({
                         app.dialog.insertOrUpdate.loading = false;
                         app.dialog.insertOrUpdate.visible = false;
                         let successMes = app.dialog.insertOrUpdate.status === 'insert' ? '添加成功!' : '编辑成功!';
-                        app.$message({message:successMes,type: 'success'});
+                        app.$message({message: successMes, type: 'success'});
                         app.getUserList(); // 添加完成后刷新页面
                     }, function () {
                         app.dialog.insertOrUpdate.loading = false;
@@ -343,7 +344,7 @@ let app = new Vue({
                 })
             });
         },
-        getProvinces:function (){
+        getProvinces: function () {
             // console.log('getProvince')
             let app = this
             let params = {
@@ -355,7 +356,7 @@ let app = new Vue({
             }
             let data = {
                 dicProperty: '省份',
-                page:params
+                page: params
             }
 
             app.fullScreenLoading = true;
@@ -364,17 +365,17 @@ let app = new Vue({
                 app.fullScreenLoading = false;
                 let provinceList = []
                 // resultList = d.data(
-                for (i in d.data.resultList){
+                for (i in d.data.resultList) {
                     provinceList[i] = d.data.resultList[i]['dicValue']
                 }
                 app.info.provinces = provinceList
-            },function (d) {
+            }, function (d) {
                 app.fullScreenLoading = false;
                 app.$message.error('获取失败，请重试' + d.message, 'warning');
 
             })
         },
-        getMajors:function (){
+        getMajors: function () {
             // console.log('getMajors')
             let app = this
             let params = {
@@ -386,7 +387,7 @@ let app = new Vue({
             }
             let data = {
                 dicProperty: '专业',
-                page:params
+                page: params
             }
 
             app.fullScreenLoading = true;
@@ -395,17 +396,17 @@ let app = new Vue({
                 app.fullScreenLoading = false;
                 let majorList = []
                 // resultList = d.data(
-                for (i in d.data.resultList){
+                for (i in d.data.resultList) {
                     majorList[i] = d.data.resultList[i]['dicValue']
                 }
                 app.info.majors = majorList
-            },function (d) {
+            }, function (d) {
                 app.fullScreenLoading = false;
                 app.$message.error('获取失败，请重试' + d.message, 'warning');
 
             })
         },
-        getModels:function (){
+        getModels: function () {
             // console.log('getModels')
             let app = this
             let params = {
@@ -417,7 +418,7 @@ let app = new Vue({
             }
             let data = {
                 dicProperty: '高考模式',
-                page:params
+                page: params
             }
 
             app.fullScreenLoading = true;
@@ -426,17 +427,17 @@ let app = new Vue({
                 app.fullScreenLoading = false;
                 let modelList = []
                 // resultList = d.data(
-                for (i in d.data.resultList){
+                for (i in d.data.resultList) {
                     modelList[i] = d.data.resultList[i]['dicValue']
                 }
                 app.info.models = modelList
-            },function (d) {
+            }, function (d) {
                 app.fullScreenLoading = false;
                 app.$message.error('获取失败，请重试' + d.message, 'warning');
 
             })
         },
-        getTypes:function (){
+        getTypes: function () {
             // console.log('getModels')
             let app = this
             let params = {
@@ -448,7 +449,7 @@ let app = new Vue({
             }
             let data = {
                 dicProperty: '关系',
-                page:params
+                page: params
             }
 
             app.fullScreenLoading = true;
@@ -457,17 +458,17 @@ let app = new Vue({
                 app.fullScreenLoading = false;
                 let typeList = []
                 // resultList = d.data(
-                for (i in d.data.resultList){
+                for (i in d.data.resultList) {
                     typeList[i] = d.data.resultList[i]['dicValue']
                 }
                 app.info.types = typeList
-            },function (d) {
+            }, function (d) {
                 app.fullScreenLoading = false;
                 app.$message.error('获取失败，请重试' + d.message, 'warning');
 
             })
         },
-        getHighSchool:function (province){
+        getHighSchool: function (province) {
             console.log('getHighSchools')
             if (!this.draw.data.province) return
             let app = this
@@ -479,8 +480,8 @@ let app = new Vue({
                 total: 0,       // 总数
             }
             let data = {
-                father:province,
-                page:params
+                father: province,
+                page: params
             }
             app.fullScreenLoading = true;
 
@@ -489,11 +490,11 @@ let app = new Vue({
                 app.fullScreenLoading = false;
                 let highSchoolList = []
                 // resultList = d.data(
-                for (i in d.data.resultList){
+                for (i in d.data.resultList) {
                     highSchoolList[i] = d.data.resultList[i]['dicValue']
                 }
                 app.info.highSchools = highSchoolList
-            },function (d) {
+            }, function (d) {
                 app.fullScreenLoading = false;
                 app.$message.error('获取失败，请重试' + d.message, 'warning');
 
@@ -511,11 +512,25 @@ let app = new Vue({
         }
     },
     mounted: function () {
-        // 获取角色列表
-        let data = null;
         let app = this;
-        app.fullScreenLoading = true;
+        app.user = JSON.parse(getSessionStorage('user'))
+        if (app.user == null) {
+            this.$message({
+                message: "请登录",
+                type: 'error'
+            });
+            return
+        }
+        if (app.user.role !== 'admin') {
+            this.$message({
+                message: "您无权访问当前页面",
+                type: 'error'
+            });
+            return
+        }
+        app.showWindow = true
 
+        let data = null;
         app.getUserList();
         this.getTypes()
         this.getProvinces()
@@ -523,9 +538,9 @@ let app = new Vue({
         this.getModels()
 
         app.fullScreenLoading = false;
-    },computed:{
-        myGetYear:function (){
-            let date=new Date(this.draw.data.year)
+    }, computed: {
+        myGetYear: function () {
+            let date = new Date(this.draw.data.year)
             return date.getFullYear()
         }
     }

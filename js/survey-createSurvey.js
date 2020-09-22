@@ -1001,7 +1001,6 @@ let app = new Vue({
         if (this.auth.userInfo.role === 'admin') {
             this.auth.showWindow = true
             let app = this
-            console.log(111)
             ajaxGet(this.urls.getConfigKey, null,
                 function (result) {
                     app.configKey = result.data

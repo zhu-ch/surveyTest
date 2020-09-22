@@ -22,7 +22,8 @@ let urls = [
 let app = new Vue({
     el: '#app',
     data: {
-        iframeWin:{},
+        user: {},
+        iframeWin: {},
         userInfo: null,
         showWindow: false,
         default_open_array: [
@@ -133,17 +134,27 @@ let app = new Vue({
                 }, 2000);
             })
         },
-        handleMessage: function(event) {
+        handleMessage: function (event) {
             const data = event.data.data
-            if(data && data.type == "addTabSurveyPreview"){
-                this.addTab("问卷预览","survey-surveyPreview.html")
-            }
-            else if(data && data.type == "addTabCreateSurvey"){
+            if (data && data.type == "addTabSurveyPreview") {
+                this.addTab("问卷预览", "survey-surveyPreview.html")
+            } else if (data && data.type == "addTabCreateSurvey") {
                 this.addTab('创建问卷', 'survey-createSurvey.html')
             }
         }
     },
-    mounted:function(){
+    mounted: function () {
+        let app = this;
+        app.user = JSON.parse(getSessionStorage('user'))
+        if (app.user == null) {
+            this.$message({
+                message: "请登录",
+                type: 'error'
+            });
+            return
+        }
+        app.showWindow = true
+
         window.addEventListener('message', this.handleMessage);
         this.iframeWin = this.$refs.iframe.contentWindow;
     }

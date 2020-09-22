@@ -12,6 +12,7 @@ let app = new Vue({
             selectDictTypeAllList: serverUrl + '/api/sys/dict/getDictTypeList'
         },
         fullScreenLoading: false,
+        showWindow: false,
         table: {
             entity: {
                 data: [],
@@ -236,8 +237,22 @@ let app = new Vue({
     },
     created: function () {
         let app = this;
-        app.user = getSessionStorage('user')
-        //todo 权限验证
+        app.user = JSON.parse(getSessionStorage('user'))
+        if (app.user == null) {
+            this.$message({
+                message: "请登录",
+                type: 'error'
+            });
+            return
+        }
+        if (app.user.role !== 'admin') {
+            this.$message({
+                message: "您无权访问当前页面",
+                type: 'error'
+            });
+            return
+        }
+        app.showWindow = true
 
         ajaxGet(this.urls.selectDictTypeAllList, null, function (d) {
             app.options.dictType = d.data;

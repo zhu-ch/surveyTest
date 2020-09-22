@@ -8,46 +8,50 @@
 
 </head>
 <body>
-<div id="app" v-cloak style="background: white;height: 90%;overflow: hidden;" v-loading="fullScreenLoading">
-    <el-container >
+<div id="app" v-cloak style="background: white;height: 90%;overflow: hidden;" v-loading="fullScreenLoading"
+     v-if="showWindow">
+    <el-container>
         <el-header></el-header>
         <el-container>
-            <el-aside style="text-align: center;" width="55vh" >
+            <el-aside style="text-align: center;" width="55vh">
                 <div style="height: 15vh;margin-top: 20vh;margin-left: 15vh" width="40vh">
                     <h1 style="font-size:350%">{{formData.name}}</h1>
                 </div>
                 <div style="margin-top: 10vh;margin-left: 15vh" width="40vh">
-                    <el-button style="width: 25vh;font-size:100%"type="primary" @click="modify()" >{{buttonText}}</el-button>
+                    <el-button style="width: 25vh;font-size:100%" type="primary" @click="modify()">{{buttonText}}
+                    </el-button>
                 </div>
                 <div style="margin-top: 3vh;margin-left: 15vh" width="40vh">
-                    <el-button  style="width: 25vh;font-size:100%" type="danger" v-if="exitButton.visible"   @click="exit()" >退出修改</el-button>
+                    <el-button style="width: 25vh;font-size:100%" type="danger" v-if="exitButton.visible"
+                               @click="exit()">退出修改
+                    </el-button>
                 </div>
             </el-aside>
             <el-main>
                 <el-form label-position="left" label-width="150px" style="padding: 0 100px; height: auto"
                          :model="formData"
                          ref="form_insertOrUpdate"
-                          status-icon>
+                         status-icon>
                     <el-form-item label="工号/准考证号" prop="admissionNumber">
-                        <el-input v-model="formData.admissionNumber"style="width: 50vh"
+                        <el-input v-model="formData.admissionNumber" style="width: 50vh"
                                   :disabled="true"></el-input>
                     </el-form-item>
                     <el-form-item label="本人姓名" prop="name">
-                        <el-input v-model="formData.name"style="width: 50vh"
+                        <el-input v-model="formData.name" style="width: 50vh"
                                   :disabled="unmodifiable"></el-input>
                     </el-form-item>
 
                     <el-form-item label="联系方式" prop="contact">
-                        <el-input v-model="formData.contact"style="width: 50vh"
+                        <el-input v-model="formData.contact" style="width: 50vh"
                                   :disabled="unmodifiable"></el-input>
                     </el-form-item>
                     <el-form-item label="备用联系方式" prop="alternateContact">
-                        <el-input v-model="formData.alternateContact"style="width: 50vh"
+                        <el-input v-model="formData.alternateContact" style="width: 50vh"
                                   :disabled="unmodifiable"></el-input>
                     </el-form-item>
 
                     <el-form-item label="考生姓名" prop="studentName">
-                        <el-input v-model="formData.studentName"style="width: 50vh"
+                        <el-input v-model="formData.studentName" style="width: 50vh"
                                   :disabled="unmodifiable"></el-input>
                     </el-form-item>
 
@@ -63,7 +67,8 @@
 
                     <el-form-item label="省份" prop="province">
 
-                        <el-select v-model="formData.province" placeholder="省份" @change="getHighSchool($event)" :disabled="unmodifiable">
+                        <el-select v-model="formData.province" placeholder="省份" @change="getHighSchool($event)"
+                                   :disabled="unmodifiable">
                             <el-option
                                     v-for="province in info.provinces"
                                     :value="province"
@@ -86,8 +91,8 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="意向专业" prop="major">
-<!--                        <el-input v-model="formData.major"-->
-<!--                                  :disabled="unmodifiable"></el-input>-->
+                        <!--                        <el-input v-model="formData.major"-->
+                        <!--                                  :disabled="unmodifiable"></el-input>-->
                         <el-select v-model="formData.major" placeholder="专业" :disabled="unmodifiable">
                             <el-option
                                     v-for="major in info.majors"
@@ -107,7 +112,7 @@
                                 content="传统模式：理科文科模式； 新高考：六选三； 其他：自填高考考试科目。">
                             <span slot="reference">高考模式</span>
                         </el-popover>
-                        <el-select v-model="formData.model" placeholder="高考模式"  :disabled="unmodifiable">
+                        <el-select v-model="formData.model" placeholder="高考模式" :disabled="unmodifiable">
                             <el-option
                                     v-for="model in info.models"
                                     :key="model"
@@ -118,7 +123,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="所学科目" prop="subject">
-                        <el-input v-model="formData.subject"style="width: 50vh"
+                        <el-input v-model="formData.subject" style="width: 50vh"
                                   :disabled="unmodifiable"></el-input>
                     </el-form-item>
 
