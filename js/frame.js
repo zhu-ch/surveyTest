@@ -14,7 +14,7 @@ let urls = [
     //学生可看
     ['信息维护', 'sys-userInformation.html'],
     ['问卷列表', 'student-surveyList.html'],
-    ['历史问卷', 'student-historySurvey.html'],
+    ['历史问卷', 'survey-historySurveys.html'],
     //不直接展示
     ['问卷预览', 'survey-surveyPreview.html']
 ];
