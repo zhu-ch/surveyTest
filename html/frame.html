@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="../css/frame.css">
 </head>
 <body>
-<div id="app" v-cloak>
-    <el-container style="height: 100vh" v-loading="fullScreenLoading"  direction="vertical" v-if="showWindow">
+<div id="app" v-cloak v-if="showWindow">
+    <el-container style="height: 100vh" v-loading="fullScreenLoading" direction="vertical" v-if="showWindow">
         <el-header height="48px"
                    style="background: #007cc4;padding-right: 60px;box-shadow: 0 2px 10px 0 rgba(0,0,0,.15);">
             <span class="title">意向考生大数据分析平台</span>
@@ -19,24 +19,23 @@
         <el-container style="height: 100%">
             <el-aside width="230px">
                 <el-menu text-color="#ccc" :default-openeds="default_open_array" @select="onSelect">
-                    <el-submenu index="systemManagement">
+                    <el-submenu index="systemManagement" v-if="user.role === 'admin'">
                         <template slot="title"><i class="el-icon-s-tools"></i>系统管理</template>
                         <el-menu-item index="1">字典管理</el-menu-item>
                         <el-menu-item index="2">用户管理</el-menu-item>
                         <el-menu-item index="3">配置管理</el-menu-item>
                     </el-submenu>
-                    <el-submenu index="surveySystem">
+                    <el-submenu index="surveySystem" v-if="user.role !== 'student'">
                         <template slot="title"><i class="el-icon-s-tools"></i>问卷系统</template>
-                        <el-menu-item index="4">创建问卷</el-menu-item>
-                        <el-menu-item index="5">问卷管理</el-menu-item>
+                        <el-menu-item index="4" v-if="user.role === 'admin'">创建问卷</el-menu-item>
+                        <el-menu-item index="5" v-if="user.role !== 'student'">问卷管理</el-menu-item>
                     </el-submenu>
-                    <el-submenu index="userInfo">
+                    <el-submenu index="userInfo" v-if="user.role === 'student'">
                         <template slot="title"><i class="el-icon-s-tools"></i>个人信息维护</template>
                         <el-menu-item index="6">信息维护</el-menu-item>
                     </el-submenu>
-                    <el-submenu index="surveyInfo">
+                    <el-submenu index="surveyInfo" v-if="user.role === 'student'">
                         <template slot="title"><i class="el-icon-s-tools"></i>问卷信息</template>
-                        <el-menu-item index="7">问卷列表</el-menu-item>
                         <el-menu-item index="8">历史问卷</el-menu-item>
                     </el-submenu>
                 </el-menu>

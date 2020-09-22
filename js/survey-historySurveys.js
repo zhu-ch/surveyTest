@@ -2,8 +2,9 @@ let app = new Vue({
     el: '#app',
     data: {
         user: {},
+        showWindow: false,
         urls: {
-            getAnswerByConditions :serverUrl + '/api/survey/getAnswerByConditions',
+            getAnswerByConditions: serverUrl + '/api/survey/getAnswerByConditions',
             deleteAnswer: serverUrl + '/api/survey/deleteAnswer'
         },
         fullScreenLoading: false,
@@ -11,10 +12,10 @@ let app = new Vue({
             entity: {
                 data: [
                     {
-                        id:'1112312321',
-                        title:'测试问卷',
-                        writeTime:'2020-01-01',
-                        mark:''
+                        id: '1112312321',
+                        title: '测试问卷',
+                        writeTime: '2020-01-01',
+                        mark: ''
                     }
                 ],
                 loading: false,
@@ -126,15 +127,24 @@ let app = new Vue({
     },
     created: function () {
         let app = this;
+        app.user = JSON.parse(getSessionStorage('user'))
+        if (app.user == null) {
+            this.$message({
+                message: "请登录",
+                type: 'error'
+            });
+            return
+        }
+        if (app.user.role !== 'student') {
+            this.$message({
+                message: "您无权访问当前页面",
+                type: 'error'
+            });
+            return
+        }
+        app.showWindow = true
+
+
         app.refreshTableEntity();
-        //
-        // // app.user = getSessionStorage('user')
-        //
-        // //todo 权限验证
-        //
-        // ajaxGet(this.urls.selectDictTypeAllList, data, function (d) {
-        //     app.options.dictType = d.data;
-        //
-        // })
     }
 })

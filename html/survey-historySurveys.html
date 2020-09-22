@@ -4,23 +4,23 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="../utils/templateJS.js"></script>
-<!--    <link rel="stylesheet" href="../css/survey-createSurvey.css">-->
+    <!--    <link rel="stylesheet" href="../css/survey-createSurvey.css">-->
 
     <link rel="stylesheet" href="../css/survey-historySurveys.css">
 
 </head>
 <body>
-<div id="app" v-cloak style="background: white;height: 100%;overflow: hidden;" v-loading="fullScreenLoading">
-
-
+<div id="app" v-cloak style="background: white;height: 100%;overflow: hidden;" v-loading="fullScreenLoading"
+     v-if="showWindow">
     <!--表格-->
     <el-table :data="table.entity.data" height="calc(100% - 116px)" v-loading="table.entity.loading"
-              style="width: 100%;overflow-y: hidden;margin-top: 20px;" class="scroll-bar" @selection-change="onSelectionChange" stripe>
+              style="width: 100%;overflow-y: hidden;margin-top: 20px;" class="scroll-bar"
+              @selection-change="onSelectionChange" stripe>
         <el-table-column type="selection" width="40"></el-table-column>
         <el-table-column label="问卷编号" prop="id"></el-table-column>
         <el-table-column label="标题" prop="title"></el-table-column>
         <el-table-column label="填写时间" prop="writeTime"></el-table-column>
-<!--        <el-table-column label="排序" prop="sort"></el-table-column>-->
+        <!--        <el-table-column label="排序" prop="sort"></el-table-column>-->
         <el-table-column label="备注" prop="remark"></el-table-column>
         <el-table-column label="操作" width="190" header-align="center" align="center">
             <template slot-scope="scope">

@@ -53,7 +53,7 @@ let myComponent = Vue.extend({
                         message: "操作成功",
                         type: 'success'
                     });
-                    app.$emit("refresh","update");
+                    app.$emit("refresh", "update");
                 } else if (d.code == 'warning')
                     app.$message({
                         message: "操作失败",
@@ -83,7 +83,7 @@ let myComponent = Vue.extend({
                         message: "操作成功",
                         type: 'success'
                     });
-                    app.$emit("refresh","update"); // 添加完成后刷新页面
+                    app.$emit("refresh", "update"); // 添加完成后刷新页面
                 } else if (d.code == 'warning')
                     app.$message({
                         message: "操作失败",
@@ -111,7 +111,7 @@ let myComponent = Vue.extend({
                         message: "操作成功",
                         type: 'success'
                     });
-                    app.$emit("refresh","update"); // 添加完成后刷新页面
+                    app.$emit("refresh", "update"); // 添加完成后刷新页面
                 } else if (d.code == 'warning')
                     app.$message({
                         message: "操作失败",
@@ -132,20 +132,20 @@ let myComponent = Vue.extend({
         clickPreview: function () {
             window.parent.postMessage({
                 data: {
-                    type:"addTabSurveyPreview",
-                    params:[]
+                    type: "addTabSurveyPreview",
+                    params: []
                 }
             }, '*');
         }
     },
     data() {
-        return{
+        return {
             urls: {
                 enableSurvey: serverUrl + "/api/survey/enableSurvey",
                 disableSurvey: serverUrl + "/api/survey/enableSurvey",
                 deleteSurvey: serverUrl + "/api/survey/deleteSurvey"
             },
-            cardloading:false
+            cardloading: false
         }
     }
 })
@@ -156,10 +156,12 @@ let app = new Vue({
         'my-component': myComponent
     },
     data: {
+        user: {},
+        showWindow: false,
         fullScreenLoading: false,
         urls: {
             querySurveyByConditions: serverUrl + "/api/survey/getSurveyByConditions",
-            getAnswerCountByConditions: serverUrl+"/api/survey/getAnswerCountByConditions"
+            getAnswerCountByConditions: serverUrl + "/api/survey/getAnswerCountByConditions"
         },
         refreshType: {
             reload: "reload",
@@ -214,17 +216,17 @@ let app = new Vue({
             startTime: "",
             endTime: "",
         },
-        AnsEntity:{
-            questionId:"",
-            answer:""
+        AnsEntity: {
+            questionId: "",
+            answer: ""
         }
     },
     methods: {
-        clickCreate: function(){
+        clickCreate: function () {
             window.parent.postMessage({
                 data: {
-                    type:"addTabCreateSurvey",
-                    params:[]
+                    type: "addTabCreateSurvey",
+                    params: []
                 }
             }, '*');
         },
@@ -234,7 +236,7 @@ let app = new Vue({
             //     this.onShowTable.entities[j].questions = this.totalTable.entities[i].questions.slice(0)
             // }
         },
-        onPageSizeChange: function(newSize){
+        onPageSizeChange: function (newSize) {
             this.onShowTable.params.pageSize = newSize;
             this.refresh(this.refreshType.reload)
         },
@@ -243,11 +245,11 @@ let app = new Vue({
                 this.refreshTotalTable(type);
             } else {
                 if (this.onShowTable.conditionType == "id") {
-                    this.refreshTotalTableByID(this.onShowTable.condition,type);
+                    this.refreshTotalTableByID(this.onShowTable.condition, type);
                 } else if (this.onShowTable.conditionType == "title") {
-                    this.refreshTotalTableByTitle(this.onShowTable.condition,type);
+                    this.refreshTotalTableByTitle(this.onShowTable.condition, type);
                 } else if (this.onShowTable.conditionType == "description") {
-                    this.refreshTotalTableByDescription(this.onShowTable.condition,type);
+                    this.refreshTotalTableByDescription(this.onShowTable.condition, type);
                 }
             }
         },
@@ -261,13 +263,13 @@ let app = new Vue({
             }, function (d) {
                 app.$message("服务器错误")
             })
-            for(i in app.totalTable.entities){
+            for (i in app.totalTable.entities) {
                 app.AnsEntity.questionId = app.totalTable.entities[i].id;
 
-                ajaxPostJSONAsync(this.urls.getAnswerCountByConditions,this.AnsEntity,function (d) {
+                ajaxPostJSONAsync(this.urls.getAnswerCountByConditions, this.AnsEntity, function (d) {
 
                     app.totalTable.entities[i].answerNum = d.data
-                },function (d) {
+                }, function (d) {
                     app.$message("服务器错误")
                 })
             }
@@ -280,7 +282,7 @@ let app = new Vue({
                 app.$message("error，参数错误")
             }
         },
-        refreshTotalTableByID: function (condition,type) {
+        refreshTotalTableByID: function (condition, type) {
             this.initializeSurveyEntity();
             this.surveyEntity.id = condition;
             let app = this;
@@ -299,11 +301,11 @@ let app = new Vue({
                 app.$message("服务器错误")
             })
 
-            for(i in app.totalTable.entities){
+            for (i in app.totalTable.entities) {
                 app.AnsEntity.questionId = app.totalTable.entities[i].id;
-                ajaxPostJSONAsync(this.urls.getAnswerCountByConditions,this.AnsEntity,function (d) {
+                ajaxPostJSONAsync(this.urls.getAnswerCountByConditions, this.AnsEntity, function (d) {
                     app.totalTable.entities[i].answerNum = d.data
-                },function (d) {
+                }, function (d) {
                     app.$message("服务器错误")
                 })
             }
@@ -316,7 +318,7 @@ let app = new Vue({
                 app.$message("error，参数错误")
             }
         },
-        refreshTotalTableByTitle: function (condition,type) {
+        refreshTotalTableByTitle: function (condition, type) {
             this.initializeSurveyEntity();
             this.surveyEntity.title = condition;
             let app = this;
@@ -337,11 +339,11 @@ let app = new Vue({
                     type: "error"
                 })
             })
-            for(i in app.totalTable.entities){
+            for (i in app.totalTable.entities) {
                 app.AnsEntity.questionId = app.totalTable.entities[i].id;
-                ajaxPostJSONAsync(this.urls.getAnswerCountByConditions,this.AnsEntity,function (d) {
+                ajaxPostJSONAsync(this.urls.getAnswerCountByConditions, this.AnsEntity, function (d) {
                     app.totalTable.entities[i].answerNum = d.data
-                },function (d) {
+                }, function (d) {
                     app.$message("服务器错误")
                 })
             }
@@ -354,7 +356,7 @@ let app = new Vue({
                 app.$message("error，参数错误")
             }
         },
-        refreshTotalTableByDescription: function (condition,type) {
+        refreshTotalTableByDescription: function (condition, type) {
             this.initializeSurveyEntity();
             this.surveyEntity.description = condition;
             let app = this;
@@ -376,11 +378,11 @@ let app = new Vue({
                     type: "error"
                 })
             })
-            for(i in app.totalTable.entities){
+            for (i in app.totalTable.entities) {
                 app.AnsEntity.questionId = app.totalTable.entities[i].id;
-                ajaxPostJSONAsync(this.urls.getAnswerCountByConditions,this.AnsEntity,function (d) {
+                ajaxPostJSONAsync(this.urls.getAnswerCountByConditions, this.AnsEntity, function (d) {
                     app.totalTable.entities[i].answerNum = d.data
-                },function (d) {
+                }, function (d) {
                     app.$message("服务器错误")
                 })
             }
@@ -422,8 +424,22 @@ let app = new Vue({
     },
     created: function () {
         let app = this;
-        app.user = getSessionStorage('user')
-        //todo 权限验证
+        app.user = JSON.parse(getSessionStorage('user'))
+        if (app.user == null) {
+            this.$message({
+                message: "请登录",
+                type: 'error'
+            });
+            return
+        }
+        if (app.user.role === 'student') {
+            this.$message({
+                message: "您无权访问当前页面",
+                type: 'error'
+            });
+            return
+        }
+        app.showWindow = true
         // this.reloadRefreshMethod()
         this.refresh(this.refreshType.reload)
     }
