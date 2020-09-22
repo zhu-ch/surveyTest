@@ -5,6 +5,9 @@ let mySurveyFilter = Vue.extend({
         },
         'condition': {
             type: Object
+        },
+        'user': {
+            type: Object
         }
     },
     template: `
@@ -12,8 +15,9 @@ let mySurveyFilter = Vue.extend({
             <div style="display: flex; width: 80vw">
                 <!--指定题目-->
                 <el-select v-model="filterCondition.id" placeholder="请选择题目" @change="resetThis(); submitThis()">
-                    <el-option v-for="item in questions" v-if="item.type!='ORDER'" 
-                                :key="item.id" :label="item.title" :value="item.id"></el-option>
+                    <el-option v-for="item in questions" :key="item.id" :label="item.title" :value="item.id"
+                            v-if="(item.type!='ORDER') && (user.role === 'admin' || user.role === 'leader' || item.isPrivate != true)">
+                    </el-option>
                 </el-select>
                 <!--选择题筛选条件-->
                 <el-select v-model="filterCondition.searchCondition" placeholder="请选择筛选条件" @change="submitThis"
@@ -93,6 +97,7 @@ let app = new Vue({
         'my-survey-filter': mySurveyFilter
     },
     data: {
+        user: {},
         showWindow: false,
         fullScreenLoading: false,
         urls: {
@@ -208,6 +213,7 @@ let app = new Vue({
     created: function () {
         this.showWindow = true
         this.queryEntity.surveyEntity.id = getSessionStorage('detail-survey-id')
+        this.user = JSON.parse(getSessionStorage('user'))
 
         //获取题目信息
         let app = this
@@ -216,9 +222,15 @@ let app = new Vue({
             function (result) {
                 let r = result.data[0]
                 app.filter.questionList = r.questions
+
                 app.surveyTitle = r.title
                 r.questions.forEach(function (item) {
-                    app.table.questionList.push({'id': item.id, 'title': item.title, 'index': item.index})
+                    app.table.questionList.push({
+                        'id': item.id,
+                        'title': item.title,
+                        'index': item.index,
+                        'isPrivate': item.isPrivate
+                    })
                 })
             },
             function () {
