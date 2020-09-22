@@ -19,8 +19,11 @@ let myComponent = Vue.extend({
         </div>
         <div>
            <span>
-                <el-button>
-                    <span>答题情况</span>
+                <el-button @click="clickSurveySituation">
+                    <span>问卷信息</span>
+                </el-button>
+                <el-button @click="clickAnswerSituation">
+                    <span>答卷概览</span>
                 </el-button>
                 <el-button @click="clickPreview">
                     <span>问卷预览</span>
@@ -136,7 +139,23 @@ let myComponent = Vue.extend({
                     params: []
                 }
             }, '*');
-        }
+        },
+        clickSurveySituation:function(){
+            window.parent.postMessage({
+                data: {
+                    type: "addTabDetail",
+                    params: [this.survey.id]
+                }
+            }, '*');
+        },
+        clickAnswerSituation:function(){
+            window.parent.postMessage({
+                data: {
+                    type: "addTabOverall",
+                    params: [this.survey.id]
+                }
+            }, '*');
+        },
     },
     data() {
         return {

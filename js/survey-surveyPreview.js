@@ -51,10 +51,10 @@ let mySingleQuestion = Vue.extend({
             this.$emit("submit-questions",JSON.stringify(this.questionInner))
         },
         clean(val,oldval){
-          if(val == this.questionInner.id){
-              var tmp = []
-              this.questionInner.selectedList = tmp.slice(0)
-          }
+            if(val == this.questionInner.id){
+                var tmp = []
+                this.questionInner.selectedList = tmp.slice(0)
+            }
         },
         deep:true
     }
@@ -424,98 +424,98 @@ let app = new Vue({
             })
         },
         clickSubmit: function () {
-            console.log("clickSubmit")
-
-            for(var i in this.survey.questions){
-                if(this.renderStatus[i]){
-                    if(!this.survey.questions[i].checked){
-                        this.$message.error('您还有未填写完成的题目');
-                        return;
-                    }
-                }
-            }
-
-
-
-
-            this.$emit("collectQuestions")
-
-            var AnsSurveyEntity={}
-            AnsSurveyEntity.surveyId = this.survey.id
-            AnsSurveyEntity.respondentId = JSON.parse(getSessionStorage("user"))
-            AnsSurveyEntity.ansList = []
-
-
-
-
-            for(var i in this.survey.questions){
-                var AnsEntity={}
-                var ans = ""
-                AnsEntity.questionId = this.survey.questions[i].id
-                if(this.survey.questions[i].type === "SINGLE"){
-
-                    for(j in this.survey.questions[i].selectedList){
-                        ans+=this.survey.questions[i].selectedList[j]
-                        if(j != this.survey.questions[i].selectedList.length-1){
-                            ans+="@@"
-                        }
-                    }
-                    AnsEntity.answer = ans
-                }
-                else if(this.survey.questions[i].type === "MULTIPLE"){
-                    for(j in this.survey.questions[i].selectedList){
-                        ans+=this.survey.questions[i].selectedList[j]
-                        if(j !== this.survey.questions[i].selectedList.length-1){
-                            ans+="@@"
-                        }
-                    }
-                    AnsEntity.answer = ans
-                }
-                else if(this.survey.questions[i].type === "FILL_BLANK"){
-                    AnsEntity.answer = this.survey.questions[i].blankQuestionAns
-                }
-                else if(this.survey.questions[i].type === "ORDER"){
-                    for(j in this.survey.questions[i].orderAnswer){
-                        ans+=this.survey.questions[i].orderAnswer[j]
-                        if(j !== this.survey.questions[i].orderAnswer.length-1){
-                            ans+="@@"
-                        }
-                    }
-                    AnsEntity.answer = ans
-                }
-                AnsSurveyEntity.ansList.push(AnsEntity)
-            }
-            console.log(AnsSurveyEntity)
-
-            app = this
-            ajaxPostJSONAsync(this.urls.insertAnswer,AnsSurveyEntity,function (d) {
-                if (d.status == 'success') {
-                    app.cardloading = false
-                    app.$message({
-                        message: "保存成功",
-                        type: 'success'
-                    });
-                    window.parent.postMessage({
-                        data: {
-                            type:"addTabHistorySurvey",
-                            params:[]
-                        }
-                    }, '*');
-
-                } else if (d.status == 'warning'){
-                    app.$message({
-                        message: "操作失败",
-                        type: 'error'
-                    });
-                }
-
-
-            },function (d) {
-                app.$message({
-                    message: '未知错误',
-                    type: 'error'
-                });
-            })
+            // console.log("clickSubmit")
+            //
+            // for(var i in this.survey.questions){
+            //     if(this.renderStatus[i]){
+            //         if(!this.survey.questions[i].checked){
+            //             this.$message.error('您还有未填写完成的题目');
+            //             return;
+            //         }
+            //     }
+            // }
+            //
+            //
+            //
+            //
+            // this.$emit("collectQuestions")
+            //
+            // var AnsSurveyEntity={}
+            // AnsSurveyEntity.surveyId = this.survey.id
+            // AnsSurveyEntity.respondentId = JSON.parse(getSessionStorage("user"))
+            // AnsSurveyEntity.ansList = []
+            //
+            //
+            //
+            //
+            // for(var i in this.survey.questions){
+            //     var AnsEntity={}
+            //     var ans = ""
+            //     AnsEntity.questionId = this.survey.questions[i].id
+            //     if(this.survey.questions[i].type === "SINGLE"){
+            //
+            //         for(j in this.survey.questions[i].selectedList){
+            //             ans+=this.survey.questions[i].selectedList[j]
+            //             if(j != this.survey.questions[i].selectedList.length-1){
+            //                 ans+="@@"
+            //             }
+            //         }
+            //         AnsEntity.answer = ans
+            //     }
+            //     else if(this.survey.questions[i].type === "MULTIPLE"){
+            //         for(j in this.survey.questions[i].selectedList){
+            //             ans+=this.survey.questions[i].selectedList[j]
+            //             if(j !== this.survey.questions[i].selectedList.length-1){
+            //                 ans+="@@"
+            //             }
+            //         }
+            //         AnsEntity.answer = ans
+            //     }
+            //     else if(this.survey.questions[i].type === "FILL_BLANK"){
+            //         AnsEntity.answer = this.survey.questions[i].blankQuestionAns
+            //     }
+            //     else if(this.survey.questions[i].type === "ORDER"){
+            //         for(j in this.survey.questions[i].orderAnswer){
+            //             ans+=this.survey.questions[i].orderAnswer[j]
+            //             if(j !== this.survey.questions[i].orderAnswer.length-1){
+            //                 ans+="@@"
+            //             }
+            //         }
+            //         AnsEntity.answer = ans
+            //     }
+            //     AnsSurveyEntity.ansList.push(AnsEntity)
+            // }
+            // console.log(AnsSurveyEntity)
+            //
+            // app = this
+            // ajaxPostJSONAsync(this.urls.insertAnswer,AnsSurveyEntity,function (d) {
+            //     if (d.status == 'success') {
+            //         app.cardloading = false
+            //         app.$message({
+            //             message: "保存成功",
+            //             type: 'success'
+            //         });
+            //         window.parent.postMessage({
+            //             data: {
+            //                 type:"addTabHistorySurvey",
+            //                 params:[]
+            //             }
+            //         }, '*');
+            //
+            //     } else if (d.status == 'warning'){
+            //         app.$message({
+            //             message: "操作失败",
+            //             type: 'error'
+            //         });
+            //     }
+            //
+            //
+            // },function (d) {
+            //     app.$message({
+            //         message: '未知错误',
+            //         type: 'error'
+            //     });
+            // })
 
         },
         initializeSurveyEntity: function () {

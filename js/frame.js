@@ -16,7 +16,11 @@ let urls = [
     ['问卷列表', 'student-surveyList.html'],
     ['历史问卷', 'survey-historySurveys.html'],
     //不直接展示
-    ['问卷预览', 'survey-surveyPreview.html']
+    ['问卷预览', 'survey-surveyPreview.html'],
+    ['问卷填写', 'survey-fillInSurvey.html'],
+    ['问卷信息', 'statistic-detail.html'],
+    ['答卷概览', 'statistic-overall.html']
+
 ];
 
 let app = new Vue({
@@ -140,6 +144,12 @@ let app = new Vue({
                 this.addTab("问卷预览", "survey-surveyPreview.html")
             } else if (data && data.type == "addTabCreateSurvey") {
                 this.addTab('创建问卷', 'survey-createSurvey.html')
+            } else if(data && data.type == 'addTabDetail'){
+                setSessionStorage("detail-survey-id",data.params[0])
+                this.addTab("问卷信息","statistic-detail.html")
+            } else if(data && data.type == 'addTabOverall'){
+                setSessionStorage("overall-survey-id",data.params[0])
+                this.addTab("答卷概览","statistic-overall.html")
             }
         }
     },
