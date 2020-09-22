@@ -5,53 +5,59 @@ let mySingleQuestion = Vue.extend({
         },
         'list': {
             type: Array
+        },
+        'clean':{
+            type: String
         }
+
     },
     data() {
         return {
             //模块内属性
             // 题目属性
-            title: "",
-            isRequired: false,
-            answerList: [],
+            questionInner: []
         }
     },
     template: `
         <el-card class="box-card">
             <div slot="header" class="clearfix">
-                <span v-if="question.isRequired" style="color: red">*</span>
-                <span v-text="question.title"></span>
+                <span v-if="questionInner.required" style="color: #ff0000">*</span>
+                <span v-text="questionInner.title"></span>
             </div>
             <div class="clearfix">
-                <el-radio-group v-model="question.selectedList[0]">
-                    <el-radio v-for="item in answerList" :key="item.index" :label="item.index">{{item.content}}</el-radio>
+                <el-radio-group v-model="questionInner.selectedList[0]">
+                    <el-radio v-for="item in questionInner.answerList" :key="item" :label="item">{{item}}</el-radio>
                 </el-radio-group>  
             </div>
         </el-card>
     `,
     created: function () {
-        this.title = this.question.title;
-        this.isRequired = this.question.isRequired;
-        this.answerList = this.question.answerList;
-        if(!this.isRequired){
-            this.question.checked = true;
+        this.questionInner = JSON.parse(JSON.stringify(this.question));
+        this.questionInner.selectedList = []
+        if(this.questionInner.required){
+            this.questionInner.checked = true;
         }
     },
     computed:{
-        selectedList(){
-            return this.question.selectedList;
+        onselectedList(){
+            return this.questionInner.selectedList;
         }
     },
     watch: {
-        selectedList(val,oldval) {
-            console.log(val,oldval);
-            if(this.isRequired){
-                this.question.checked = true;
+        onselectedList(val,oldval) {
+            if(!this.questionInner.required){
+                this.questionInner.checked = true;
             }
+            this.$emit("submit-questions",JSON.stringify(this.questionInner))
+        },
+        clean(val,oldval){
+          if(val == this.questionInner.id){
+              var tmp = []
+              this.questionInner.selectedList = tmp.slice(0)
+          }
         },
         deep:true
     }
-
 })
 
 let myMultipleQuestion = Vue.extend({
@@ -61,52 +67,59 @@ let myMultipleQuestion = Vue.extend({
         },
         'list': {
             type: Array
+        },
+        'clean':{
+            type: String
         }
     },
     data() {
         return {
-            //模块内属性
-            // 题目属性
-            title: "",
-            isRequired: false,
-            answerList: [],
+            questionInner:{}
         }
     },
     template: `
         <el-card class="box-card">
             <div slot="header" class="clearfix">
-                <span v-if="question.isRequired" style="color: red">*</span>
-                <span v-text="question.title"></span> 
+                <span v-if="questionInner.required" style="color: red">*</span>
+                <span v-text="questionInner.title"></span> 
             </div>
             <div class="clearfix">
-                <el-checkbox-group v-model="question.selectedList">
-                    <el-checkbox v-for="item in answerList" :key="item.index" :label="item.index">{{item.content}}</el-checkbox>
+                <el-checkbox-group v-model="questionInner.selectedList">
+                    <el-checkbox v-for="item in questionInner.answerList" :key="item" :label="item" :value="item">{{item}}</el-checkbox>
                 </el-checkbox-group>  
             </div>
         </el-card>
     `,
     created: function () {
-        this.title = this.question.title;
-        this.isRequired = this.question.isRequired;
-        this.answerList = this.question.answerList;
-        if(!this.isRequired){
-            this.question.checked = true;
+        this.questionInner = JSON.parse(JSON.stringify(this.question));
+        this.questionInner.selectedList = []
+        if(!this.questionInner.required){
+            this.questionInner.checked = true;
         }
     },
     computed:{
         selectedList(){
-            return this.question.selectedList;
+            return this.questionInner.selectedList;
         }
     },
     watch: {
         selectedList(val,oldval) {
-            console.log(val,oldval);
             if(val.length != 0){
-                this.question.checked = true;
+                this.questionInner.checked = true;
             }
             else{
-                this.question.checked = false;
+                this.questionInner.checked = false;
                 //todo 提示信息
+            }
+            this.$emit("submit-questions",JSON.stringify(this.questionInner))
+        },
+        clean(val,oldval){
+            console.log("MULTYPLE",val,this.questionInner.id)
+            if(val == this.questionInner.id){
+                var tmp = []
+
+                this.questionInner.selectedList = tmp.slice(0)
+                this.$forceUpdate()
             }
         },
         deep:true
@@ -120,16 +133,16 @@ let myBlankQuestion = Vue.extend({
         },
         'list': {
             type: Array
+        },
+        'clean':{
+            type:String
         }
     },
     data() {
         return {
-            //模块内属性
-            // 题目属性
-            title: "",
-            isRequired: false,
-            validationCheck:false,
-            validationMessage:'',
+            questionInner: {},
+            validationCheck: false,
+            validationMessage: '',
             validationType: [
                 {type: 'phone', text: '手机号'},
                 {type: 'integer', text: '整数'},
@@ -140,75 +153,70 @@ let myBlankQuestion = Vue.extend({
     template: `
         <el-card class="box-card">
             <div slot="header" class="clearfix">
-                <span v-if="question.isRequired" style="color: red">*</span>
-                <span v-text="question.title"></span>
+                <span v-if="questionInner.required" style="color: red">*</span>
+                <span v-text="questionInner.title"></span>
                 <span v-if="validationCheck" style="color: red">{{validationMessage}}</span>
             </div>
             <div class="clearfix">
-                <el-input v-model="question.blankQuestionAns" :placeholder="question.defaultAns"></el-input>   
+                <el-input v-model="questionInner.blankQuestionAns" :placeholder="questionInner.defaultAns"></el-input>   
             </div>
         </el-card>
     `,
     created: function () {
-        this.title = this.question.title;
-        this.isRequired = this.question.isRequired;
-        if(this.question.validation == ''){
+        this.questionInner = JSON.parse(JSON.stringify(this.question));
+        if (this.question.validation == '') {
             this.validationCheck = false;
-        }
-        else {
+        } else {
             this.validationCheck = true;
         }
         this.validationMessage = '';
-        if(!this.isRequired){
-            this.question.checked  = true;
+        this.questionInner.blankQuestionAns = ""
+        if (!this.questionInner.required) {
+            this.questionInner.checked = true;
         }
     },
-    computed:{
-        blankQuestionAns(){
-            return this.question.blankQuestionAns;
+    computed: {
+        blankQuestionAns() {
+            return this.questionInner.blankQuestionAns;
         }
     },
     watch: {
-        blankQuestionAns(val,oldval) {
-            console.log(val,oldval);
-            if(val.length != 0){
-                if(this.question.validation == ''){
-                    this.question.checked = true;
-                }
-                else if(this.question.validation == 'phone'){
-                    if(!(/^1[3456789]\d{9}$/.test(val))){
-                        this.question.checked = false;
+        blankQuestionAns(val, oldval) {
+            console.log(val, oldval);
+            if (val.length != 0) {
+                if (this.questionInner.validation == '') {
+                    this.questionInner.checked = true;
+                } else if (this.questionInner.validation == 'phone') {
+                    if (!(/^1[3456789]\d{9}$/.test(val))) {
+                        this.questionInner.checked = false;
                         this.validationMessage = '手机号格式错误'
-                    }
-                    else{
-                        this.question.checked = true;
+                    } else {
+                        this.questionInner.checked = true;
                         this.validationMessage = ''
                     }
-                }
-                else if(this.question.validation == 'integer'){
-                    if(!(/^-?[1-9]\d*$/.test(val))){
-                        this.question.checked = false;
+                } else if (this.questionInner.validation == 'integer') {
+                    if (!(/^-?[1-9]\d*$/.test(val))) {
+                        this.questionInner.checked = false;
                         this.validationMessage = '整数格式错误'
-                    }
-                    else{
-                        this.question.checked = true;
+                    } else {
+                        this.questionInner.checked = true;
                         this.validationMessage = ''
                     }
-                }
-                else if(this.question.validation == 'rank'){
+                } else if (this.questionInner.validation == 'rank') {
                     //todo 排名正则表达式
                     // if(!(/^1[3456789]\d{9}$/.test(val))){
                     //     this.question.checked = false;
                     //     this.validationMessage = '排名格式错误'
                     // }
                     // else{
+                    //     this.$emit("submit-questions", this.questionInner)
                     //     this.question.checked = true;
                     //     this.validationMessage = ''
                     // }
-                }
-                else if(this.question.validation == 'grade'){
+                } else if (this.questionInner.validation == 'grade') {
                     //todo 成绩正则表达式
                     // if(!(/^1[3456789]\d{9}$/.test(val))){
+                    //     this.$emit("submit-questions", this.questionInner)
                     //     this.question.checked = false;
                     //     this.validationMessage = '成绩格式错误'
                     // }
@@ -217,11 +225,12 @@ let myBlankQuestion = Vue.extend({
                     //     this.validationMessage = ''
                     // }
                 }
-            }
-            else{
-                this.question.checked = false;
+            } else {
+                this.questionInner.checked = false;
+                this.validationMessage = ''
                 //todo 提示信息
             }
+            this.$emit("submit-questions",JSON.stringify(this.questionInner))
         }
     }
 })
@@ -233,6 +242,9 @@ let myOrderQuestion = Vue.extend({
         },
         'list': {
             type: Array
+        },
+        'clean':{
+            type:String
         }
     },
     data() {
@@ -240,7 +252,8 @@ let myOrderQuestion = Vue.extend({
             //模块内属性
             // 题目属性
             title: "",
-            isRequired: false,
+            required: false,
+            questionInner:{},
             validationType: [
                 {type: 'phone', text: '手机号'},
                 {type: 'integer', text: '整数'},
@@ -254,19 +267,19 @@ let myOrderQuestion = Vue.extend({
     template: `
         <el-card class="box-card">
             <div slot="header" class="clearfix">
-                <span v-if="question.isRequired" style="color: red">*</span>
-                <span v-text="question.title"></span>
+                <span v-if="required" style="color: red">*</span>
+                <span v-text="title"></span>
             </div>
             <div class="clearfix">
                 <el-container> 
                     <el-main class="num">
-                        <span v-for=" i in this.answerNum" style="height: 40px;margin-bottom: 10px">{{i}}</span>
+                        <span v-for=" i in answerNum" style="height: 40px;margin-bottom: 10px">{{i}}</span>
                     </el-main>           
                     <el-main stytle="display:grid !important; flex: 10;" class = "row">
-                        <el-button plain v-for="item in leftArea" @click="clickLeft(item.index)">{{item.content}}</el-button> 
+                        <el-button plain v-for="item in leftArea" :key="item" @click="clickLeft(item)">{{item}}</el-button> 
                     </el-main>
                      <el-main stytle="display:grid;flex: 10;" class = "row">
-                        <el-button plain v-for="item in rightArea" @click="clickRight(item.index)">{{item.content}}</el-button>
+                        <el-button plain v-for="item in rightArea" :key="item" @click="clickRight(item)">{{item}}</el-button>
                     </el-main>       
                 </el-container>
             </div>
@@ -274,30 +287,32 @@ let myOrderQuestion = Vue.extend({
     `,
     created: function () {
         this.title = this.question.title;
-        this.isRequired = this.question.isRequired;
+        this.required = this.question.required;
+        this.questionInner = JSON.parse(JSON.stringify(this.question))
+        this.questionInner.orderAnswer = [];
         this.leftArea = [];
         // {index: '选项A', content: 'A'}, {index: '选项B', content: 'B'}, {index: '选项C', content: 'C'}
         this.rightArea = this.question.answerList;
         this.answerNum = this.question.answerList.length;
-        if(!this.isRequired){
-            this.question.checked  = true;
+        if(!this.required){
+            this.questionInner.checked  = true;
         }
     },
     methods:{
-        clickLeft: function (ansIndex){
+        clickLeft: function (ans){
             var temp= {};
             for (var i = 0;i < this.leftArea.length;i++){
-                if (this.leftArea[i].index == ansIndex){
+                if (this.leftArea[i] == ans){
                     temp = this.leftArea[i];
                     this.leftArea.splice(i,1);
                     this.rightArea.push(temp);
                 }
             }
         },
-        clickRight: function (ansIndex) {
+        clickRight: function (ans) {
             var temp= {};
             for (var i = 0;i < this.rightArea.length;i++){
-                if (this.rightArea[i].index == ansIndex){
+                if (this.rightArea[i] == ans){
                     temp = this.rightArea[i];
                     this.rightArea.splice(i,1);
                     this.leftArea.push(temp);
@@ -310,12 +325,15 @@ let myOrderQuestion = Vue.extend({
             handler(val,oldval){
                 console.log(val,oldval);
                 if(val.length == this.answerNum){
-                    this.question.checked = true;
+                    this.questionInner.checked = true;
                 }
                 else{
-                    this.question.checked = false;
+                    this.questionInner.checked = false;
                     //todo 提示信息
                 }
+
+                this.questionInner.orderAnswer = this.leftArea.slice(0)
+                this.$emit("submit-questions",JSON.stringify(this.questionInner))
             },
             deep:true
         }
@@ -324,27 +342,35 @@ let myOrderQuestion = Vue.extend({
 
 let app = new Vue({
     el: "#app",
-    data: {
-        questionCount: 0,
-        groupCount: 0,
-        survey: {
-            surveyTitle: '',
-            description: '',
-            questions: []
-        },
-        urls:{
-            getSurveyByConditions:serverUrl+"/api/survey/getSurveyByConditions"
-        },
-        surveyEntity: {
-            id: "",
-            ownerId: "",
-            title: "",
-            description: "",
-            enable: 0,
-            questions: [],
-            startTime: "",
-            endTime: "",
+    data() {
+        return{
+            clean:"",
+            renderStatus:[true,true,true,true,true,true,false],
+            questionCount: 0,
+            groupCount: 0,
+            survey: {
+                surveyTitle: '',
+                description: '',
+                id: "",
+                ownerId:"",
+                questions: []
+            },
+            urls:{
+                getSurveyByConditions:serverUrl+"/api/survey/getSurveyByConditions",
+                insertAnswer:serverUrl+"/api/survey/insertOrUpdateAnswer"
+            },
+            surveyEntity: {
+                id: "",
+                ownerId: "",
+                title: "",
+                description: "",
+                enable: 0,
+                questions: [],
+                startTime: "",
+                endTime: "",
+            }
         }
+
     },
     components: {
         'SINGLE': mySingleQuestion,
@@ -358,7 +384,10 @@ let app = new Vue({
         this.survey.description = "默认问卷描述";
         // todo 权限检查
         // todo 从后端获取问卷
-        this.getSurvey("a094ef34e83648e89718e6605d4b97e3")
+        this.getSurvey("59e84b944f014ab181036013e6b4aee3")
+
+
+
     },
     methods:{
         getSurvey: function(id){
@@ -366,25 +395,108 @@ let app = new Vue({
             this.surveyEntity.id = id;
             let app = this;
             ajaxPostJSON(this.urls.getSurveyByConditions, this.surveyEntity, function (d) {
+                app.survey.surveyTitle = d.data[0].title;
+                app.survey.description = d.data[0].description;
                 app.survey.questions= d.data[0].questions;
+                app.survey.id = d.data[0].id
+                app.survey.ownerId = d.data[0].ownerId
                 for(i in app.survey.questions){
+                    if(d.data[0].questions[i].answerList)
+                        app.survey.questions[i].answerList = d.data[0].questions[i].answerList.slice(0)
+                    if(d.data[0].questions[i].frontOptions)
+                        app.survey.questions[i].frontOptions = d.data[0].questions[i].frontOptions.slice(0)
                     app.survey.questions[i].selectedList=[];
                     app.survey.questions[i].blankQuestionAns = ""
+                    app.survey.questions[i].checked = false
                 }
                 console.log(d.data)
+                var temp = []
+                for(i in app.survey.questions){
+                    if(app.survey.questions[i].frontOptions.length == 0)
+                        temp.push(true)
+                    else
+                        temp.push(false)
+                }
+                console.log("create",temp)
+                app.renderStatus = temp
             }, function (d) {
                 app.$message("服务器错误")
             })
         },
         clickSubmit: function () {
             console.log("clickSubmit")
+
             for(var i in this.survey.questions){
-                if(!this.survey.questions[i].checked){
-                    this.$message.error('您还有未填写完成的题目');
-                    return;
+                if(this.renderStatus[i]){
+                    if(!this.survey.questions[i].checked){
+                        this.$message.error('您还有未填写完成的题目');
+                        return;
+                    }
                 }
             }
-            //todo 上传数据
+
+
+
+
+            this.$emit("collectQuestions")
+
+            var AnsSurveyEntity={}
+            AnsSurveyEntity.surveyId = this.survey.id
+            AnsSurveyEntity.respondentId = JSON.parse(getSessionStorage("user"))
+            AnsSurveyEntity.ansList = []
+
+
+
+
+            for(var i in this.survey.questions){
+                var AnsEntity={}
+                AnsEntity.questionId = this.survey.questions[i].id
+                if(this.survey.questions[i].type === "SINGLE"){
+                    AnsEntity.answer = this.survey.questions[i].selectedList.slice(0)
+                }
+                else if(this.survey.questions[i].type === "MULTIPLE"){
+                    AnsEntity.answer = this.survey.questions[i].selectedList.slice(0)
+                }
+                else if(this.survey.questions[i].type === "FILL_BLANK"){
+                    AnsEntity.answer = this.survey.questions[i].blankQuestionAns
+                }
+                else if(this.survey.questions[i].type === "ORDER"){
+                    AnsEntity.answer = this.survey.questions[i].orderAnswer.slice(0)
+                }
+                AnsSurveyEntity.ansList.push(AnsEntity)
+            }
+            console.log(AnsSurveyEntity)
+
+            app = this
+            ajaxPostJSONAsync(this.urls.insertAnswer,AnsSurveyEntity,function (d) {
+                if (d.status == 'success') {
+                    app.cardloading = false
+                    app.$message({
+                        message: "保存成功",
+                        type: 'success'
+                    });
+                    window.parent.postMessage({
+                        data: {
+                            type:"addTabHistorySurvey",
+                            params:[]
+                        }
+                    }, '*');
+
+                } else if (d.status == 'warning'){
+                    app.$message({
+                        message: "操作失败",
+                        type: 'error'
+                    });
+                }
+
+
+            },function (d) {
+                app.$message({
+                    message: '未知错误',
+                    type: 'error'
+                });
+            })
+
         },
         initializeSurveyEntity: function () {
             this.surveyEntity.id = "";
@@ -396,28 +508,88 @@ let app = new Vue({
             this.surveyEntity.startTime = "";
             this.surveyEntity.endTime = "";
         },
-        checkFrontOptions:function (question) {
-            for(var i in question.frontOptions){
-                for(var j in this.survey.questions){
+        submitQuestions:function(v){
+            questionInner = JSON.parse(v)
+            var temp = 0;
+            for(i in this.survey.questions){
+                if(this.survey.questions[i].id == questionInner.id){
+                    temp = i;
+                    break;
+                }
+            }
+            this.survey.questions[i] = JSON.parse(JSON.stringify(questionInner))
 
-                    if(question.frontOptions[i].question_id == this.survey.questions[j].id){
-                        console.log(question.frontOptions[i].question_id,this.survey.questions[j].id)
-                        var hasAns = false
-                        for(var k in this.survey.questions[j].selectedList){
-                            console.log(this.survey.questions[j].selectedList[k],question.frontOptions[i].question_answer)
-                            if(this.survey.questions[j].selectedList[k] == question.frontOptions[i].question_answer) {
-                                hasAns = true;
-                                break;
+            this.checkRenderStatus(questionInner)
+            // console.log(this.survey.questions[i])
+        },
+        checkRenderStatus: function(question){
+            var temp = []
+            for (i in this.renderStatus){
+                temp.push(this.renderStatus[i])
+            }
+            console.log("check",temp)
+            for(i in this.survey.questions){
+                var flag = false
+                var used = false
+                for(j in this.survey.questions[i].frontOptions){
+                    if(this.survey.questions[i].frontOptions[j].questionId == question.id){
+                        used = true
+                        for(k in question.selectedList){
+                            if(question.selectedList[k] == question.answerList[this.survey.questions[i].frontOptions[j].questionAnswer]){
+                                flag = true
                             }
-                        }
-                        if(!hasAns){
-                            return false;
                         }
                     }
                 }
+
+                if(used){
+                    temp[i] = flag
+                    if(this.survey.questions[i].frontOptions.length == 0 || this.survey.questions[i].id == question.id){
+                        temp[i] = true
+                    }
+                    if(temp[i] == false){
+                        if(this.survey.questions[i].type === "SINGLE" || this.survey.questions[i].type === "MULTIPLE") {
+
+                            var tmp = []
+                            this.survey.questions[i].selectedList = []
+                            this.clean = this.survey.questions[i].id
+                            console.log(i,this.clean)
+                        }
+                        else if(this.survey.questions[i].type === "ORDER") {
+                            var tmp = []
+
+                            this.survey.questions[i].orderAnswer = []
+                            this.clean = this.survey.questions[i].id
+                            console.log(i,this.clean)
+
+                        }
+                        else if(this.survey.questions[i].type === "FILL_BLANK"){
+
+                            this.survey.questions[i].blankQuestionAns = ""
+                            this.clean = this.survey.questions[i].id
+                            console.log(i,this.clean)
+                        }
+
+                    }
+                }
+
+
             }
-            return true;
+            this.renderStatus = temp
+            // console.log(this.renderStatus)
         }
+    },
+    computed:{
+        onRenderStatus:function () {
+            // console.log(this.renderStatus)
+            return this.renderStatus;
+        }
+    },
+    watch:{
+        onRenderStatus(val, oldval) {
+            // console.log(val)
+        },
+        deep:true
     }
 })
 
