@@ -76,6 +76,11 @@
                            @click="getUserInfo(scope.row)">
                     <span>详情</span>
                 </el-button>
+                <el-button type="primary" size="mini" style="position:relative;bottom: 1px;"
+                           :disabled="scope.row.role != 'student'"
+                           @click="getUserHistoryAnswers(scope.row.id)">
+                    <span>答卷</span>
+                </el-button>
                 <el-button type="warning" size="mini" style="position:relative;bottom: 1px;margin-left: 6px;"
                            @click="openUpdate(scope.row)">
                     <span>编辑</span>
@@ -133,6 +138,21 @@
             </el-button>
         </div>
     </el-dialog>
+
+    <el-dialog title="历史问卷" :visible.sync="history.visible">
+        <el-table :data="history.entity.data" height="calc(100% - 116px)" v-loading="history.loading"
+                  style="width: 100%;overflow-y: hidden;margin-top: 20px;" class="scroll-bar"
+                   stripe>
+            <el-table-column  width="40"></el-table-column>
+            <el-table-column width="290" label="问卷编号" prop="surveyId"></el-table-column>
+            <el-table-column label="标题" prop="title"></el-table-column>
+
+            <el-table-column label="备注" prop="remark"></el-table-column>
+
+            <el-table-column width="50"></el-table-column>
+        </el-table>
+    </el-dialog>
+
 
 
     <el-drawer
