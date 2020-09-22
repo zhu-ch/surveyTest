@@ -35,8 +35,8 @@ let app = new Vue({
         ],
         tabList: [
             {
-                url: '../index.html',
-                title: '首页',
+                url: 'http://admission.bit.edu.cn/',
+                title: '北京理工大学本科招生网',
                 name: 'tab0',
                 loading: true // tab页进入加载状态
             }
@@ -55,8 +55,8 @@ let app = new Vue({
             if (this.userInfo != null) {
                 this.showWindow = true;
                 console.log(getSessionStorage("fill-in-survey-id"))
-                if(getSessionStorage("fill-in-survey-id") != null){
-                    this.addTab("问卷填写","survey-fillInSurvey.html")
+                if (getSessionStorage("fill-in-survey-id") != null) {
+                    this.addTab("问卷填写", "survey-fillInSurvey.html")
                 }
                 return;
             }
@@ -65,7 +65,7 @@ let app = new Vue({
                 type: 'error'
             });
             console.log(window.location.search)
-            var tmp_str = window.location.search.substring(1,window.location.search.length)
+            var tmp_str = window.location.search.substring(1, window.location.search.length)
             var arr = tmp_str.split("&")
             var object = new Object()
             for (var i = 0; i < arr.length; i++) {
@@ -75,8 +75,8 @@ let app = new Vue({
 
 
             var surveyId = object["surveyId"]
-            if(surveyId!=null)
-                setSessionStorage("fill-in-survey-id",surveyId)
+            if (surveyId != null)
+                setSessionStorage("fill-in-survey-id", surveyId)
             setTimeout(function () {
                 window.open("welcome.html", "_self")
             }, 2000);
@@ -158,15 +158,19 @@ let app = new Vue({
         handleMessage: function (event) {
             const data = event.data.data
             if (data && data.type == "addTabSurveyPreview") {
-                this.addTab("问卷预览", "survey-surveyPreview.html")
+                this.addTab(data.title + " - 问卷预览", "survey-surveyPreview.html")
             } else if (data && data.type == "addTabCreateSurvey") {
                 this.addTab('创建问卷', 'survey-createSurvey.html')
-            } else if(data && data.type == 'addTabDetail'){
-                setSessionStorage("detail-survey-id",data.params[0])
-                this.addTab("问卷信息","statistic-detail.html")
-            } else if(data && data.type == 'addTabOverall'){
-                setSessionStorage("overall-survey-id",data.params[0])
-                this.addTab("答卷概览","statistic-overall.html")
+            } else if (data && data.type == 'addTabDetail') {
+                setSessionStorage("detail-survey-id", data.params[0])
+                this.addTab(data.title + " - 问卷信息", "statistic-detail.html")
+            } else if (data && data.type == 'addTabOverall') {
+                setSessionStorage("overall-survey-id", data.params[0])
+                this.addTab(data.title + " - 答卷概览", "statistic-overall.html")
+            } else if (data && data.type == 'closeCreateSurvey') {
+                this.removeTab(this.activeTabName)
+            } else if (data && data.type == 'addSurveyManagement') {
+                this.addTab("问卷管理", "survey-surveyManagement.html")
             }
         }
     },

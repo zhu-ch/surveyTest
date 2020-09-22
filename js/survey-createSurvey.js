@@ -59,12 +59,12 @@ let mySingleQuestion = Vue.extend({
                     <el-switch v-model="required" :disabled="disableEdit" 
                                 active-text="必填项" inactive-text="非必填项" style="margin-left:20px;margin-right: 10px"
                                 active-color="#13ce66" inactive-color="#ff4949"></el-switch>
-                    <!--是否启用跳题逻辑-->
+                    <!--是否启用题目关联-->
                     <el-switch v-model="enableFrontOptions" :disabled="disableEdit" 
-                    style="margin-left:20px;margin-right: 10px" active-text="启用跳题逻辑" inactive-text="关闭跳题逻辑"
+                    style="margin-left:20px;margin-right: 10px" active-text="启用题目关联" inactive-text="关闭题目关联"
                                 active-color="#13ce66" inactive-color="#ff4949"></el-switch>
                 </div>
-                <!--跳题逻辑设置-->
+                <!--题目关联设置-->
                 <div v-if="enableFrontOptions" style="width:100%;margin-bottom: 15px;">
                     当<strong>题目</strong>
                     <el-select v-model="selectedQuestionId" :disabled="disableEdit">
@@ -222,12 +222,12 @@ let myMultipleQuestion = Vue.extend({
                     <el-switch v-model="required" :disabled="disableEdit" 
                                 active-text="必填项" inactive-text="非必填项" style="margin-left:20px;margin-right: 10px"
                                 active-color="#13ce66" inactive-color="#ff4949"></el-switch>
-                    <!--是否启用跳题逻辑-->
+                    <!--是否启用题目关联-->
                     <el-switch v-model="enableFrontOptions" :disabled="disableEdit" 
-                                style="margin-left:20px;margin-right: 10px" active-text="启用跳题逻辑" inactive-text="关闭跳题逻辑"
+                                style="margin-left:20px;margin-right: 10px" active-text="启用题目关联" inactive-text="关闭题目关联"
                                 active-color="#13ce66" inactive-color="#ff4949"></el-switch>
                 </div>
-                <!--跳题逻辑设置-->
+                <!--题目关联设置-->
                 <div v-if="enableFrontOptions" style="width:100%;margin-bottom: 15px;">
                     当<strong>题目</strong>
                     <el-select v-model="selectedQuestionId" :disabled="disableEdit">
@@ -382,9 +382,9 @@ let myBlankQuestion = Vue.extend({
                     <el-switch v-model="enableValidation" :disabled="disableEdit" 
                                 style="margin-left:0px;margin-right: 8px" active-text="启用数据验证" inactive-text="关闭数据验证"
                                 active-color="#13ce66" inactive-color="#ff4949"></el-switch>
-                    <!--是否启用跳题逻辑-->
+                    <!--是否启用题目关联-->
                     <el-switch v-model="enableFrontOptions" :disabled="disableEdit" 
-                                style="margin-left:0px;margin-right: 8px" active-text="启用跳题逻辑" inactive-text="关闭跳题逻辑"
+                                style="margin-left:0px;margin-right: 8px" active-text="启用题目关联" inactive-text="关闭题目关联"
                                 active-color="#13ce66" inactive-color="#ff4949"></el-switch>
                 </div>
                 <!--数据验证选项-->
@@ -394,7 +394,7 @@ let myBlankQuestion = Vue.extend({
                         <el-option v-for="item in validationType" :key="item.type" :label="item.text" :value="item.type"></el-option>
                     </el-select>
                 </div>
-                <!--跳题逻辑设置-->
+                <!--题目关联设置-->
                 <div v-if="enableFrontOptions"style="width:100%;margin-bottom: 15px;">
                     当<strong>题目</strong>
                     <el-select v-model="selectedQuestionId" :disabled="disableEdit">
@@ -561,12 +561,12 @@ let myOrderQuestion = Vue.extend({
                     <el-switch v-model="required" :disabled="disableEdit" 
                                 active-text="必填项" inactive-text="非必填项" style="margin-left:20px;margin-right: 10px"
                                 active-color="#13ce66" inactive-color="#ff4949"></el-switch>
-                    <!--是否启用跳题逻辑-->
+                    <!--是否启用题目关联-->
                     <el-switch v-model="enableFrontOptions" :disabled="disableEdit" 
-                                style="margin-left:20px;margin-right: 10px" active-text="启用跳题逻辑" inactive-text="关闭跳题逻辑"
+                                style="margin-left:20px;margin-right: 10px" active-text="启用题目关联" inactive-text="关闭题目关联"
                                 active-color="#13ce66" inactive-color="#ff4949"></el-switch>
                 </div>
-                <!--跳题逻辑设置-->
+                <!--题目关联设置-->
                 <div v-if="enableFrontOptions" style="width:100%;margin-top: 15px;">
                     当<strong>题目</strong>
                     <el-select v-model="selectedQuestionId" :disabled="disableEdit">
@@ -810,14 +810,14 @@ let app = new Vue({
             this.questionCount++
             this.groupCount++
         },
-        addSpecialPlan: function () {
+        addNationalPlan: function () {
             let single = {
                 //前端使用
                 id: '#' + this.questionCount,
                 groupId: '$' + this.groupCount,
                 submitted: true,
                 //传至后端
-                title: '是否报考其他学校的强基计划或国家专项',
+                title: '是否报考其他学校的国家专项',
                 index: this.survey.questions.length + 1,
                 type: 'my-single',
                 required: true,
@@ -829,29 +829,6 @@ let app = new Vue({
                 isPrivate: false
             };
             this.survey.questions.push(single)
-            this.questionCount++
-
-            let plan = {
-                //前端使用
-                id: '#' + this.questionCount,
-                groupId: '$' + this.groupCount,
-                submitted: true,
-                //传至后端
-                title: '报考类别',
-                index: this.survey.questions.length + 1,
-                type: 'my-single',
-                required: true,
-                defaultAns: '',
-                answerList: [{index: '选项A', content: '强基计划'}, {index: '选项B', content: '国家专项'}],
-                frontOptions: [{
-                    questionId: '#' + (this.questionCount - 1),
-                    questionAnswer: '选项A'
-                }],
-                skipLogices: [],
-                validation: '',
-                isPrivate: false
-            };
-            this.survey.questions.push(plan)
             this.questionCount++
 
             let fillBlank = {
@@ -867,7 +844,7 @@ let app = new Vue({
                 defaultAns: '',
                 answerList: [],
                 frontOptions: [{
-                    questionId: '#' + (this.questionCount - 2),
+                    questionId: '#' + (this.questionCount - 1),
                     questionAnswer: '选项A'
                 }],
                 skipLogices: [],
@@ -877,6 +854,160 @@ let app = new Vue({
             this.survey.questions.push(fillBlank)
             this.questionCount++
             this.groupCount++
+        },
+        addBasicPlan: function () {
+            let single = {
+                //前端使用
+                id: '#' + this.questionCount,
+                groupId: '$' + this.groupCount,
+                submitted: true,
+                //传至后端
+                title: '是否报考其他学校的强基计划',
+                index: this.survey.questions.length + 1,
+                type: 'my-single',
+                required: true,
+                defaultAns: '',
+                answerList: [{index: '选项A', content: '是'}, {index: '选项B', content: '否'}],
+                frontOptions: [],
+                skipLogices: [],
+                validation: '',
+                isPrivate: false
+            };
+            this.survey.questions.push(single)
+            this.questionCount++
+
+            let fillBlank = {
+                //前端使用
+                id: '#' + this.questionCount,
+                groupId: '$' + this.groupCount,
+                submitted: true,
+                //传至后端
+                title: '报考学校名称',
+                index: this.survey.questions.length + 1,
+                type: 'my-fill-blank',
+                required: true,
+                defaultAns: '',
+                answerList: [],
+                frontOptions: [{
+                    questionId: '#' + (this.questionCount - 1),
+                    questionAnswer: '选项A'
+                }],
+                skipLogices: [],
+                validation: '',
+                isPrivate: false
+            };
+            this.survey.questions.push(fillBlank)
+            this.questionCount++
+            this.groupCount++
+        },
+        addAdvanceApproval: function () {
+            let single = {
+                //前端使用
+                id: '#' + this.questionCount,
+                groupId: '$' + this.groupCount,
+                submitted: true,
+                //传至后端
+                title: '是否填报提前批',
+                index: this.survey.questions.length + 1,
+                type: 'my-single',
+                required: true,
+                defaultAns: '',
+                answerList: [{index: '选项A', content: '是'}, {index: '选项B', content: '否'}],
+                frontOptions: [],
+                skipLogices: [],
+                validation: '',
+                isPrivate: false
+            };
+            this.survey.questions.push(single)
+            this.questionCount++
+
+            let fillBlank = {
+                //前端使用
+                id: '#' + this.questionCount,
+                groupId: '$' + this.groupCount,
+                submitted: true,
+                //传至后端
+                title: '报考学校名称',
+                index: this.survey.questions.length + 1,
+                type: 'my-fill-blank',
+                required: true,
+                defaultAns: '',
+                answerList: [],
+                frontOptions: [{
+                    questionId: '#' + (this.questionCount - 1),
+                    questionAnswer: '选项A'
+                }],
+                skipLogices: [],
+                validation: '',
+                isPrivate: false
+            };
+            this.survey.questions.push(fillBlank)
+            this.questionCount++
+            this.groupCount++
+        },
+        addOath: function () {
+            let single = {
+                //前端使用
+                id: '#' + this.questionCount,
+                groupId: '$' + this.groupCount,
+                submitted: true,
+                //传至后端
+                title: '我承诺上述信息与提供给我所在省招办信息一致',
+                index: this.survey.questions.length + 1,
+                type: 'my-single',
+                required: true,
+                defaultAns: '',
+                answerList: [{index: '选项A', content: '是'}],
+                frontOptions: [],
+                skipLogices: [],
+                validation: '',
+                isPrivate: false
+            };
+            this.survey.questions.push(single)
+            this.questionCount++
+        },
+        addIdentity: function () {
+            let single = {
+                //前端使用
+                id: '#' + this.questionCount,
+                groupId: '$' + this.groupCount,
+                submitted: true,
+                //传至后端
+                title: '我是考生的',
+                index: this.survey.questions.length + 1,
+                type: 'my-single',
+                required: true,
+                defaultAns: '',
+                answerList: [{index: '选项A', content: '本人'}, {index: '选项B', content: '父亲'},
+                    {index: '选项C', content: '母亲'}, {index: '选项D', content: '其他'}],
+                frontOptions: [],
+                skipLogices: [],
+                validation: '',
+                isPrivate: false
+            };
+            this.survey.questions.push(single)
+            this.questionCount++
+        },
+        addSigned: function () {
+            let single = {
+                //前端使用
+                id: '#' + this.questionCount,
+                groupId: '$' + this.groupCount,
+                submitted: true,
+                //传至后端
+                title: '是否与北京理工大学签约',
+                index: this.survey.questions.length + 1,
+                type: 'my-single',
+                required: true,
+                defaultAns: '',
+                answerList: [{index: '选项A', content: '是'}, {index: '选项B', content: '否'}],
+                frontOptions: [],
+                skipLogices: [],
+                validation: '',
+                isPrivate: false
+            };
+            this.survey.questions.push(single)
+            this.questionCount++
         },
         deleteQuestionByIndex: function (index) {
             console.log('index', index - 1);
@@ -968,7 +1099,6 @@ let app = new Vue({
                             break;
                     }
                 })
-                console.log(JSON.stringify(data))
                 let app = this
                 app.fullScreenLoading = true
                 ajaxPostJSON(this.urls.post, data,
@@ -976,11 +1106,21 @@ let app = new Vue({
                         if (r.code === 'success') {
                             app.fullScreenLoading = false
                             app.$message({
-                                message: '创建成功',
+                                message: '创建成功，3秒后关闭页面',
                                 type: 'success'
                             })
-                            //todo 跳转到详情页，待管理员启用
-                            console.log('页面跳转')
+                            setTimeout(function () {
+                                window.parent.postMessage({
+                                    data: {
+                                        type: "closeCreateSurvey"
+                                    }
+                                }, '*')
+                                window.parent.postMessage({
+                                    data: {
+                                        type: "addSurveyManagement"
+                                    }
+                                }, '*')
+                            },3000)
                         }
                     }, function () {
                         app.fullScreenLoading = false

@@ -57,7 +57,7 @@ let myComponent = Vue.extend({
                         type: 'success',
                     });
                     app.$emit("refresh", "update");
-                    app.$emit('qrcode',app.survey.id)
+                    app.$emit('qrcode', app.survey.id)
                 } else if (d.code == 'warning')
                     app.$message({
                         message: "操作失败",
@@ -134,25 +134,29 @@ let myComponent = Vue.extend({
             })
         },
         clickPreview: function () {
+            console.log('****', this.survey)
             window.parent.postMessage({
                 data: {
                     type: "addTabSurveyPreview",
+                    title: this.survey.title,
                     params: []
                 }
             }, '*');
         },
-        clickSurveySituation:function(){
+        clickSurveySituation: function () {
             window.parent.postMessage({
                 data: {
                     type: "addTabDetail",
+                    title: this.survey.title,
                     params: [this.survey.id]
                 }
             }, '*');
         },
-        clickAnswerSituation:function(){
+        clickAnswerSituation: function () {
             window.parent.postMessage({
                 data: {
                     type: "addTabOverall",
+                    title: this.survey.title,
                     params: [this.survey.id]
                 }
             }, '*');
@@ -176,10 +180,10 @@ let app = new Vue({
         'my-component': myComponent
     },
     data: {
-        qcode:{
-            loading:false,
-            visible:false,
-            qrcodeObjcet:''
+        qcode: {
+            loading: false,
+            visible: false,
+            qrcodeObjcet: ''
         },
         user: {},
         showWindow: false,
@@ -444,25 +448,24 @@ let app = new Vue({
             this.surveyEntity.startTime = "";
             this.surveyEntity.endTime = "";
         },
-        openDialog:function (id){
-            let app=this
+        openDialog: function (id) {
+            let app = this
             app.qcode.visible = true
 
-            setTimeout(function (){
-                let a=document.getElementById('codeArea')
+            setTimeout(function () {
+                let a = document.getElementById('codeArea')
                 console.log(a)
 
-                if (app.qcode.qrcodeObjcet != ''){
+                if (app.qcode.qrcodeObjcet != '') {
                     app.qcode.qrcodeObjcet.clear()
-                    app.qcode.qrcodeObjcet.makeCode('https://wxxyx.m0yuqi.cn/survey/html/frame.html?surveyId='+id)
-                }else{
-                    app.qcode.qrcodeObjcet = new QRCode(a,'https://wxxyx.m0yuqi.cn/survey/html/frame.html?surveyId='+id);
+                    app.qcode.qrcodeObjcet.makeCode('https://wxxyx.m0yuqi.cn/survey/html/frame.html?surveyId=' + id)
+                } else {
+                    app.qcode.qrcodeObjcet = new QRCode(a, 'https://wxxyx.m0yuqi.cn/survey/html/frame.html?surveyId=' + id);
                     app.qcode.loading = false
                 }
 
 
-            },100)
-
+            }, 100)
 
 
         }
