@@ -320,30 +320,24 @@ let app = new Vue({
         },
         // 添加或编辑用户信息
         insertOrUpdate: function () {
-            this.$refs['form_insertOrUpdate'].validate((valid) => {
-                if (valid) {
-                    let data = copy(this.dialog.insertOrUpdate.formData);
-                    console.log('xiugaihou', data)
-                    let app = this;
-                    let url = app.dialog.insertOrUpdate.status === 'insert' ? app.urls.addUser : app.urls.updateUser;
-                    app.dialog.insertOrUpdate.loading = true;
+            console.log('in')
+            let data = copy(this.dialog.insertOrUpdate.formData);
+            console.log('xiugaihou', data)
+            let app = this;
+            let url = app.dialog.insertOrUpdate.status === 'insert' ? app.urls.addUser : app.urls.updateUser;
+            app.dialog.insertOrUpdate.loading = true;
 
-                    ajaxPostJSON(url, data, function (d) {
-                        app.dialog.insertOrUpdate.loading = false;
-                        app.dialog.insertOrUpdate.visible = false;
-                        let successMes = app.dialog.insertOrUpdate.status === 'insert' ? '添加成功!' : '编辑成功!';
-                        app.$message({message: successMes, type: 'success'});
-                        app.getUserList(); // 添加完成后刷新页面
-                    }, function () {
-                        app.dialog.insertOrUpdate.loading = false;
-                        app.dialog.insertOrUpdate.visible = false;
-                        let errorMes = app.dialog.insertOrUpdate.status === 'insert' ? '添加失败!' : '编辑失败!';
-                        app.$message.error(errorMes, 'error');
-                    });
-                } else {
-                    console.log("表单数据不合法！");
-                    return false;
-                }
+            ajaxPostJSON(url, data, function (d) {
+                app.dialog.insertOrUpdate.loading = false;
+                app.dialog.insertOrUpdate.visible = false;
+                let successMes = app.dialog.insertOrUpdate.status === 'insert' ? '添加成功!' : '编辑成功!';
+                app.$message({message: successMes, type: 'success'});
+                app.getUserList(); // 添加完成后刷新页面
+            }, function () {
+                app.dialog.insertOrUpdate.loading = false;
+                app.dialog.insertOrUpdate.visible = false;
+                let errorMes = app.dialog.insertOrUpdate.status === 'insert' ? '添加失败!' : '编辑失败!';
+                app.$message.error(errorMes, 'error');
             });
             // let data = this.dialog.insertOrUpdate.formData;
         },
