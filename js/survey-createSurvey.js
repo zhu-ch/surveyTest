@@ -1056,6 +1056,10 @@ let app = new Vue({
                     this.$message.error('您还有未编辑完成的题目，请编辑后提交');
                     return
                 }
+            if (this.survey.title === '') {
+                this.$message.error('请填写问卷标题');
+                return;
+            }
             this.$confirm('确认提交？提交后将不能修改', '警告', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -1120,7 +1124,7 @@ let app = new Vue({
                                         type: "addSurveyManagement"
                                     }
                                 }, '*')
-                            },3000)
+                            }, 3000)
                         }
                     }, function () {
                         app.fullScreenLoading = false
