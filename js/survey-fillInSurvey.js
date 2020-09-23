@@ -188,7 +188,7 @@ let myBlankQuestion = Vue.extend({
         blankQuestionAns(val, oldval) {
             console.log(val, oldval);
             if (val.length != 0) {
-                if (this.questionInner.validationMessage == null || this.questionInner.validation == '') {
+                if (this.questionInner.validation == null || this.questionInner.validation == '') {
                     this.questionInner.checked = true;
                     this.validationMessage =""
                 } else if (this.questionInner.validation == 'phone') {
