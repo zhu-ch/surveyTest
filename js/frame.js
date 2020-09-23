@@ -53,8 +53,8 @@ let app = new Vue({
         checkStatus(){
             this.userInfo = JSON.parse(getSessionStorage('user'))
             if (this.userInfo != null) {
-                this.showWindow = true;
-                console.log("add",getSessionStorage("fill-in-survey-id"))
+                this.showWindow = true
+                console.log(this.userInfo)
                 if (getSessionStorage("fill-in-survey-id") != null) {
                     this.addTab("问卷填写", "survey-fillInSurvey.html")
                 }
