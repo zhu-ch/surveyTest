@@ -13,6 +13,12 @@
     line-height: 48px;
 }
 
+.user-name{
+    color: white;
+    line-height: 48px;
+    margin-right: 20px;
+}
+
 
 /*菜单栏*/
 /* 菜单文字不可被选中 */

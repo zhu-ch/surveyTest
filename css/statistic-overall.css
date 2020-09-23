@@ -1,7 +1,7 @@
 @import "../utils/templateCSS.css";
 
 .el-card__body {
-    overflow: auto;
+    overflow: hidden;
 }
 
 .el-collapse-item__header {

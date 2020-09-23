@@ -46,40 +46,58 @@ let app = new Vue({
         fullScreenLoading: false
     },
     created: function () {
-        this.checkStatus();
+        let app=this
+        this.user = JSON.parse(getSessionStorage('user'))
+        console.log('***',this.user)
+        if (this.user != null) {
+            this.showWindow = true;
+            window.addEventListener('message', this.handleMessage);
+            this.iframeWin = this.$refs.iframe.contentWindow;
+
+            console.log(getSessionStorage("fill-in-survey-id"))
+            if (getSessionStorage("fill-in-survey-id") != null) {
+                ajaxPostJSON(this.urls.getUserInfo, {id: this.user.id},
+                    function (result) {
+                        let info = result.data
+                        if (info.contact && info.highSchool && info.province && info.studentName && info.model) {
+                            this.addTab("问卷填写", "survey-fillInSurvey.html")
+                        } else {
+                            this.$message({
+                                message: "请先补全个人信息",
+                                type: 'error'
+                            });
+                            this.addTab("信息维护", "sys-userInformation.html")
+                        }
+                    })
+
+            }
+            return;
+        }
+        this.$message({
+            message: "请登录",
+            type: 'error'
+        });
+        console.log(window.location.search)
+        var tmp_str = window.location.search.substring(1, window.location.search.length)
+        var arr = tmp_str.split("&")
+        var object = new Object()
+        for (var i = 0; i < arr.length; i++) {
+            var tmp_arr = arr[i].split("=");
+            object[decodeURIComponent(tmp_arr[0])] = decodeURIComponent(tmp_arr[1]);
+        }
+
+
+        var surveyId = object["surveyId"]
+        if (surveyId != null)
+            setSessionStorage("fill-in-survey-id", surveyId)
+        setTimeout(function () {
+            window.open("welcome.html", "_self")
+        }, 2000);
     },
     methods: {
         //判断登录状态
         checkStatus() {
-            this.userInfo = JSON.parse(getSessionStorage('user'))
-            if (this.userInfo != null) {
-                this.showWindow = true;
-                console.log(getSessionStorage("fill-in-survey-id"))
-                if (getSessionStorage("fill-in-survey-id") != null) {
-                    this.addTab("问卷填写", "survey-fillInSurvey.html")
-                }
-                return;
-            }
-            this.$message({
-                message: "请登录",
-                type: 'error'
-            });
-            console.log(window.location.search)
-            var tmp_str = window.location.search.substring(1, window.location.search.length)
-            var arr = tmp_str.split("&")
-            var object = new Object()
-            for (var i = 0; i < arr.length; i++) {
-                var tmp_arr = arr[i].split("=");
-                object[decodeURIComponent(tmp_arr[0])] = decodeURIComponent(tmp_arr[1]);
-            }
 
-
-            var surveyId = object["surveyId"]
-            if (surveyId != null)
-                setSessionStorage("fill-in-survey-id", surveyId)
-            setTimeout(function () {
-                window.open("welcome.html", "_self")
-            }, 2000);
         },
         //选中触发
         onSelect(key) {
@@ -158,9 +176,9 @@ let app = new Vue({
         handleMessage: function (event) {
             const data = event.data.data
             if (data && data.type == "addTabSurveyPreview") {
-                setSessionStorage("fill-in-survey-id",data.params[0])
+                setSessionStorage("fill-in-survey-id", data.params[0])
                 this.addTab(data.title + " - 问卷预览", "survey-surveyPreview.html")
-                setSessionStorage("fill-in-survey-id",data.params[0])
+                setSessionStorage("fill-in-survey-id", data.params[0])
             } else if (data && data.type == "addTabCreateSurvey") {
                 this.addTab('创建问卷', 'survey-createSurvey.html')
             } else if (data && data.type == 'addTabDetail') {
@@ -173,22 +191,11 @@ let app = new Vue({
                 this.removeTab(this.activeTabName)
             } else if (data && data.type == 'addSurveyManagement') {
                 this.addTab("问卷管理", "survey-surveyManagement.html")
+            } else if (data && data.type == 'addTabSurveyOverview') {
+                setSessionStorage("overview-survey-id", data.params[0])
+                setSessionStorage("overview-respondent-id", JSON.parse(getSessionStorage("user")).id)
+                this.addTab(data.title + " - 问卷回顾", "survey-surveyOverview.html")
             }
         }
-    },
-    mounted: function () {
-        let app = this;
-        app.user = JSON.parse(getSessionStorage('user'))
-        if (app.user == null) {
-            this.$message({
-                message: "请登录",
-                type: 'error'
-            });
-            return
-        }
-        app.showWindow = true
-
-        window.addEventListener('message', this.handleMessage);
-        this.iframeWin = this.$refs.iframe.contentWindow;
     }
 });

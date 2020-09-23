@@ -139,6 +139,17 @@ let app = new Vue({
                 })
             });
         },
+        viewAnswer:function(row){
+            let app = this
+            console.log(row)
+            window.parent.postMessage({
+                data: {
+                    type: "addTabSurveyOverview",
+                    title: app.table.entity.data[row].title,
+                    params: [app.table.entity.data[row].id]
+                }
+            }, '*');
+        },
 
         // 处理选中的行变化
         onSelectionChange: function (val) {
