@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../utils/templateJS.js"></script>
+    <!--    <link rel="stylesheet" href="../css/survey-createSurvey.css">-->
+
+    <link rel="stylesheet" href="../css/survey-surveyOverview.css">
+
+</head>
+<body>
+<div id="app" v-cloak style="background: white;height: 100%;overflow-x:hidden ;overflow-y:scroll" >
+    <div style="height: 15%;padding: 40px;display: flex;align-items: center;justify-content: center;">
+        <span style="font-weight: bold;font-size: x-large;">{{form.title}}</span>
+        <span style="font-size: large">{{form.description}}</span>
+    </div>
+    <div  style="padding-left: 100px;padding-right: 100px;padding-bottom: 100px;">
+        <el-form :model="form" >
+            <el-form-item v-for="(item,index) in form.questions" :label="item.title" :key="index" >
+                <el-input disabled="true" v-model="item.answer"></el-input>
+            </el-form-item>
+        </el-form>
+    </div>
+
+
+</div>
+</body>
+<script src="../js/survey-surveyOverview.js"></script>
+</html>

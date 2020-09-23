@@ -191,6 +191,10 @@ let app = new Vue({
                 this.removeTab(this.activeTabName)
             } else if (data && data.type == 'addSurveyManagement') {
                 this.addTab("问卷管理", "survey-surveyManagement.html")
+            } else if (data && data.type == 'addTabSurveyOverview') {
+                setSessionStorage("overview-survey-id", data.params[0])
+                setSessionStorage("overview-respondent-id", JSON.parse(getSessionStorage("user")).id)
+                this.addTab(data.title + " - 问卷回顾", "survey-surveyOverview.html")
             }
         }
     }
