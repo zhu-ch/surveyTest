@@ -288,10 +288,19 @@ let app = new Vue({
         app.showWindow = true
 
         this.getUserInfo()
-        this.getTypes()
-        this.getProvinces()
-        this.getMajors()
-        this.getModels()
+        // this.getTypes()
+        setTimeout(function () {
+            app.getProvinces()
+        }, 2000)
+
+        setTimeout(function () {
+            app.getMajors()
+        }, 2000)
+
+        setTimeout(function () {
+            app.getModels()
+        }, 2000)
+
 
 
     },
