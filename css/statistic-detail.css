@@ -5,11 +5,12 @@
     font-size: large !important;
 }
 
-.el-collapse-item__content{
+.el-collapse-item__content {
     padding-left: 50px;
     padding-right: 50px;
 }
 
-.sub-title{
+.sub-title {
     font-size: medium;
+    padding-bottom: 20px;
 }

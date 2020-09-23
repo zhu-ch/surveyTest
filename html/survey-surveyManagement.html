@@ -49,6 +49,7 @@
     <el-dialog width="300px" title="二维码" :visible.sync="qcode.visible"
                v-loading="qcode.loading">
         <div id="codeArea" style="height: 250px; width: 100px"></div>
+    </br>{{qcode.url}}
     </el-dialog>
 
     <!--分页-->

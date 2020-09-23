@@ -17,6 +17,9 @@ let app = new Vue({
             getMajorList: serverUrl + '/api/sys/user/getMajorList',
             selectDictListByPage: serverUrl + "/api/sys/dict/selectDictListByPage",
             updateUserInfo: serverUrl + "/api/sys/user/updateUserInfo",
+            getAnswerByConditions: serverUrl + '/api/survey/getAnswerByConditions',
+            // deleteAnswer: serverUrl + '/api/survey/deleteAnswer',
+            getSurveyByConditions : serverUrl + '/api/survey/getSurveyByConditions'
         },
         fullScreenLoading: false,
         table: {
@@ -73,6 +76,20 @@ let app = new Vue({
             },
             visible: false,
             direction: 'ltr'
+        },
+        history:{
+            entity:{
+                data:[]
+            },
+            params: {
+                pageIndex: 1,
+                pageSize: 10,
+                pageSizes: [5, 10, 20, 40],
+                searchKey: '',  // 搜索词
+                total: 0,       // 总数
+            },
+            visible:false,
+            loading:false
         }
         ,
         dialog: {
@@ -509,7 +526,41 @@ let app = new Vue({
             this.dialog.insertOrUpdate.formData.email = '';
 
 
-        }
+        },
+        getUserHistoryAnswers: function (id) {
+            console.log(id)
+
+            let data = {respondentId: id}
+            data.page = this.history.params;
+            let app = this;
+            app.history.visible = true;
+            app.history.loading = true;
+            ajaxPostJSON(this.urls.getAnswerByConditions, data, function (d) {
+                console.log(d)
+
+                let resData = d.data;
+                app.history.entity.data = []
+                console.log(resData)
+                for ( i in resData){
+                    app.history.entity.data[i] = {surveyId:resData[i].surveyId}
+                    let tempData = {surveyId: resData[i].surveyId}
+                    tempData.page = app.history.entity.params
+                    ajaxPostJSON(app.urls.getSurveyByConditions, tempData,function (d){
+                        app.history.entity.data[i].title = d.data[0].title
+                    },function (){},false)
+                }
+
+                app.history.params.total = d.data.total;
+                console.log(app.history)
+                app.history.loading = false;
+            }, function () {
+                app.history.loading = false;
+                app.$message({
+                    message: '未知错误',
+                    type: 'error'
+                });
+            },false);
+        },
     },
     mounted: function () {
         let app = this;

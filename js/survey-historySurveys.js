@@ -5,8 +5,9 @@ let app = new Vue({
         showWindow: false,
         urls: {
             getAnswerByConditions: serverUrl + '/api/survey/getAnswerByConditions',
-            deleteAnswer: serverUrl + '/api/survey/deleteAnswer',
-            getSurveyByConditions : serverUrl + '/api/survey/getSurveyByConditions'
+            deleteAnswer: serverUrl + '/api/survey/deleteAnswerByIds',
+            getSurveyByConditions : serverUrl + '/api/survey/getSurveyByConditions',
+            // deleteAnswer: serverUrl + '/api/survey/deleteAnswer'
         },
         fullScreenLoading: false,
         table: {
@@ -36,6 +37,9 @@ let app = new Vue({
 
     },
     methods: {
+        handleSelectionChange: function (val) {
+            this.table.selectionList = val;
+        },
         refreshTableEntity: function () {
             this.getAnswerByConditions();
         },
@@ -55,7 +59,7 @@ let app = new Vue({
                 app.table.entity.data = []
                 console.log(resData)
                 for ( i in resData){
-                    app.table.entity.data[i] = {surveyId:resData[i].surveyId}
+                    app.table.entity.data[i] = {id:resData[i].id}
                     let tempData = {surveyId: resData[i].surveyId}
                     tempData.page = app.table.entity.params
                     ajaxPostJSON(app.urls.getSurveyByConditions, tempData,function (d){
@@ -73,12 +77,10 @@ let app = new Vue({
             },false);
         },
 
-        deleteEntityListByIds: function (val) {
-            if (val.length === 0) {
-                app.$message({
-                    message: '提示：未选中任何项！',
-                    type: 'warning'
-                });
+        deleteAnswer: function (val, type = 'multi') {
+            // 未选中任何用户的情况下点选批量删除
+            if (type === 'multi' && val.length == 0) {
+                app.$message.error('提示：未选中任何用户', 'warning');
                 return;
             }
             this.$confirm('确认删除选中的项', '警告', {
@@ -86,10 +88,26 @@ let app = new Vue({
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                let data = val;
+                let idList = [];
+                if (type === 'single') {
+                    let id = val;
+                    idList.push({
+                        id: id
+                    });
+                } else {
+                    let selectionList = val;
+                    for (let i = 0; i < selectionList.length; i++) {
+                        idList.push({
+                            id: selectionList[i].id
+                        });
+                    }
+                }
+                let data = idList;
                 let app = this;
                 app.fullScreenLoading = true;
-                ajaxPostJSON(this.urls.deleteAnswer, data, function (d) {
+                console.log('idList',data)
+                // data = data[0]
+                ajaxPostJSON(app.urls.deleteAnswer, data, function (d) {
                     app.fullScreenLoading = false;
                     if (d.code === 'success') {
                         app.$message({
