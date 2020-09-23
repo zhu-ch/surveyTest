@@ -28,7 +28,6 @@ let app = new Vue({
     data: {
         user: {},
         iframeWin: {},
-        userInfo: null,
         showWindow: false,
         default_open_array: [
             'management'
@@ -51,10 +50,9 @@ let app = new Vue({
     methods: {
         //判断登录状态
         checkStatus(){
-            this.userInfo = JSON.parse(getSessionStorage('user'))
-            if (this.userInfo != null) {
+            this.user = JSON.parse(getSessionStorage('user'))
+            if (this.user != null) {
                 this.showWindow = true
-                console.log(this.userInfo)
                 if (getSessionStorage("fill-in-survey-id") != null) {
                     this.addTab("问卷填写", "survey-fillInSurvey.html")
                 }
