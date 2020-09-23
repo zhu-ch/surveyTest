@@ -36,10 +36,14 @@
                         <el-input v-model="formData.admissionNumber" style="width: 50vh"
                                   :disabled="true"></el-input>
                     </el-form-item>
-                    <el-form-item label="本人姓名" prop="name">
-                        <el-input v-model="formData.name" style="width: 50vh"
+                    <el-form-item label="考生姓名" prop="studentName">
+                        <el-input v-model="formData.studentName" style="width: 50vh"
                                   :disabled="unmodifiable"></el-input>
                     </el-form-item>
+<!--                    <el-form-item label="本人姓名" prop="name">-->
+<!--                        <el-input v-model="formData.name" style="width: 50vh"-->
+<!--                                  :disabled="unmodifiable"></el-input>-->
+<!--                    </el-form-item>-->
 
                     <el-form-item label="联系方式" prop="contact">
                         <el-input v-model="formData.contact" style="width: 50vh"
@@ -50,20 +54,17 @@
                                   :disabled="unmodifiable"></el-input>
                     </el-form-item>
 
-                    <el-form-item label="考生姓名" prop="studentName">
-                        <el-input v-model="formData.studentName" style="width: 50vh"
-                                  :disabled="unmodifiable"></el-input>
-                    </el-form-item>
 
-                    <el-form-item label="与考生关系" prop="type">
-                        <el-select v-model="formData.type" placeholder="关系" :disabled="unmodifiable">
-                            <el-option
-                                    v-for="type in info.types"
-                                    :value="type"
-                            >
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
+
+<!--                    <el-form-item label="与考生关系" prop="type">-->
+<!--                        <el-select v-model="formData.type" placeholder="关系" :disabled="unmodifiable">-->
+<!--                            <el-option-->
+<!--                                    v-for="type in info.types"-->
+<!--                                    :value="type"-->
+<!--                            >-->
+<!--                            </el-option>-->
+<!--                        </el-select>-->
+<!--                    </el-form-item>-->
 
                     <el-form-item label="省份" prop="province">
 

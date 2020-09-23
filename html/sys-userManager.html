@@ -72,14 +72,14 @@
         <el-table-column label="操作" header-align="center" align="center">
             <template slot-scope="scope">
                 <el-button type="success" size="mini" style="position:relative;bottom: 1px;"
-                           :disabled="scope.row.role != 'student'"
+                           :disabled="scope.row.role != '考生'"
                            @click="getUserInfo(scope.row)">
-                    <span>详情</span>
+                    <span>详细信息</span>
                 </el-button>
                 <el-button type="primary" size="mini" style="position:relative;bottom: 1px;"
-                           :disabled="scope.row.role != 'student'"
+                           :disabled="scope.row.role != '考生'"
                            @click="getUserHistoryAnswers(scope.row.id)">
-                    <span>答卷</span>
+                    <span>历史答卷</span>
                 </el-button>
                 <el-button type="warning" size="mini" style="position:relative;bottom: 1px;margin-left: 6px;"
                            @click="openUpdate(scope.row)">
@@ -172,10 +172,14 @@
                 <el-input v-model="draw.data.admissionNumber"
                           :disabled="true"></el-input>
             </el-form-item>
-            <el-form-item label="本人姓名" prop="name">
-                <el-input v-model="draw.data.name"
+            <el-form-item label="考生姓名" prop="studentName">
+                <el-input v-model="draw.data.studentName"
                           :disabled=false></el-input>
             </el-form-item>
+<!--            <el-form-item label="本人姓名" prop="name">-->
+<!--                <el-input v-model="draw.data.name"-->
+<!--                          :disabled=false></el-input>-->
+<!--            </el-form-item>-->
 
             <el-form-item label="联系方式" prop="contact">
                 <el-input v-model="draw.data.contact"
@@ -186,20 +190,17 @@
                           :disabled=false></el-input>
             </el-form-item>
 
-            <el-form-item label="考生姓名" prop="studentName">
-                <el-input v-model="draw.data.studentName"
-                          :disabled=false></el-input>
-            </el-form-item>
 
-            <el-form-item label="与考生关系" prop="type">
-                <el-select v-model="draw.data.type" placeholder="关系" :disabled=false>
-                    <el-option
-                            v-for="type in info.types"
-                            :value="type"
-                    >
-                    </el-option>
-                </el-select>
-            </el-form-item>
+
+<!--            <el-form-item label="与考生关系" prop="type">-->
+<!--                <el-select v-model="draw.data.type" placeholder="关系" :disabled=false>-->
+<!--                    <el-option-->
+<!--                            v-for="type in info.types"-->
+<!--                            :value="type"-->
+<!--                    >-->
+<!--                    </el-option>-->
+<!--                </el-select>-->
+<!--            </el-form-item>-->
 
             <el-form-item label="省份" prop="province">
 
@@ -217,10 +218,9 @@
 
             <el-form-item label="高中" prop="highSchool">
 
-                <el-select v-model="draw.data.highSchool" placeholder="省份" :disabled=false>
+                <el-select v-model="draw.data.highSchool" placeholder="高中" :disabled=false>
                     <el-option
                             v-for="highSchool in info.highSchools"
-
                             :value="highSchool"
                     >
                     </el-option>

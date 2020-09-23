@@ -120,7 +120,7 @@ let app = new Vue({
                     {label: '管理员', value: 'admin'},
                     {label: '招生组组长', value: 'leader'},
                     {label: '招生老师', value: 'teacher'},
-                    {label: '访客', value: 'student'}
+                    {label: '考生', value: 'student'}
                 ],
                 schoolList: [],
                 majorList: []
@@ -138,7 +138,7 @@ let app = new Vue({
                 {label: '管理员', value: 'admin'},
                 {label: '招生组组长', value: 'leader'},
                 {label: '招生老师', value: 'teacher'},
-                {label: '访客', value: 'student'}
+                {label: '考生', value: '考生'}
 
             ]
         },
@@ -205,6 +205,17 @@ let app = new Vue({
                 console.log(d)
                 app.table.loading = false;
                 app.table.data = d.data;
+                for (i in app.table.data ){
+                    role = app.table.data[i].role
+                    if (role == 'admin')
+                        app.table.data[i].role = '管理员'
+                    else if (role == 'leader')
+                        app.table.data[i].role = '招生组组长'
+                    else if (role == 'teacher')
+                        app.table.data[i].role = '招生老师'
+                    else if (role == 'student')
+                        app.table.data[i].role = '考生'
+                }
                 app.table.params.total = d.data.length;
             }, function () {
                 app.table.loading = false;
