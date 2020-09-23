@@ -203,7 +203,7 @@ let app = new Vue({
                 pageIndex: 1,
                 pageSize: 5,
                 pageSizes: [5, 10, 20],
-                total: 500,       // 总数
+                total: 0,       // 总数
             },
             condition: "",
             conditionType: "id",
@@ -282,6 +282,7 @@ let app = new Vue({
                     this.refreshTotalTableByDescription(this.onShowTable.condition, type);
                 }
             }
+
         },
         refreshTotalTable: function (type) {
             this.initializeSurveyEntity();
@@ -289,6 +290,7 @@ let app = new Vue({
             // this.fullScreenLoading = true
             ajaxPostJSONAsync(this.urls.querySurveyByConditions, this.surveyEntity, function (d) {
                 app.totalTable.entities = d.data;
+                app.onShowTable.params.total = app.totalTable.entities.length
                 console.log("finish")
             }, function (d) {
                 app.$message("服务器错误")
@@ -323,6 +325,7 @@ let app = new Vue({
             // this.fullScreenLoading = true
             ajaxPostJSONAsync(this.urls.querySurveyByConditions, this.surveyEntity, function (d) {
                 app.totalTable.entities = d.data;
+                app.onShowTable.params.total = app.totalTable.entities.length
                 if (type == "reload") {
                     app.reloadRefreshMethod()
 
@@ -364,6 +367,7 @@ let app = new Vue({
             // this.fullScreenLoading = true
             ajaxPostJSONAsync(this.urls.querySurveyByConditions, this.surveyEntity, function (d) {
                 app.totalTable.entities = d.data;
+                app.onShowTable.params.total = app.totalTable.entities.length
                 if (type == "reload") {
                     app.reloadRefreshMethod()
 
@@ -409,6 +413,7 @@ let app = new Vue({
             ajaxPostJSONAsync(this.urls.querySurveyByConditions, this.surveyEntity, function (d) {
                 // this.fullScreenLoading = false
                 app.totalTable.entities = d.data;
+                app.onShowTable.params.total = app.totalTable.entities.length
                 if (type == "reload") {
                     app.reloadRefreshMethod()
 

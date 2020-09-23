@@ -160,6 +160,7 @@ let app = new Vue({
             if (data && data.type == "addTabSurveyPreview") {
                 setSessionStorage("fill-in-survey-id",data.params[0])
                 this.addTab(data.title + " - 问卷预览", "survey-surveyPreview.html")
+                setSessionStorage("fill-in-survey-id",data.params[0])
             } else if (data && data.type == "addTabCreateSurvey") {
                 this.addTab('创建问卷', 'survey-createSurvey.html')
             } else if (data && data.type == 'addTabDetail') {
