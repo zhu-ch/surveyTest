@@ -9,11 +9,6 @@
 </head>
 <body>
 <div id="app" v-cloak v-if="showWindow" v-loading="fullScreenLoading">
-    <div style="display: flex; justify-content: flex-end">
-        <el-button type="primary" size="small" @click="getSurveyStatistics">查询</el-button>
-        <div style="width: 30px"></div>
-    </div>
-
     <!--筛选-->
     <el-collapse v-model="filter.activeNames">
         <el-collapse-item title="筛选面板" name="1">
@@ -22,6 +17,10 @@
                        :questions="filter.questionList" :condition="item" :user="user"
                        v-on:submit-this-question="submitQuestionByIndex"
                        v-on:delete-this-question="deleteQuestionByIndex"></component>
+            <div style="display: flex; justify-content: flex-end">
+                <el-button type="primary" size="small" @click="getSurveyStatistics">查询</el-button>
+                <div style="width: 30px"></div>
+            </div>
         </el-collapse-item>
     </el-collapse>
 

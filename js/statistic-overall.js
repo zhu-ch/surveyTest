@@ -11,8 +11,7 @@ let card = Vue.extend({
             </div>
             <div>
                 <el-table :data="tableData.filter(data => !search || data.answer.includes(search))" 
-                          :default-sort = "{prop: 'answer', order: 'descending'}" max-height="250"
-                          @sort-change="changeSort">
+                          :default-sort = "{prop: 'answer', order: 'descending'}" max-height="250">
                      <el-table-column type="index" label="序号" width="50" align="center"></el-table-column>
                     <el-table-column prop="person" label="用户" sortable align="center"></el-table-column>
                     <el-table-column prop="answer" label="答案文本" sortable align="center"></el-table-column>
@@ -32,11 +31,14 @@ let card = Vue.extend({
                             :type="display==='pie' ? 'primary' : 'plain'">饼图</el-button>
             </div>
             <div :id="'chart-area-' + entity.question.index" v-show="display !== ''"
-                   style="width:100vw; height:35vh;"></div>
+                   style="width:100vw; height:35vh"></div>
         </el-card>
     `,
     data() {
         return {
+            urls: {
+                getUserInfo: serverUrl + '/api/sys/user/getUserInfo'
+            },
             useECharts: false,
             display: '',
             tableData: [],
@@ -152,11 +154,6 @@ let card = Vue.extend({
                 ]
             }
             myChart.setOption(option)
-        },
-        changeSort(val) {
-            console.log(val) // column: {…} order: "ascending" prop: "date"
-            // 根据当前排序重新获取后台数据,一般后台会需要一个排序的参数
-
         }
     },
     computed: {
@@ -194,7 +191,10 @@ let card = Vue.extend({
         if (this.entity.question.type !== 'FILL_BLANK')
             this.useECharts = true
         Object.keys(this.entity.summary).forEach(function (key) {
-            app.tableData.push({'answer': app.entity.summary[key], 'person': key})
+            ajaxPostJSON(app.urls.getUserInfo, {id: key},
+                function (result) {
+                    app.tableData.push({'answer': app.entity.summary[key], 'person': result.data[0].admissionNumber})
+                })
         })
     }
 })
@@ -217,13 +217,18 @@ let mySurveyFilter = Vue.extend({
                 <!--指定题目-->
                 <el-select v-model="filterCondition.id" placeholder="请选择题目" @change="resetThis(); submitThis()">
                     <el-option v-for="item in questions" :key="item.id" :label="item.title" :value="item.id"
-                                v-if="(item.type!='ORDER') && (user.role === 'admin' || user.role === 'leader' || item.isPrivate != true)">
+                            v-if="(item.type!='ORDER') && (user.role === 'admin' || user.role === 'leader' || item.isPrivate != true)">
                     </el-option>
                 </el-select>
-                <!--选择题筛选条件-->
+                <!--单选题筛选条件-->
                 <el-select v-model="filterCondition.searchCondition" placeholder="请选择筛选条件" @change="submitThis"
-                            v-if="selectedQuestion && selectedQuestion.type !== 'FILL_BLANK'">
-                    <el-option v-for="item in choose" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            v-if="selectedQuestion && selectedQuestion.type === 'SINGLE'">
+                    <el-option v-for="item in single" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                </el-select>
+                <!--多选题筛选条件-->
+                <el-select v-model="filterCondition.searchCondition" placeholder="请选择筛选条件" @change="submitThis"
+                            v-if="selectedQuestion && selectedQuestion.type === 'MULTIPLE'">
+                    <el-option v-for="item in multiple" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
                 <!--填空题筛选条件-->
                 <el-select v-model="filterCondition.searchCondition" placeholder="请选择筛选条件" @change="submitThis"
@@ -247,8 +252,12 @@ let mySurveyFilter = Vue.extend({
     data() {
         return {
             filterCondition: {},
-            choose: [{'label': '选择了', 'value': 'EQUAL'},
-                {'label': '未选择', 'value': 'NOT_EQUAL'}
+            single: [{'label': '选中', 'value': 'EQUAL'},
+                {'label': '未选中', 'value': 'NOT_EQUAL'}
+            ],
+            multiple: [
+                {'label': '选中', 'value': 'CONTAIN'},
+                {'label': '未选中', 'value': 'NOT_CONTAIN'}
             ],
             fill: [{'label': '大于', 'value': 'GREATER'},
                 {'label': '小于', 'value': 'LESS'},
@@ -352,12 +361,20 @@ let app = new Vue({
             let app = this
             this.resultList = []
             this.fullScreenLoading = true
+            console.log(JSON.stringify(this.queryEntity))
             ajaxPostJSON(this.urls.getSurveyStatistics, this.queryEntity,
                 function (result) {
                     app.fullScreenLoading = false
-                    Object.keys(result.data).forEach(function (key) {
-                        app.resultList.push(result.data[key])
-                    })
+                    if (result.code === 'success') {
+                        Object.keys(result.data).forEach(function (key) {
+                            app.resultList.push(result.data[key])
+                        })
+                        console.log('---', app.resultList)
+                    } else
+                        app.$message({
+                            message: '请求错误',
+                            type: 'error'
+                        })
                 }, function () {
                     app.fullScreenLoading = false
                     app.$message({
