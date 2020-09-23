@@ -677,7 +677,7 @@ let app = new Vue({
         addBasicQuestion: function (questionType) {
             let newQuestion = {
                 //前端使用
-                id: '#' + this.questionCount,
+                id: uuid(),
                 groupId: '',
                 submitted: false,
                 //传至后端
@@ -698,7 +698,7 @@ let app = new Vue({
         addMobilePhone: function () {
             let newQuestion = {
                 //前端使用
-                id: '#' + this.questionCount,
+                id: uuid(),
                 groupId: '',
                 submitted: true,
                 //传至后端
@@ -717,9 +717,14 @@ let app = new Vue({
             this.questionCount++
         },
         addApplication: function () {
+            let firstID=uuid()
+            let secondId=uuid()
+            let thirdId=uuid()
+            let fourthId=uuid()
+
             let question1 = {
                 //前端使用
-                id: '#' + this.questionCount,
+                id: firstID,
                 groupId: '$' + this.groupCount,
                 submitted: true,
                 //传至后端
@@ -742,7 +747,7 @@ let app = new Vue({
 
             let question2 = {
                 //前端使用
-                id: '#' + this.questionCount,
+                id: secondId,
                 groupId: '$' + this.groupCount,
                 submitted: true,
                 //传至后端
@@ -752,8 +757,8 @@ let app = new Vue({
                 required: true,
                 defaultAns: '',
                 answerList: [],
-                frontOptions: [{questionId: '#' + (this.questionCount - 1), questionAnswer: '选项B'},
-                    {questionId: '#' + (this.questionCount - 1), questionAnswer: '选项C'}],
+                frontOptions: [{questionId: firstID, questionAnswer: '选项B'},
+                    {questionId: firstID, questionAnswer: '选项C'}],
                 skipLogices: [],
                 validation: '',
                 isPrivate: false
@@ -763,7 +768,7 @@ let app = new Vue({
 
             let question3 = {
                 //前端使用
-                id: '#' + this.questionCount,
+                id: thirdId,
                 groupId: '$' + this.groupCount,
                 submitted: true,
                 //传至后端
@@ -774,7 +779,7 @@ let app = new Vue({
                 defaultAns: '',
                 answerList: [],
                 frontOptions: [{
-                    questionId: '#' + (this.questionCount - 2),
+                    questionId: firstID,
                     questionAnswer: '选项C'
                 }],
                 skipLogices: [],
@@ -786,7 +791,7 @@ let app = new Vue({
 
             let question4 = {
                 //前端使用
-                id: '#' + this.questionCount,
+                id: fourthId,
                 groupId: '$' + this.groupCount,
                 submitted: true,
                 //传至后端
@@ -799,7 +804,7 @@ let app = new Vue({
                     {index: '选项B', content: 'E志愿'},
                     {index: '选项C', content: 'F志愿'}],
                 frontOptions: [{
-                    questionId: '#' + (this.questionCount - 3),
+                    questionId: firstID,
                     questionAnswer: '选项D'
                 }],
                 skipLogices: [],
@@ -811,9 +816,10 @@ let app = new Vue({
             this.groupCount++
         },
         addNationalPlan: function () {
+            let firstId=uuid()
             let single = {
                 //前端使用
-                id: '#' + this.questionCount,
+                id: firstId,
                 groupId: '$' + this.groupCount,
                 submitted: true,
                 //传至后端
@@ -833,7 +839,7 @@ let app = new Vue({
 
             let fillBlank = {
                 //前端使用
-                id: '#' + this.questionCount,
+                id: uuid(),
                 groupId: '$' + this.groupCount,
                 submitted: true,
                 //传至后端
@@ -844,7 +850,7 @@ let app = new Vue({
                 defaultAns: '',
                 answerList: [],
                 frontOptions: [{
-                    questionId: '#' + (this.questionCount - 1),
+                    questionId: firstId,
                     questionAnswer: '选项A'
                 }],
                 skipLogices: [],
@@ -856,9 +862,10 @@ let app = new Vue({
             this.groupCount++
         },
         addBasicPlan: function () {
+            let firstId=uuid()
             let single = {
                 //前端使用
-                id: '#' + this.questionCount,
+                id: firstId,
                 groupId: '$' + this.groupCount,
                 submitted: true,
                 //传至后端
@@ -878,7 +885,7 @@ let app = new Vue({
 
             let fillBlank = {
                 //前端使用
-                id: '#' + this.questionCount,
+                id: uuid(),
                 groupId: '$' + this.groupCount,
                 submitted: true,
                 //传至后端
@@ -889,7 +896,7 @@ let app = new Vue({
                 defaultAns: '',
                 answerList: [],
                 frontOptions: [{
-                    questionId: '#' + (this.questionCount - 1),
+                    questionId: firstId,
                     questionAnswer: '选项A'
                 }],
                 skipLogices: [],
@@ -901,9 +908,10 @@ let app = new Vue({
             this.groupCount++
         },
         addAdvanceApproval: function () {
+            let firstId=uuid()
             let single = {
                 //前端使用
-                id: '#' + this.questionCount,
+                id: firstId,
                 groupId: '$' + this.groupCount,
                 submitted: true,
                 //传至后端
@@ -923,7 +931,7 @@ let app = new Vue({
 
             let fillBlank = {
                 //前端使用
-                id: '#' + this.questionCount,
+                id: uuid(),
                 groupId: '$' + this.groupCount,
                 submitted: true,
                 //传至后端
@@ -934,7 +942,7 @@ let app = new Vue({
                 defaultAns: '',
                 answerList: [],
                 frontOptions: [{
-                    questionId: '#' + (this.questionCount - 1),
+                    questionId: firstId,
                     questionAnswer: '选项A'
                 }],
                 skipLogices: [],
@@ -948,7 +956,7 @@ let app = new Vue({
         addOath: function () {
             let single = {
                 //前端使用
-                id: '#' + this.questionCount,
+                id: uuid(),
                 groupId: '$' + this.groupCount,
                 submitted: true,
                 //传至后端
@@ -969,7 +977,7 @@ let app = new Vue({
         addIdentity: function () {
             let single = {
                 //前端使用
-                id: '#' + this.questionCount,
+                id: uuid(),
                 groupId: '$' + this.groupCount,
                 submitted: true,
                 //传至后端
@@ -991,7 +999,7 @@ let app = new Vue({
         addSigned: function () {
             let single = {
                 //前端使用
-                id: '#' + this.questionCount,
+                id: uuid(),
                 groupId: '$' + this.groupCount,
                 submitted: true,
                 //传至后端
@@ -1135,6 +1143,8 @@ let app = new Vue({
     },
     created: function () {
         this.auth.userInfo = JSON.parse(getSessionStorage('user'))
+        // this.auth.userInfo = {role: 'admin'}
+
         if (this.auth.userInfo == null) {
             this.$message({
                 message: "请登录",
@@ -1159,3 +1169,28 @@ let app = new Vue({
         });
     }
 })
+
+function uuid() {
+    let withLine = true; //带不带横线
+    let len = 36; //长度为36
+    let radix = 16; //16进制
+    let chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+    let uuid = [], i;
+    radix = radix || chars.length;
+    if (withLine) {
+        let r;
+        uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-';
+        uuid[14] = '4';
+        for (i = 0; i < len; i++) {
+            if (!uuid[i]) {
+                r = 0 | Math.random() * 16;
+                uuid[i] = chars[(i == 19) ? (r & 0x3) | 0x8 : r];
+            }
+        }
+    } else {
+        for (i = 0; i < len; i++) {
+            uuid[i] = chars[0 | Math.random() * radix];
+        }
+    }
+    return uuid.join('');
+}
