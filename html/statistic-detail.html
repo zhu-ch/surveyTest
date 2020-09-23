@@ -8,17 +8,11 @@
 </head>
 <body>
 <div id="app" v-cloak v-if="showWindow" v-loading="fullScreenLoading">
-    <div style="display: flex; justify-content: flex-end">
-        <el-button type="primary" size="small" @click="queryData">查询</el-button>
-        <el-button type="success" size="small" @click="exportExcel">导出为Excel</el-button>
-        <div style="width: 30px"></div>
-    </div>
-
     <el-collapse v-model="filter.activeNames">
         <!--筛选-->
-        <el-collapse-item title="筛选面板" name="1">
-            <p class="sub-title">个人信息</p>
-            <el-form :model="queryEntity.userConditions" label-width="80px">
+        <el-collapse-item title="操作面板" name="1">
+            <p class="sub-title">个人信息筛选</p>
+            <el-form :model="queryEntity.userConditions" label-width="80px" :inline="true">
                 <el-form-item label="高考年份">
                     <el-input v-model="queryEntity.userConditions.year" clearable></el-input>
                 </el-form-item>
@@ -35,21 +29,30 @@
 
             <el-divider></el-divider>
 
-            <p class="sub-title">作答情况</p>
+            <p class="sub-title">作答情况筛选</p>
             <el-button type="primary" icon="el-icon-plus" circle @click="addSurveyFilter"></el-button>
             <component is="my-survey-filter" v-for="(item,index) in filter.surveyFilterList" :key="index"
                        :questions="filter.questionList" :condition="item" :user="user"
                        v-on:submit-this-question="submitQuestionByIndex"
                        v-on:delete-this-question="deleteQuestionByIndex"></component>
+
+            <el-divider></el-divider>
+
+            <div style="display: flex; justify-content: flex-end">
+                <el-button type="primary" size="small" @click="queryData">查询</el-button>
+                <el-button type="success" size="small" @click="exportExcel">导出为Excel</el-button>
+                <div style="width: 30px"></div>
+            </div>
         </el-collapse-item>
     </el-collapse>
 
     <!--表格-->
     <el-table :data="table.tableData" style="width: 100%" max-height="600" height="600" stripe
               @sort-change="changeSort">
+        <el-table-column type="index" label="序号" fixed></el-table-column>
         <!--个人信息-->
         <el-table-column label="个人信息" align="center">
-            <el-table-column prop="name" label="姓名" fixed sortable></el-table-column>
+            <el-table-column prop="name" label="姓名" sortable></el-table-column>
             <el-table-column prop="highSchool" label="毕业高中" sortable></el-table-column>
             <el-table-column prop="contact" label="联系方式" sortable></el-table-column>
         </el-table-column>
@@ -58,7 +61,7 @@
         <el-table-column label="作答情况" align="center">
             <el-table-column v-for="(item, idx) in table.questionList" :key="item.id"
                              v-if="user.role === 'admin' || user.role === 'leader' || !item.isPrivate"
-                             :label="item.index + '.' + item.title" sortable>
+                             :label="item.index + '.' + item.title" sortable width="200">
                 <template slot-scope="scope">
                     <span>{{scope.row[item.id]}}</span>
                 </template>
