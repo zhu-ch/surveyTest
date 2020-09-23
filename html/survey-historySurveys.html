@@ -35,9 +35,8 @@
 
         <el-table-column label="操作" header-align="center" align="center">
             <template slot-scope="scope">
-                <el-button type="success" size="mini" style="position:relative;bottom: 1px;"
-                           @click="viewAnswer(scope.row.id)">
-                    <span>预览</span>
+                <el-button type="success" size="mini" style="position:relative;bottom: 1px;" @click="viewAnswer(scope.$index)">
+                    <span>回顾</span>
                 </el-button>
 
                 <el-button type="danger" size="mini" style="position:relative;bottom: 1px;margin-left: 6px;"
